@@ -104,7 +104,7 @@ const dist_libs = [
     /* moment */
     { "route": "/dist/js", "path": "moment-2.22.2" },
     /* riotjs */
-    { "route": "/dist/js", "path": "riotjs-4.2.0" },
+    { "route": "/dist/js", "path": "riotjs-3.13.2" },
 ];
 
 function dist_lib(app, exportRoute, localPath) {
