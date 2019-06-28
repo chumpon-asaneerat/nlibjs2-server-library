@@ -41,6 +41,7 @@
     "gulp-jsdoc3": "^2.0.0",
     "gulp-nodemon": "^2.4.2",
     "gulp-order": "^1.2.0",
+    "gulp-riot": "^1.1.5",
     "gulp-rm": "^2.0.0",
     "gulp-sass": "^4.0.2",
     "gulp-sort": "^2.0.0",
