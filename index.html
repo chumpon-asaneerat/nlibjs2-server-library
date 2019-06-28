@@ -19,6 +19,10 @@
 </head>
 <body>
     <p><i class="fas fa-arrow-right"></i>Sample icon</p>
+    <app>
+        <h4>This is in app tag.</h4>
+        <example text='XXX'></example>
+    </app>
     
     <!-- JQuery -->
     <script src="/dist/js/jquery.min.js"></script>
@@ -30,5 +34,10 @@
     <script src="/dist/js/bootstrap.min.js">/* bootstrap required jQuery and popperjs. */</script>
     <!-- Moment.js -->
     <script src="/dist/js/moment.min.js"></script>
+    <!-- Riot.js -->
+    <script src="/dist/js/riot.min.js"></script>
+    <script>
+        riot.mount('app')
+    </script>
 </body>
 </html>

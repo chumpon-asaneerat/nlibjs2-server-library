@@ -105,6 +105,8 @@ const dist_libs = [
     { "route": "/dist/js", "path": "moment-2.22.2" },
     /* riotjs */
     { "route": "/dist/js", "path": "riotjs-3.13.2" },
+    /* for access precompile riotjs component */
+    { "route": "/components", "path": "../../dist/component/riot" },
 ];
 
 function dist_lib(app, exportRoute, localPath) {
