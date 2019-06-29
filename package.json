@@ -8,14 +8,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/chumpon-asaneerat/github-expressjs-buildtools-template.git"
+    "url": "git+https://github.com/chumpon-asaneerat/nlibjs2.git"
   },
   "author": "Chumpon Asaneerat",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/chumpon-asaneerat/github-expressjs-buildtools-template/issues"
+    "url": "https://github.com/chumpon-asaneerat/nlibjs2/issues"
   },
-  "homepage": "https://github.com/chumpon-asaneerat/github-expressjs-buildtools-template#readme",
+  "homepage": "https://github.com/chumpon-asaneerat/nlibjs2#readme",
   "devDependencies": {
     "@types/dot": "^1.1.3",
     "@types/gulp": "^4.0.6",
