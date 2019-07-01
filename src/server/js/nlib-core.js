@@ -53,7 +53,7 @@ NLib.JSONFile = class {
      * @return {Boolean} Returns true if save success.
      */
     static save(fileName, obj) {
-        return fs.writeFileSync(fileName, JSON.stringify(obj, null, 4), 'utf8');
+        return fs.writeFileSync(fileName, JSON.stringify(obj, null, 2), 'utf8');
     }
     /**
      * Load object from json file.
