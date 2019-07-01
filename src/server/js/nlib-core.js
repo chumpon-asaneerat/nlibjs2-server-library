@@ -89,8 +89,11 @@ NLib.Configuration = class {
         let obj = this._data;
         for (let i = 0; i < len; ++i) {
             let pName = props[i];
-            if (!obj[pName]) {
-                obj[pName] = {}
+            if (i < len - 1) {
+                if (!obj[pName]) {
+                    // not found.
+                    return obj[pName];
+                }
             }
             obj = obj[pName];
         }        

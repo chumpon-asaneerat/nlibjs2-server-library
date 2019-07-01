@@ -12,8 +12,10 @@ rootCfg.set('webserver.port', 3001 );
 console.log(rootCfg.data);
 let appObj = rootCfg.get('app');
 console.log(appObj);
-let appName = rootCfg.get('app.name');
-console.log(appName);
+let appNoName = rootCfg.get('app.noname');
+console.log('app.noname:', appNoName);
+let appDataName = rootCfg.get('app.data.name');
+console.log('app.data.name:', appDataName);
 
 /*
 const express = require("express");
