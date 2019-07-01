@@ -140,28 +140,6 @@ NLib.Configuration = class {
 
 module.exports.Configuration = exports.Configuration = NLib.Configuration;
 
-/*
-class NLib {
-    constructor() {
-        this._cfg = null;
-        this.initialize();
-    }
-    initialize() {
-        if (!fs.existsSync(cfgFile)) saveConfig({});
-        this._cfg = loadConfig();
-        if (!this._cfg) this._cfg = {};
-    }
-    get config() {
-        if (!this._cfg) this.initialize();
-        return this._cfg;
-    }
-    update() { saveConfig(this._cfg); }
-}
-
-let nlib = new NLib();
-
-*/
-
 let nlib = new NLib();
 
 module.exports = exports = nlib;
