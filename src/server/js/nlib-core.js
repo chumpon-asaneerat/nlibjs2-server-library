@@ -8,16 +8,39 @@ const rootPath = process.env['ROOT_PATHS'];
 // default config file name.
 let cfgFile = path.join(rootPath, 'nlib.config.json');
 
+/**
+ * The NLib Class.
+ */
 class NLib {
-    doA() {}
-    doB() {}
+    constructor() {
+        this._config = new NLib.Configuration();
+    }
+    /** Gets the application config. */
+    get Config() { return this._config; }
+    /**
+     * Assign value to target Object's property.
+     * @param {Object} obj Target Object.
+     * @param {String} property The Object's property name.
+     * @param {Object} value The value to apply on object.
+     */
+    static assignTo(obj, property, value) {
+        if (value instanceof Object) {
+            if (!obj[property]) obj[property] = {};
+            let keys = Object.keys(value);
+            keys.forEach((key) => {
+                obj[property][key] = value[key];
+            });
+        }
+        else {
+            obj[property] = value;
+        }
+    }
 }
 
-let nlib = new NLib();
-
-module.exports = exports = nlib;
-
-NLib.JSON = class {
+/**
+ * The JSON File Class.
+ */
+NLib.JSONFile = class {
     /**
      * Save object to json file.
      * @param {String} fileName Target File Name.
@@ -47,54 +70,58 @@ NLib.JSON = class {
     }
 }
 
-module.exports.JSON = exports.JSON = NLib.JSON;
+module.exports.JSON = exports.JSON = NLib.JSONFile;
 
-NLib.Config = class {
-    /**
-     * Create new instance of NConfig.
-     * @param {Object} parent The Parent Object.
-     * @param {String} propertyName The Parent Object's property name.
-     */
-    constructor(parent, propertyName, defaultConfig) {
-        this._parent = parent;
-        this._propertyName = propertyName;
-        this._default = (defaultConfig) ? defaultConfig : {}
-        this.init();
+/**
+ * The Configuration Class.
+ */
+NLib.Configuration = class {
+    constructor() {
+        this._data = {};
     }
     /**
-     * Initialize the config object (internal call only).
+     * gets property value.
+     * @param {String} property The nested object property in string.
      */
-    init() {
-        if (!this._parent || !this._propertyName) {
-            this._data = this.default;
-        }
-        else {
-            if (!this._parent[this._propertyName]) {
-                this._parent[this._propertyName] = this.default;
+    get(property) {
+        let props = property.toLowerCase().split(".");
+        let len = props.length;
+        let obj = this._data;
+        for (let i = 0; i < len; ++i) {
+            let pName = props[i];
+            if (!obj[pName]) {
+                obj[pName] = {}
             }
-            this._data = this._parent[this._propertyName];
-        }
+            obj = obj[pName];
+        }        
+        return obj;
     }
     /**
-     * Gets default config object.
-     * @return {Object} Returns default config object.
+     * set property value.
+     * @param {String} property The nested object property in string.
+     * @param {Object} value The Property's Value.
      */
-    get default() { return this._default; }
-    /**
-     * Gets parent object.
-     */
-    get parent() { return this._parent; }
-    /**
-     * Gets data object's property name.
-     */
-    get property() { return this._propertyName; }
-    /**
-     * Gets current config data object.
-     */
+    set(property, value) {
+        let props = property.toLowerCase().split(".");
+        let len = props.length;
+        let obj = this._data;
+        for (let i = 0; i < len; ++i) {
+            let pName = props[i];
+            if (i < len - 1) {
+                if (!obj[pName]) {
+                    obj[pName] = {}
+                }
+                obj = obj[pName];
+            }
+            else {
+                NLib.assignTo(obj, pName, value);
+            }
+        }
+    }
     get data() { return this._data; }
 }
 
-module.exports.Config = exports.Config = NLib.Config;
+module.exports.Configuration = exports.Configuration = NLib.Configuration;
 
 /*
 class NLib {
@@ -116,5 +143,8 @@ class NLib {
 
 let nlib = new NLib();
 
-exports = module.exports = nlib;
 */
+
+let nlib = new NLib();
+
+module.exports = exports = nlib;

@@ -2,17 +2,18 @@
 
 const nlib = require("./src/server/js/nlib-core");
 
-let rootCfg = new nlib.Config();
-//console.log(rootCfg.config)
-let appCfg = new nlib.Config(rootCfg.data, 'app', { 
-    name:"Sample", 
-    version:"1.0.0", 
-    updated:"2019-07-01 05.00" 
-});
-let webSrvCfg = new nlib.Config(rootCfg.data, 'webserver', { 
-    port: 3000
-});
+let rootCfg = nlib.Config;
+rootCfg.set('app.name', 'Example');
+rootCfg.set('app', { version:'1.0.0', updated: '2019-07-01 16:00' });
+
+rootCfg.set('webserver', { port: 3000 });
+rootCfg.set('webserver.port', 3001 );
+
 console.log(rootCfg.data);
+let appObj = rootCfg.get('app');
+console.log(appObj);
+let appName = rootCfg.get('app.name');
+console.log(appName);
 
 /*
 const express = require("express");
