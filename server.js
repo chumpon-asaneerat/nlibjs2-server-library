@@ -23,9 +23,6 @@ app.get('/', (req, res) => {
     res.status(200).send(`It's work!!!`);
 });
 
-nlib.config.webserver.port = 3002;
-nlib.update();
-
 const server = app.listen(nlib.config.webserver.port, () => {
     console.log(`${nlib.config.app.name} listen on port: ${nlib.config.webserver.port}`);
 });

@@ -26,42 +26,32 @@ let saveConfig = (cfg) => {
 // load config file.
 let loadConfig = () => {
     let sJson = fs.readFileSync(cfgFile, 'utf8');
-    try { 
-        return JSON.parse(sJson);
-    }
-    catch {
-        return null;
-    }
+    try { return JSON.parse(sJson); }
+    catch { return null; }
 };
 
+/**
+ * The NLib Class.
+ */
 class NLib {
-    /** create new instance of NLib class. */
+    /** create new instance of NConfig class. */
     constructor() {
         this._cfg = null;
         this.initialize();
     }
     /** initialize configuration. */
     initialize() {
-        if (!fs.existsSync(cfgFile)) {
-            saveConfig(defCfg)
-        }
+        if (!fs.existsSync(cfgFile)) saveConfig(defCfg);        
         this._cfg = loadConfig();
-        if (!this._cfg) {
-            this._cfg = defCfg
-        }
+        if (!this._cfg) this._cfg = defCfg;
     }
     /** get configuration. */
     get config() {
-        if (!this._cfg) {
-            this.initialize();
-        }
+        if (!this._cfg) this.initialize();
         return this._cfg;
     }
     /** update current configuration to file. */
-    update() { 
-        console.log(this._cfg);
-        saveConfig(this._cfg);
-    }
+    update() { saveConfig(this._cfg); }
 }
 
 let nlib = new NLib();
