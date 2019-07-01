@@ -119,6 +119,10 @@ NLib.Configuration = class {
         }
     }
     get data() { return this._data; }
+
+    save() {}
+    load() {}
+    update() {}
 }
 
 module.exports.Configuration = exports.Configuration = NLib.Configuration;
