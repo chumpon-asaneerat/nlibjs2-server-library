@@ -8,7 +8,16 @@ const rootPath = process.env['ROOT_PATHS'];
 // default config file name.
 let cfgFile = path.join(rootPath, 'nlib.config.json');
 
-class JSONFile {
+class NLib {
+    doA() {}
+    doB() {}
+}
+
+let nlib = new NLib();
+
+module.exports = exports = nlib;
+
+NLib.JSON = class {
     /**
      * Save object to json file.
      * @param {String} fileName Target File Name.
@@ -38,88 +47,74 @@ class JSONFile {
     }
 }
 
-module.exports.JSONFile = exports.JSONFile = JSONFile;
+module.exports.JSON = exports.JSON = NLib.JSON;
 
-class NConfig {
+NLib.Config = class {
     /**
      * Create new instance of NConfig.
      * @param {Object} parent The Parent Object.
-     * @param {String} propertyName The Property Name.
+     * @param {String} propertyName The Parent Object's property name.
      */
-    constructor(parent, propertyName) {
+    constructor(parent, propertyName, defaultConfig) {
         this._parent = parent;
         this._propertyName = propertyName;
-        this._cfg = (parent) ? this._parent[this._propertyName] : NConfig.default;
+        this._default = (defaultConfig) ? defaultConfig : {}
+        this.init();
+    }
+    /**
+     * Initialize the config object (internal call only).
+     */
+    init() {
+        if (!this._parent || !this._propertyName) {
+            this._data = this.default;
+        }
+        else {
+            if (!this._parent[this._propertyName]) {
+                this._parent[this._propertyName] = this.default;
+            }
+            this._data = this._parent[this._propertyName];
+        }
     }
     /**
      * Gets default config object.
      * @return {Object} Returns default config object.
      */
-    static get default() { return {}; }
+    get default() { return this._default; }
     /**
      * Gets parent object.
      */
     get parent() { return this._parent; }
     /**
-     * Gets property name.
+     * Gets data object's property name.
      */
     get property() { return this._propertyName; }
     /**
-     * Gets config object.
+     * Gets current config data object.
      */
-    get config() { return this._cfg; }
+    get data() { return this._data; }
 }
 
-module.exports.NConfig = exports.NConfig = NConfig;
+module.exports.Config = exports.Config = NLib.Config;
 
-class NAppConfig extends NConfig {
-    /**
-     * Create new instance of NAppConfig.
-     * @param {Object} parent The Parent Object.
-     * @param {String} propertyName The Property Name.
-     */
-    constructor(parent, propertyName) {
-        super(parent, propertyName)
-    }
-    /**
-     * Gets default config object.
-     * @return {Object} Returns default config object.
-     */
-    static get default() { 
-        return {
-            name: 'Defaule App', 
-            version: '1.0.0', 
-            updated: '2019-07-01 14:30'
-        };
-    }
-}
-
-module.exports.NAppConfig = exports.NAppConfig = NAppConfig;
-
-/**
- * The NLib Class.
- */
+/*
 class NLib {
-    /** create new instance of NConfig class. */
     constructor() {
         this._cfg = null;
         this.initialize();
     }
-    /** initialize configuration. */
     initialize() {
         if (!fs.existsSync(cfgFile)) saveConfig({});
         this._cfg = loadConfig();
         if (!this._cfg) this._cfg = {};
     }
-    /** get configuration. */
     get config() {
         if (!this._cfg) this.initialize();
         return this._cfg;
     }
-    /** update current configuration to file. */
     update() { saveConfig(this._cfg); }
 }
 
 let nlib = new NLib();
 
 exports = module.exports = nlib;
+*/
