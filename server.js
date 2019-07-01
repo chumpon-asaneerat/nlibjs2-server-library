@@ -2,11 +2,17 @@
 
 const nlib = require("./src/server/js/nlib-core");
 
-let rootCfg = nlib.Config;
-if (!rootCfg.exists()) {
-    rootCfg.set('app', { name:'NLib Web Application', version:'2.0.0', updated: '2019-07-01 19:30' });
-    rootCfg.set('webserver', { port: 3000 });
-    rootCfg.update();
+let cfg = nlib.Config;
+if (!cfg.exists()) {
+    cfg.set('app', { 
+        name:'NLib Web Application', 
+        version:'2.0.0', 
+        updated: '2019-07-01 19:30' 
+    });
+    cfg.set('webserver', { 
+        port: 3000 
+    });
+    cfg.update();
 }
 
 /*
