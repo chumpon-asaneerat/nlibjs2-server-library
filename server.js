@@ -3,19 +3,11 @@
 const nlib = require("./src/server/js/nlib-core");
 
 let rootCfg = nlib.Config;
-rootCfg.set('app.name', 'Example');
-rootCfg.set('app', { version:'1.0.0', updated: '2019-07-01 16:00' });
-
-rootCfg.set('webserver', { port: 3000 });
-rootCfg.set('webserver.port', 3001 );
-
-console.log(rootCfg.data);
-let appObj = rootCfg.get('app');
-console.log(appObj);
-let appNoName = rootCfg.get('app.noname');
-console.log('app.noname:', appNoName);
-let appDataName = rootCfg.get('app.data.name');
-console.log('app.data.name:', appDataName);
+if (!rootCfg.exists()) {
+    rootCfg.set('app', { name:'NLib Web Application', version:'2.0.0', updated: '2019-07-01 19:30' });
+    rootCfg.set('webserver', { port: 3000 });
+    rootCfg.update();
+}
 
 /*
 const express = require("express");

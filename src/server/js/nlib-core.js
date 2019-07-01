@@ -78,6 +78,7 @@ module.exports.JSON = exports.JSON = NLib.JSONFile;
 NLib.Configuration = class {
     constructor() {
         this._data = {};
+        this.load();
     }
     /**
      * gets property value.
@@ -89,12 +90,7 @@ NLib.Configuration = class {
         let obj = this._data;
         for (let i = 0; i < len; ++i) {
             let pName = props[i];
-            if (i < len - 1) {
-                if (!obj[pName]) {
-                    // not found.
-                    return obj[pName];
-                }
-            }
+            if (!obj[pName]) return obj[pName]; // not found.
             obj = obj[pName];
         }        
         return obj;
@@ -111,9 +107,7 @@ NLib.Configuration = class {
         for (let i = 0; i < len; ++i) {
             let pName = props[i];
             if (i < len - 1) {
-                if (!obj[pName]) {
-                    obj[pName] = {}
-                }
+                if (!obj[pName]) obj[pName] = {}
                 obj = obj[pName];
             }
             else {
@@ -122,10 +116,26 @@ NLib.Configuration = class {
         }
     }
     get data() { return this._data; }
-
-    save() {}
-    load() {}
-    update() {}
+    /**
+     * Checks is configuration file exists.
+     */
+    exists() {
+        return NLib.JSONFile.exists(cfgFile);
+    }
+    /**
+     * Load configuration data from file.
+     */
+    load() {
+        if (this.exists()) {
+            this._data = NLib.JSONFile.load(cfgFile);
+        }
+    }
+    /** 
+     * Update configuration data to file.
+     */
+    update() {
+        return NLib.JSONFile.save(cfgFile, this._data);
+    }
 }
 
 module.exports.Configuration = exports.Configuration = NLib.Configuration;
