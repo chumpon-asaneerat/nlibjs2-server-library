@@ -14,6 +14,11 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
 class NLib {
     constructor() {
         this._config = new NLib.Configuration();
+        /** The commmon paths for nlib. */
+        this.paths = {
+            /** The project root path. */
+            root: rootPath
+        }
     }
     /** Gets the application config. */
     get Config() { return this._config; }

@@ -15,6 +15,8 @@ if (!cfg.exists()) {
     cfg.update();
 }
 
+console.log('paths:', nlib.paths);
+
 /*
 const express = require("express");
 const morgan = require("morgan");
