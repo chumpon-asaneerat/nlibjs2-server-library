@@ -1,3 +1,8 @@
+/**
+ * 
+ * @module NLib
+ * @namespace NLib
+ */
 const path = require('path');
 const fs = require('fs');
 
@@ -12,8 +17,6 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
 
 /**
  * The NLib Class.
- * @module NLib
- * @namespace NLib
  * 
  * @example <caption>Usage of NLib Core Library.</caption>
  * const nlib = require("./src/server/js/nlib-core");
@@ -58,13 +61,11 @@ const NLib = class {
     get Configuration() { return Configuration; }
     /** 
      * The DateTime class. 
-     * @return {DateTime} The DateTime class.
      * @ignore
      */
     get DateTime() { return DateTime; }
     /** 
      * The Timespan class.
-     * @return {Timespan} The Timespan class.
      * @ignore
      */
     get Timespan() { return Timespan; }
@@ -78,8 +79,6 @@ const NLib = class {
 
 /**
  * The Objects management and utilities class.
- * @module NLib
- * @namespace NLib
  */
 const Objects = class {
     /**
@@ -108,8 +107,6 @@ const Objects = class {
 
 /**
  * The JSON File Class.
- * @module NLib
- * @namespace NLib
  */
 const JSONFile = class {
     /**
@@ -147,8 +144,6 @@ const JSONFile = class {
 
 /**
  * The Configuration file manipulation Class.
- * @module NLib
- * @namespace NLib
  * 
  * @example <caption>Usage of Application Configuration.</caption>
  * 
@@ -250,8 +245,6 @@ const Configuration = class {
 
 /** 
  * DateTime class.
- * @module NLib
- * @namespace NLib
  * 
  * @example
  * // nlib load module.
@@ -280,8 +273,6 @@ const DateTime = class  {
 
 /** 
  * The Timespan class. 
- * @module NLib
- * @namespace NLib
  */
 const Timespan = class {
     /**
