@@ -40,7 +40,31 @@ class NLib {
             obj[property] = value;
         }
     }
+
+    /** DateTime class. */
+    get DateTime() { return DateTime; }
+    /** Timespan class. */
+    get Timespan() { return Timespan; }
 }
+
+/** DateTime class. */
+class DateTime {
+    constructor() {
+        console.log('New DateTime instance created.');
+    }
+    /** Gets current datetime. */
+    get Now() { return new Date(); }
+}
+
+/** Timespan class. */
+class Timespan {
+    constructor() {
+        console.log('New Timespan instance created.');
+    }
+    /** Gets current datetime. */
+    get Now() { return new Date(); }
+}
+
 
 /**
  * The JSON File Class.

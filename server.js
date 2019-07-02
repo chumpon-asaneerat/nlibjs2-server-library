@@ -22,6 +22,11 @@ console.log('paths:', nlib.paths);
 
 console.log('App:', expSvr.getAppName());
 
+let dt = new nlib.DateTime();
+console.log('DateTime Now:', dt.Now);
+let ts = new nlib.Timespan();
+console.log('Timespan Now:', ts.Now);
+
 /*
 const express = require("express");
 const morgan = require("morgan");
