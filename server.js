@@ -1,6 +1,7 @@
 //const path = require("path");
 
 const nlib = require("./src/server/js/nlib-core");
+const expSvr = require("./src/server/js/nlib-express");
 
 let cfg = nlib.Config;
 if (!cfg.exists()) {
@@ -15,7 +16,11 @@ if (!cfg.exists()) {
     cfg.update();
 }
 
+cfg.set('app.name', 'NLib Express Server Application');
+
 console.log('paths:', nlib.paths);
+
+console.log('App:', expSvr.getAppName());
 
 /*
 const express = require("express");
