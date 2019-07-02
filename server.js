@@ -1,4 +1,4 @@
-//const path = require("path");
+const path = require("path");
 
 const nlib = require("./src/server/js/nlib-core");
 const expSvr = require("./src/server/js/nlib-express");
@@ -26,6 +26,16 @@ let dt = new nlib.DateTime();
 console.log('DateTime Now:', dt.Now);
 let ts = new nlib.Timespan();
 console.log('Timespan Now:', ts.Now);
+
+let cfg2 = new nlib.Configuration(path.join(nlib.paths.root, 'custom.json'));
+cfg2.set('db', {
+    type: 'sqlserver',
+    host: 'localhost',
+    database: 'TestDb7x3',
+    user: 'sa',
+    pwd: 'winnt'
+})
+cfg2.update();
 
 /*
 const express = require("express");

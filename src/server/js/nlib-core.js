@@ -1,8 +1,3 @@
-/** 
- * The NLib Core library.
- * @namespace NLib
- */
-
 const path = require('path');
 const fs = require('fs');
 
@@ -15,12 +10,15 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
 
 /**
  * The NLib Class.
- * @example
+ * @module NLib
+ * @namespace NLib
+ * 
+ * @example <caption>Usage of NLib Core Library.</caption>
  * const nlib = require("./src/server/js/nlib-core");
  */
-class NLib {
+const NLib = class {
     constructor() {
-        this._config = new Configuration();
+        this._config = new Configuration(cfgFile);
         /** The commmon paths for nlib. */
         this.paths = {
             /** The project root path. */
@@ -29,6 +27,42 @@ class NLib {
     }
     /** Gets the application config. */
     get Config() { return this._config; }
+
+    /** 
+     * The Objects management and utilities class.
+     * @ignore
+     */
+    get Objects() { return Objects; }
+    /** 
+     * The JSON File class 
+     * @ignore
+     */
+    get JSONFile() { return JSONFile; }
+    /** 
+     * The Configuration file manipulation class 
+     * @ignore
+     */
+    get Configuration() { return Configuration; }
+    /** 
+     * The DateTime class. 
+     * @return {DateTime} The DateTime class.
+     * @ignore
+     */
+    get DateTime() { return DateTime; }
+    /** 
+     * The Timespan class.
+     * @return {Timespan} The Timespan class.
+     * @ignore
+     */
+    get Timespan() { return Timespan; }
+}
+
+/**
+ * The Objects management and utilities class.
+ * @module NLib
+ * @namespace NLib
+ */
+const Objects = class {
     /**
      * Assign value to target Object's property.
      * @param {Object} obj Target Object.
@@ -47,34 +81,19 @@ class NLib {
             obj[property] = value;
         }
     }
-    /** 
-     * The JSON File class 
-     * @ignore
-     */
-    get JSONFile() { return JSONFile; }
-    /** 
-     * The DateTime class. 
-     * @return {DateTime} The DateTime class.
-     * @ignore
-     */
-    get DateTime() { return DateTime; }
-    /** 
-     * The Timespan class.
-     * @return {Timespan} The Timespan class.
-     * @ignore
-     */
-    get Timespan() { return Timespan; }
 }
 
 /**
  * The JSON File Class.
+ * @module NLib
+ * @namespace NLib
  */
-JSONFile = class {
+const JSONFile = class {
     /**
      * Save object to json file.
      * @param {String} fileName Target File Name.
      * @param {Object} obj Object to save.
-     * @return {Boolean} Returns true if save success.
+     * @return {Boolean} Returns true if file is successfully saved.
      */
     static save(fileName, obj) {
         return fs.writeFileSync(fileName, JSON.stringify(obj, null, 2), 'utf8');
@@ -100,8 +119,11 @@ JSONFile = class {
 }
 
 /**
- * The Configuration Class.
- * @example <caption>Example usage of Application Configuration.</caption>
+ * The Configuration file manipulation Class.
+ * @module NLib
+ * @namespace NLib
+ * 
+ * @example <caption>Usage of Application Configuration.</caption>
  * 
  * // nlib load module.
  * const nlib = require("./src/server/js/nlib-core");
@@ -115,17 +137,20 @@ JSONFile = class {
  * // then update to file.
  * cfg.update();
  */
-Configuration = class {
+const Configuration = class {
     /**
-     * Create new instace of DateTime class.
+     * Create new instace of Configuration class.
+     * @param {String} fileName The Configuration File Name.
      */
-    constructor() {
+    constructor(fileName) {
+        this._fileName = fileName;
         this._data = {};
         this.load();
     }
     /**
      * gets property value.
      * @param {String} property The nested object property in string.
+     * @return {Object} Returns object property's value.
      */
     get(property) {
         let props = property.toLowerCase().split(".");
@@ -154,35 +179,49 @@ Configuration = class {
                 obj = obj[pName];
             }
             else {
-                NLib.assignTo(obj, pName, value);
+                Objects.assignTo(obj, pName, value);
             }
         }
     }
+    /** 
+     * Gets configuration object.
+     * @return {Object} Returns configuration object.
+     */
     get data() { return this._data; }
+    /** 
+     * Gets configuration file name.
+     * @return {String} Returns configuration file name.
+     */
+    get fileName() { return this._fileName; }
     /**
      * Checks is configuration file exists.
+     * @return {Boolean} Returns true if file is already exists.
      */
     exists() {
-        return JSONFile.exists(cfgFile);
+        return JSONFile.exists(this._fileName);
     }
     /**
      * Load configuration data from file.
      */
     load() {
         if (this.exists()) {
-            this._data = JSONFile.load(cfgFile);
+            this._data = JSONFile.load(this._fileName);
         }
     }
     /** 
      * Update configuration data to file.
+     * @return {Boolean} Returns true if file is successfully updated.
      */
     update() {
-        return JSONFile.save(cfgFile, this._data);
+        return JSONFile.save(this._fileName, this._data);
     }
 }
 
 /** 
  * DateTime class.
+ * @module NLib
+ * @namespace NLib
+ * 
  * @example
  * // nlib load module.
  * const nlib = require("./src/server/js/nlib-core");
@@ -191,21 +230,25 @@ Configuration = class {
  * // show current DateTime.
  * console.log(dt.Now);
  */
-DateTime = class  {
+const DateTime = class  {
     /**
      * Create new instace of DateTime class.
      */
     constructor() {
         console.log('New DateTime instance created.');
     }
-    /** Gets current datetime. */
+    /**
+     * Gets current datetime.
+     */
     get Now() { return new Date(); }
 }
 
 /** 
  * The Timespan class. 
+ * @module NLib
+ * @namespace NLib
  */
-Timespan = class {
+const Timespan = class {
     /**
      * Create new instace of Timespoan class.
      */
@@ -221,7 +264,3 @@ Timespan = class {
 let nlib = new NLib();
 
 module.exports = exports = nlib;
-
-//module.exports.Configuration = exports.Configuration = Configuration;
-//module.exports.DateTime = exports.DateTime = DateTime;
-//module.exports.Timespan = exports.Timespan = Timespan;
