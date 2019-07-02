@@ -8,6 +8,8 @@ const rootPath = process.env['ROOT_PATHS'];
 // default config file name.
 let cfgFile = path.join(rootPath, 'nlib.config.json');
 
+//#region NLib
+
 /**
  * The NLib Class.
  * @module NLib
@@ -17,6 +19,8 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
  * const nlib = require("./src/server/js/nlib-core");
  */
 const NLib = class {
+    //#region constructor
+
     constructor() {
         this._config = new Configuration(cfgFile);
         /** The commmon paths for nlib. */
@@ -25,8 +29,17 @@ const NLib = class {
             root: rootPath
         }
     }
+
+    //#endregion
+
+    //#region public properties
+
     /** Gets the application config. */
     get Config() { return this._config; }
+
+    //#endregion
+
+    //#region method for export classes
 
     /** 
      * The Objects management and utilities class.
@@ -55,7 +68,13 @@ const NLib = class {
      * @ignore
      */
     get Timespan() { return Timespan; }
+
+    //#endregion
 }
+
+//#endregion
+
+//#region Objects
 
 /**
  * The Objects management and utilities class.
@@ -82,6 +101,10 @@ const Objects = class {
         }
     }
 }
+
+//#endregion
+
+//#region JSONFile
 
 /**
  * The JSON File Class.
@@ -117,6 +140,10 @@ const JSONFile = class {
         return fs.existsSync(fileName);
     }
 }
+
+//#endregion
+
+//#region Configuration
 
 /**
  * The Configuration file manipulation Class.
@@ -217,6 +244,10 @@ const Configuration = class {
     }
 }
 
+//#endregion
+
+//#region DateTime
+
 /** 
  * DateTime class.
  * @module NLib
@@ -243,6 +274,10 @@ const DateTime = class  {
     get Now() { return new Date(); }
 }
 
+//#endregion
+
+//#region Timespan
+
 /** 
  * The Timespan class. 
  * @module NLib
@@ -260,6 +295,8 @@ const Timespan = class {
      */
     get Now() { return new Date(); }
 }
+
+//#endregion
 
 let nlib = new NLib();
 
