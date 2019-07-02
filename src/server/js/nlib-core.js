@@ -1,3 +1,8 @@
+/** 
+ * The NLib Core library.
+ * @namespace NLib
+ */
+
 const path = require('path');
 const fs = require('fs');
 
@@ -10,10 +15,12 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
 
 /**
  * The NLib Class.
+ * @example
+ * const nlib = require("./src/server/js/nlib-core");
  */
 class NLib {
     constructor() {
-        this._config = new NLib.Configuration();
+        this._config = new Configuration();
         /** The commmon paths for nlib. */
         this.paths = {
             /** The project root path. */
@@ -40,36 +47,29 @@ class NLib {
             obj[property] = value;
         }
     }
-
-    /** DateTime class. */
+    /** 
+     * The JSON File class 
+     * @ignore
+     */
+    get JSONFile() { return JSONFile; }
+    /** 
+     * The DateTime class. 
+     * @return {DateTime} The DateTime class.
+     * @ignore
+     */
     get DateTime() { return DateTime; }
-    /** Timespan class. */
+    /** 
+     * The Timespan class.
+     * @return {Timespan} The Timespan class.
+     * @ignore
+     */
     get Timespan() { return Timespan; }
 }
-
-/** DateTime class. */
-class DateTime {
-    constructor() {
-        console.log('New DateTime instance created.');
-    }
-    /** Gets current datetime. */
-    get Now() { return new Date(); }
-}
-
-/** Timespan class. */
-class Timespan {
-    constructor() {
-        console.log('New Timespan instance created.');
-    }
-    /** Gets current datetime. */
-    get Now() { return new Date(); }
-}
-
 
 /**
  * The JSON File Class.
  */
-NLib.JSONFile = class {
+JSONFile = class {
     /**
      * Save object to json file.
      * @param {String} fileName Target File Name.
@@ -99,12 +99,26 @@ NLib.JSONFile = class {
     }
 }
 
-module.exports.JSON = exports.JSON = NLib.JSONFile;
-
 /**
  * The Configuration Class.
+ * @example <caption>Example usage of Application Configuration.</caption>
+ * 
+ * // nlib load module.
+ * const nlib = require("./src/server/js/nlib-core");
+ * // Set variable to access application configuration.
+ * const cfg = nlib.Config;
+ * // To set app.name to 'App1'
+ * // 1. direct assign to target property
+ * cfg.set('app.name', 'App1');
+ * // 2. set an object
+ * cfg.set('app', { name:'App1' });
+ * // then update to file.
+ * cfg.update();
  */
-NLib.Configuration = class {
+Configuration = class {
+    /**
+     * Create new instace of DateTime class.
+     */
     constructor() {
         this._data = {};
         this.load();
@@ -149,26 +163,65 @@ NLib.Configuration = class {
      * Checks is configuration file exists.
      */
     exists() {
-        return NLib.JSONFile.exists(cfgFile);
+        return JSONFile.exists(cfgFile);
     }
     /**
      * Load configuration data from file.
      */
     load() {
         if (this.exists()) {
-            this._data = NLib.JSONFile.load(cfgFile);
+            this._data = JSONFile.load(cfgFile);
         }
     }
     /** 
      * Update configuration data to file.
      */
     update() {
-        return NLib.JSONFile.save(cfgFile, this._data);
+        return JSONFile.save(cfgFile, this._data);
     }
 }
 
-module.exports.Configuration = exports.Configuration = NLib.Configuration;
+/** 
+ * DateTime class.
+ * @example
+ * // nlib load module.
+ * const nlib = require("./src/server/js/nlib-core");
+ * // create new DateTime instance.
+ * let dt = new nlib.DateTime();
+ * // show current DateTime.
+ * console.log(dt.Now);
+ */
+DateTime = class  {
+    /**
+     * Create new instace of DateTime class.
+     */
+    constructor() {
+        console.log('New DateTime instance created.');
+    }
+    /** Gets current datetime. */
+    get Now() { return new Date(); }
+}
+
+/** 
+ * The Timespan class. 
+ */
+Timespan = class {
+    /**
+     * Create new instace of Timespoan class.
+     */
+    constructor() {
+        console.log('New Timespan instance created.');
+    }
+    /**
+     * Gets current datetime.
+     */
+    get Now() { return new Date(); }
+}
 
 let nlib = new NLib();
 
 module.exports = exports = nlib;
+
+//module.exports.Configuration = exports.Configuration = Configuration;
+//module.exports.DateTime = exports.DateTime = DateTime;
+//module.exports.Timespan = exports.Timespan = Timespan;
