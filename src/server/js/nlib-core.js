@@ -35,6 +35,37 @@ const NLib = class {
 
     //#endregion
 
+    //#region public methods
+
+    //#region object management methods
+    
+    /**
+     * Assign value to target Object's property.
+     * @param {Object} obj Target Object.
+     * @param {String} property The Object's property name.
+     * @param {Object} value The value to apply on object.
+     */
+    assignTo(obj, property, value) { Objects.assignTo(obj, property, value); }
+    /** 
+     * Create New object with clone all properties with supports ignore case sensitive.     
+     * @param {Object} o The Target Object.
+     * @param {Boolean} caseSensitive The true for checks property with case sensitive.
+     */
+    clone(o, caseSensitive) { Objects.clone(o, caseSensitive); }
+    /** 
+     * Set dest object's properties that match src object's property with case insensitive.
+     * If dest property not exist in src obj and overwrite flag is set so null value is assigned
+     * otherwise if overwrite flag is not set the original dest property will not changed.
+     * @param {Object} dest The Target Object.
+     * @param {Object} src The Source Object.
+     * @param {Boolean} overwrite The true to overwrite value if property match.
+     */
+    setValues(dest, src, overwrite) { Objects.setValues(dest, src, overwrite); }
+
+    //#endregion
+
+    //#endregion
+
     //#region public properties
 
     /** Gets the application config. */
@@ -44,11 +75,6 @@ const NLib = class {
 
     //#region method for export classes
 
-    /** 
-     * The Objects management and utilities class.
-     * @ignore
-     */
-    get Objects() { return Objects; }
     /** 
      * The JSON File class 
      * @ignore
@@ -98,6 +124,33 @@ const Objects = class {
         else {
             obj[property] = value;
         }
+    }
+    /** 
+     * Create New object with clone all properties with supports ignore case sensitive.     
+     * @param {Object} o The Target Object.
+     * @param {Boolean} caseSensitive The true for checks property with case sensitive.
+     */
+    static clone(o, caseSensitive) {
+        let result = {}
+        let ignoreCase = (caseSensitive) ? false : true;
+        let keys = Object.keys(o);
+        keys.forEach((key) => { result[(ignoreCase) ? key.toLowerCase() : key] = o[key]; });
+        return result;
+    }
+    /** 
+     * Set dest object's properties that match src object's property with case insensitive.
+     * If dest property not exist in src obj and overwrite flag is set so null value is assigned
+     * otherwise if overwrite flag is not set the original dest property will not changed.
+     * @param {Object} dest The Target Object.
+     * @param {Object} src The Source Object.
+     * @param {Boolean} overwrite The true to overwrite value if property match.
+     */
+    static setValues(dest, src, overwrite) {
+        let keys = Object.keys(dest);
+        keys.forEach(key => {
+            let dKey = key.toLowerCase();
+            dest[key] = (!src[dKey]) ? (!overwrite) ? dest[key] : null : src[dKey];
+        });
     }
 }
 
