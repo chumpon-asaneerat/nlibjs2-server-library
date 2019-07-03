@@ -58,7 +58,8 @@ function DateTime(){
 	if(!year && !month && !day)
 		days = 0;
 	else
-		days = Math.round(this.absoluteDays(year, month, day));
+        days = Math.round(this.absoluteDays(year, month, day));
+    //console.log(days);
 	
 	this.span = new TimeSpan(days, hour, minute, second, millisecond);
  	
@@ -114,14 +115,17 @@ DateTime.prototype = {
 				month -=12;
 				year++;
 			}
-			
+
 			var days = DateTime.daysInMonth(year, month);
 			
 			if(day > days)
 				day = days;
-				
-			var time = new DateTime(year, month, day);
-			return time.add(this.timeOfDay());
+
+            //console.log(month)                
+            var time = new DateTime(year, month, day);            
+            //console.log(time.month())
+            
+            return time.add(this.timeOfDay());
 		},
 		
 		addSeconds : function(seconds){
@@ -152,29 +156,36 @@ DateTime.prototype = {
 			
 			var index = 1;
 			var daysmonth = DateTime.monthDays;
-			var days = this.span.days();
+            var days = this.span.days();
+            //console.log(1000 * 60 * 60 * 24)
 			var num = Math.round(days / 146097);
 			days -= num * 146097;
 			var num2 = Math.round(days / 36524);
-			if(num2 == 4) num2 =3;
+			if (num2 === 4) num2 =3;
 			days -= num2 * 36524;
 			var num3 = Math.round(days / 1461);
 			days -= num3 * 1461;
 			var num4 = Math.round(days / 365);
-			if(num4 == 4) num = 3;
-			if(what == "year")
-				return (((((num * 400) + (num2 * 100)) + (num3 * 4)) + num4) + 1);
+            if (num4 === 4) num = 3;
+            
+			if (what === "year") {
+                return (((((num * 400) + (num2 * 100)) + (num3 * 4)) + num4) + 1);
+            }
+
 			days -= num4 * 365;
-			if(what != "dayyear"){
-				if((num4==3) && ((num2 == 3) || (num3 != 24)))
-					daysmonth = DateTime.monthDaysLeapYear;
-				while(days >= daysmonth[index])
-					days -= daysmonth[index++];
-				if(what == "month")
-					return index;
+			if (what !== "dayyear"){
+				if ((num4 === 3) && ((num2 === 3) || (num3 !== 24))) {
+                    daysmonth = DateTime.monthDaysLeapYear;
+                }
+				while (days >= daysmonth[index]) {
+                    days -= daysmonth[index++];
+                }
+                if (what == "month") {
+                    console.log(index)
+                    return index;
+                }
 			}
-			return days + 1;
-			
+			return days + 1;			
 		},
 		
 		
@@ -501,3 +512,14 @@ TimeSpan.prototype = {
 };
 
 TimeSpan.pad = function(number){ return (number < 10 ? '0' : '') + number; };
+
+let o = new DateTime(2019, 7, 3, 23, 12, 0, 333)
+//console.log(dt)
+let dt = o.addYears(1);
+//let dt = o.addMonths(2);
+//let dt = o.addDays(1);
+//console.log(`${dt.year}-${dt.month}-${dt.day} ${dt.hour}:${dt.minute}:${dt.second}.${dt.millisecond}`);
+console.log(dt.year())
+console.log(dt.month())
+console.log(dt.day())
+console.log(dt.toString())
