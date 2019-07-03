@@ -504,8 +504,8 @@ let offset = (new Date(1970, 0, 1).getTimezoneOffset() * 60000);
 console.log('offset:', offset)
 let dd1 = new Date(1970, 0, 1) // elapsed from January 1, 1970
 console.log(dd1);
-//let dd2 = new Date(2019, 6, 4)
-let dd2 = new Date()
+let dd2 = new Date(2019, 6, 4) // date only
+//let dd2 = new Date() // date with time
 console.log(dd2);
 let diffMillsecs = (dd2 - (dd1.getTime() - offset))
 console.log('diff in ms:', diffMillsecs)
