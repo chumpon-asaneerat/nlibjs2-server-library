@@ -359,6 +359,9 @@ class TimeSpan {
         __TimeSpanUtils.TimeSpanInitializers[idx].init(this, ...arguments);
     }
     add(timespan) {
+        console.log(timespan._millis)
+        console.log(this._millis)
+        console.log(timespan._millis + this._millis)
         return new TimeSpan(timespan._millis + this._millis);
     }
     compareTo(timespan) {
@@ -382,11 +385,11 @@ class TimeSpan {
     }
     toString() {
         let sign = (this._millis < 0 ? "-" : "");
-        let dy = (Math.abs(this.days()) ? pad(Math.abs(this.days()))  + ".": "");
-        let hr = __TimeSpanUtils.pad(Math.abs(this.hours()));
-        let min = __TimeSpanUtils.__TimeSpanUtils.pad(Math.abs(this.minutes()));
-        let sec = pad(Math.abs(this.seconds()));
-        let ms = Math.abs(this.milliseconds());
+        let dy = (Math.abs(this.days) ? __TimeSpanUtils.pad(Math.abs(this.days))  + ".": "");
+        let hr = __TimeSpanUtils.pad(Math.abs(this.hours));
+        let min = __TimeSpanUtils.pad(Math.abs(this.minutes));
+        let sec = __TimeSpanUtils.pad(Math.abs(this.seconds));
+        let ms = Math.abs(this.milliseconds);
         return sign + dy + hr + ":" + min + ":" + sec + "." + ms;
     }
     get days() { 
@@ -421,7 +424,48 @@ class TimeSpan {
     }
 }
 
+/*
 let o = new DateTime(2019, 7, 3, 23, 12, 0, 333)
 //console.log(dt)
 let dt = o.addYears(1);
 console.log(`${dt.year}-${dt.month}-${dt.day} ${dt.hour}:${dt.minute}:${dt.second}.${dt.millisecond}`);
+*/
+
+let ts = new TimeSpan(99, 23, 59, 59, 1000)
+console.log(`Days: ${ts.days}`)
+console.log(`Hours: ${ts.hours}`)
+console.log(`Minutes: ${ts.minutes}`)
+console.log(`Seconds: ${ts.seconds}`)
+console.log(`Milliseconds: ${ts.milliseconds}`)
+
+ts.negate() // * -1
+console.log(`Total days: ${ts.totalDays}`)
+console.log(`Total hours: ${ts.totalHours}`)
+console.log(`Total minutes: ${ts.totalMinutes}`)
+console.log(`Total seconds: ${ts.totalSeconds}`)
+console.log(`Total milliseconds: ${ts.totalMilliseconds}`)
+console.log(ts.toString())
+
+let ts2 = ts.duration() // make abs value.
+
+console.log(`Total days: ${ts2.totalDays}`)
+console.log(`Total hours: ${ts2.totalHours}`)
+console.log(`Total minutes: ${ts2.totalMinutes}`)
+console.log(`Total seconds: ${ts2.totalSeconds}`)
+console.log(`Total milliseconds: ${ts2.totalMilliseconds}`)
+console.log(ts2.toString())
+
+let ts3 = ts2.add(new TimeSpan(1, 1, 1, 1, 1));
+
+console.log(`Total days: ${ts3.totalDays}`)
+console.log(`Total hours: ${ts3.totalHours}`)
+console.log(`Total minutes: ${ts3.totalMinutes}`)
+console.log(`Total seconds: ${ts3.totalSeconds}`)
+console.log(`Total milliseconds: ${ts3.totalMilliseconds}`)
+console.log(ts3.toString())
+
+ts.negate(); // make is positive again.
+console.log('same:', ts.equals(ts2));
+console.log('ts = ts2:', ts.compareTo(ts2));
+console.log('ts < ts3', ts.compareTo(ts3));
+console.log('ts3 < ts', ts3.compareTo(ts));
