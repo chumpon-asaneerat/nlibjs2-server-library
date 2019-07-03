@@ -467,6 +467,7 @@ console.log('ts3 < ts', ts3.compareTo(ts));
 */
 
 // DateTime class test.
+/*
 let o = new DateTime(2019, 7, 3, 23, 58, 58, 999)
 let dt;
 //console.log(dt)
@@ -482,4 +483,32 @@ dt = dt.addSeconds(1);
 dt = dt.addMinutes(1); //! at this step the day not work correctly.
 
 console.log(`${dt.year}-${dt.month}-${dt.day} ${dt.hour}:${dt.minute}:${dt.second}.${dt.millisecond}`);
+*/
+
+// JavaScript Date class test.
+
+let d = new Date(2019, 1, 28);
+console.log(`Date (src): ${d}`);
+
+//let ms = d.getTime() - (d.getTimezoneOffset() * 60000); // UTC time
+let ms = d.getTime(); // local time
+
+let totalms = ms;
+console.log(`ms: ${totalms}`);
+
+let d2 = new Date(totalms);
+console.log(`Date from ms: ${d2}`);
+
+// note: month start from 0 to 11
+let dd1 = new Date(1970, 0, 1) // elapsed from January 1, 1970
+console.log(dd1);
+let dd2 = new Date(2019, 6, 4)
+console.log(dd2);
+let diffMillsecs = (dd2 - dd1)
+console.log('diff in ms:', diffMillsecs)
+let diffDays = diffMillsecs / (24 * 3600 * 1000)
+console.log('diff in days:', diffDays)
+
+let d3 = new Date(diffMillsecs);
+console.log(`Date from ms: ${d3}`)
 
