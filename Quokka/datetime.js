@@ -500,11 +500,14 @@ let d2 = new Date(totalms);
 console.log(`Date from ms: ${d2}`);
 
 // note: month start from 0 to 11
+let offset = (new Date(1970, 0, 1).getTimezoneOffset() * 60000);
+console.log('offset:', offset)
 let dd1 = new Date(1970, 0, 1) // elapsed from January 1, 1970
 console.log(dd1);
-let dd2 = new Date(2019, 6, 4)
+//let dd2 = new Date(2019, 6, 4)
+let dd2 = new Date()
 console.log(dd2);
-let diffMillsecs = (dd2 - dd1)
+let diffMillsecs = (dd2 - (dd1.getTime() - offset))
 console.log('diff in ms:', diffMillsecs)
 let diffDays = diffMillsecs / (24 * 3600 * 1000)
 console.log('diff in days:', diffDays)
