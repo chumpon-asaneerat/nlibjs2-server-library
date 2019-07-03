@@ -424,13 +424,8 @@ class TimeSpan {
     }
 }
 
+// TimeSpan class test.
 /*
-let o = new DateTime(2019, 7, 3, 23, 12, 0, 333)
-//console.log(dt)
-let dt = o.addYears(1);
-console.log(`${dt.year}-${dt.month}-${dt.day} ${dt.hour}:${dt.minute}:${dt.second}.${dt.millisecond}`);
-*/
-
 let ts = new TimeSpan(99, 23, 59, 59, 1000)
 console.log(`Days: ${ts.days}`)
 console.log(`Hours: ${ts.hours}`)
@@ -469,3 +464,22 @@ console.log('same:', ts.equals(ts2));
 console.log('ts = ts2:', ts.compareTo(ts2));
 console.log('ts < ts3', ts.compareTo(ts3));
 console.log('ts3 < ts', ts3.compareTo(ts));
+*/
+
+// DateTime class test.
+let o = new DateTime(2019, 7, 3, 23, 58, 58, 999)
+let dt;
+//console.log(dt)
+//dt = o.addYears(1);
+//dt = o.addMinutes(48); // NOT OK seem to be if day change the calculation is not work.
+//dt = o.addSeconds(60); // OK
+//dt = o.addMilliseconds(667); // OK
+//dt = o.addMinutes(1).addSeconds(1).addMilliseconds(1); // OK
+//dt = o.addMinutes(46).addSeconds(60).addMilliseconds(667); // NOT OK
+dt = o;
+dt = dt.addMilliseconds(1);
+dt = dt.addSeconds(1);
+dt = dt.addMinutes(1); //! at this step the day not work correctly.
+
+console.log(`${dt.year}-${dt.month}-${dt.day} ${dt.hour}:${dt.minute}:${dt.second}.${dt.millisecond}`);
+
