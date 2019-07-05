@@ -101,8 +101,8 @@ const DateTimeMode = {
 }
 
 class DateTime {
-    static msDateRe = /\/Date\((-?\d+)\)\//
-    static isoDateRe = /^(\d{4})(?:-?W(\d+)(?:-?(\d+)D?)?|(?:-(\d+))?-(\d+))(?:[T ](\d+):(\d+)(?::(\d+)(?:\.(\d+))?)?)?(?:Z(-?\d*))?$/
+    static get msDateRe() { return /\/Date\((-?\d+)\)\// }
+    static get isoDateRe() { return /^(\d{4})(?:-?W(\d+)(?:-?(\d+)D?)?|(?:-(\d+))?-(\d+))(?:[T ](\d+):(\d+)(?::(\d+)(?:\.(\d+))?)?)?(?:Z(-?\d*))?$/ }
 
     constructor(yearOrTicksOrDate, month, day, hour, minute, sec, msec) {
         let ticksOrDate
@@ -704,3 +704,10 @@ class DateTime {
         )
     }
 }
+
+let dt = DateTime.utcNow();
+let dt2 = dt.addDays(1)
+console.log(dt)
+console.log(dt2)
+console.log(dt.value)
+console.log(dt2.value)
