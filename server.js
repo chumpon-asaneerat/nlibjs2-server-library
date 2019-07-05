@@ -64,6 +64,37 @@ console.log('Total Milliseconds:', ts.totalMilliseconds);
 */
 //#endregion
 
+//#region package.json test
+/*
+let file = path.join(nlib.paths.root, 'package.json');
+let pjson = require(file);
+//console.log('devDependencies', pjson.devDependencies);
+//console.log('dependencies', pjson.dependencies);
+if (!pjson.dependencies['mssql']) {
+    console.log('no package installed.');
+    pjson.dependencies['mssql'] = '^5.1.0'
+    let fs = require('fs');
+    fs.writeFileSync(file, JSON.stringify(pjson, null, 4), 'utf8')
+    console.log('package.json is updated.');
+    console.log('please run `npm install` to install required package(s).');
+}
+else {
+    console.log('package.json is already updated.');
+    let r = require;
+    try { 
+        let o = r.resolve('mssql')
+        if (o) {
+            console.log('package found. Now nlib library should work properly.');
+        }
+    }
+    catch {
+        console.log('package not found.');
+        console.log('please run `npm install` to install required package(s).');
+    }
+}
+*/
+//#endregion
+
 //#region Original Express seting code
 /*
 const express = require("express");
