@@ -23,9 +23,17 @@ console.log('paths:', nlib.paths);
 console.log('App:', expSvr.getAppName());
 
 let dt = new nlib.DateTime();
-console.log('DateTime Now:', dt.Now);
-let ts = new nlib.Timespan();
-console.log('Timespan Now:', ts.Now);
+console.log('DateTime Now:', dt.toString());
+
+let d1 = new Date(2019, 6, 5); // 2019-07-05 
+let d2 = Date.now();
+let ts = new nlib.TimeSpan(d2 - d1);
+console.log('Timespan (Now - Begin of Day):', ts.toString());
+console.log('Total Days:', ts.totalDays);
+console.log('Total Hours:', ts.totalHours);
+console.log('Total Minutes:', ts.totalMinutes);
+console.log('Total Seconds:', ts.totalSeconds);
+console.log('Total Milliseconds:', ts.totalMilliseconds);
 
 let cfg2 = new nlib.Configuration(path.join(nlib.paths.root, 'custom.json'));
 cfg2.set('db', {

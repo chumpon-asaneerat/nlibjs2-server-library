@@ -1,5 +1,11 @@
 
-class TimeSpan {
+/** 
+ * The TimeSpan class. 
+ */
+const TimeSpan = class {
+    /**
+     * Create new instace of Timespoan class.
+     */
     constructor() {
         let len = arguments.length;
         let plens = TimeSpan.constructors.map((item) => item.length);
@@ -12,9 +18,18 @@ class TimeSpan {
         // init variable by arguments.
         TimeSpan.constructors[idx].init(this, ...arguments);
     }
-
+    /**
+     * Checks is TimeSpan is equals.
+     * @param {TimeSpan} timespan The TimeSpan object to compare.
+     */
     equals(timespan) { return this.ticks === timespan.ticks; }
+    /**
+     * Gets duration in milliseconds.
+     */
     duration() { return new TimeSpan(Math.abs(this.ticks)); }
+    /**
+     * Gets string of current TimeSpan object.
+     */
     toString() {
         let sign = (this.ticks < 0 ? "-" : "");
         let dy = (Math.abs(this.days) ? Math.abs(this.days) + "." : "0.");
@@ -24,27 +39,80 @@ class TimeSpan {
         let ms = TimeSpan.pad(Math.abs(this.milliseconds), 3);
         return sign + dy + hr + ":" + min + ":" + sec + "." + ms;
     }
-
+    /**
+     * Add timespan.
+     * @param {TimeSpan} timespan The TimeSpan object to add.
+     */
     add(timespan) { return new TimeSpan(this.ticks + timespan.ticks); }
+    /**
+     * Subtract timespan.
+     * @param {TimeSpan} timespan The TimeSpan object to subtract.
+     */
     subtract(timespan) { return new TimeSpan(this.ticks - timespan.ticks); }
-
+    /**
+     * Gets days part.
+     */
     get days() { return Math.floor(this.ticks / (24 * 3600 * 1000)); }
+    /**
+     * Gets hours part.
+     */
     get hours() { return Math.floor((this.ticks % (24 * 3600 * 1000)) / (3600 * 1000)); }
+    /**
+     * Gets minutes part.
+     */
     get minutes() { return Math.floor((this.ticks % (3600 * 1000)) / (60 * 1000)); }
+    /**
+     * Gets seconds part.
+     */
     get seconds() { return Math.floor((this.ticks % 60000) / 1000); }
+    /**
+     * Gets milliseconds part.
+     */
     get milliseconds() { return Math.floor(this.ticks % 1000); }
+    /**
+     * Gets total days.
+     */
     get totalDays() { return this.ticks / (24 * 3600 * 1000); }
+    /**
+     * Gets total hours.
+     */
     get totalHours() { return this.ticks / (3600 * 1000); }
+    /**
+     * Gets total minutes.
+     */
     get totalMinutes() { return this.ticks / (60 * 1000); }
+    /**
+     * Gets total seconds.
+     */
     get totalSeconds() { return this.ticks / 1000; }
+    /**
+     * Gets total milliseconds.
+     */
     get totalMilliseconds() { return this.ticks; }
 
+    /**
+     * Create new TimeSpan from specificed days.
+     * @param {Number} days The days value.
+     */
     static fromDays(days) { return new TimeSpan(days, 0); }
+    /**
+     * Create new TimeSpan from specificed hours.
+     * @param {Number} hours The hours value.
+     */
     static fromHours(hours) { return new TimeSpan(0, hours); }
+    /**
+     * Create new TimeSpan from specificed minutes.
+     * @param {Number} hours The minutes value.
+     */
     static fromMinutes(minutes) { return new TimeSpan(0, minutes, 0); }
+    /**
+     * Create new TimeSpan from specificed seconds.
+     * @param {Number} hours The seconds value.
+     */
     static fromSeconds(seconds) { return new TimeSpan(0, 0, seconds); }
 }
 
+/** This constant array is for internal used. @ignore */
 TimeSpan.constructors = [
     {
         length: 0,
@@ -84,7 +152,7 @@ TimeSpan.constructors = [
         }
     }
 ];
-
+/** This function is for internal used. @ignore */
 TimeSpan.pad = (number, len = 2) => String(number).padStart(len, "0")
 
 TimeSpan.test = () => {
@@ -110,7 +178,21 @@ TimeSpan.test = () => {
 
 //TimeSpan.test();
 
-class DateTime {
+/** 
+ * DateTime class.
+ * 
+ * @example
+ * // nlib load module.
+ * const nlib = require("./src/server/js/nlib-core");
+ * // create new DateTime instance.
+ * let dt = new nlib.DateTime();
+ * // show current DateTime.
+ * console.log(dt.Now);
+ */
+const DateTime = class  {
+    /**
+     * Create new instace of DateTime class.
+     */
     constructor() {
         let len = arguments.length;
         let plens = DateTime.constructors.map((item) => item.length);
@@ -127,13 +209,29 @@ class DateTime {
         // keep Date object value.
         this.value = new Date(this.span.ticks);
     }
+    /**
+     * Add timespan to current DateTime object.
+     * @param {TimeSpan} timespan The TimeSpan object.
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     add(timespan) {
         return new DateTime(this.span.ticks + timespan.ticks);
     }
+    /**
+     * Add year(s) to current DateTime object.
+     * @param {Number} years The number of years (can be both positive and negative value).
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addYears(years) {
         return new DateTime(this.year + years, this.month, this.day,
             this.hour, this.minute, this.second, this.millisecond);
     }
+    /**
+     * Add month(s) to current DateTime object.
+     * @param {Number} months The number of months (can be both positive and negative value).
+     * @param {Boolean} autoCalcDays. True to calculate exact math day in each month to add or substract.
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addMonths(months, autoCalcDays) {
         let y = this.year;
         let m = this.month;
@@ -153,35 +251,89 @@ class DateTime {
         }
         return ret;
     }
+    /**
+     * Add day(s) to current DateTime object.
+     * @param {Number} days The number of days (can be both positive and negative value).
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addDays(days) {
         return new DateTime(this.span.ticks + ((days * 86400) * 1000));
     }
+    /**
+     * Add hour(s) to current DateTime object.
+     * @param {Number} hours The number of hours (can be both positive and negative value).
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addHours(hours) {
         return new DateTime(this.span.ticks + ((hours * 3600) * 1000));
     }
+    /**
+     * Add second(s) to current DateTime object.
+     * @param {Number} minutes The number of minutes (can be both positive and negative value).
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addMinutes(minutes) {
         return new DateTime(this.span.ticks + ((minutes * 60) * 1000));
     }
+    /**
+     * Add second(s) to current DateTime object.
+     * @param {Number} seconds The number of seconds (can be both positive and negative value).
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addSeconds(seconds) {
         return new DateTime(this.span.ticks + (seconds * 1000));
     }
+    /**
+     * Add millisecond(s) to current DateTime object.
+     * @param {Number} milliseconds The number of milliseconds (can be both positive and negative value).
+     * @return {DateTime} Returns new DateTime object that add the specificed parameter.
+     */
     addMilliseconds(milliseconds) {
         return new DateTime(this.span.ticks + milliseconds);
     }
 
+    /**
+     * Gets the year part.
+     */
     get year() { return this.value.getFullYear(); }
+    /**
+     * Gets the month part.
+     */
     get month() { return this.value.getMonth() + 1; }
+    /**
+     * Gets the day part.
+     */
     get day() { return this.value.getDate(); }
+    /**
+     * Gets the day of week value (0-sunday, 1-monday, ...).
+     */
     get dayOfWeek() { return this.value.getDay(); }
+    /**
+     * Gets the hour part.
+     */
     get hour() { return this.value.getHours(); }
+    /**
+     * Gets the minute part.
+     */
     get minute() { return this.value.getMinutes(); }
+    /**
+     * Gets the second part.
+     */
     get second() { return this.value.getSeconds(); }
+    /**
+     * Gets the millisecond part.
+     */
     get millisecond() { return this.value.getMilliseconds(); }
+    /**
+     * Checks current day is end of month.
+     */
     get isEndOfMonth() {
         let ret = (DateTime.daysInMonth(this.year, this.month) === this.day);
         return ret;
     }
-
+    /**
+     * Format Current DateTime object with specificed format's mask.
+     */
     format(mask, locale = DateTime.LocaleSettings) {
         const token = /d{1,4}|M{1,4}|y{1,4}|([Hhms])\1?|tt|[Ll]|"[^"]*"|'[^']*'/g
         const d = this.day;
@@ -221,26 +373,56 @@ class DateTime {
             return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1)
         });
     }
+    /**
+     * Gets valueOf current object.
+     */
     valueOf() {
         return this.span.ticks;
     }
+    /**
+     * Gets string that represents current DateTime Object.
+     * @param {String} format The format string.
+     */
     toString(format = "yyyy-MM-dd HH:mm:ss.l") {
         let fmt = (format) ? format : "yyyy-MM-dd HH:mm:ss.l";
         return this.format(fmt);
     }
 
+    /**
+     * Gets Current DateTime.
+     * @return {DateTime} Returns the DateTime object of current time.
+     */
     static get now() { return new DateTime(Date.now()) }
-
+    /**
+     * Checks is leap year.
+     * 
+     * @param {Number} year The year value.
+     */
     static isLeapYear(year) {
         return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
     }
+    /**
+     * Checks is month is betweeen 1 to 12.
+     * 
+     * @param {Number} month The month value.
+     */
     static isValidMonth(month) { return (month > 0 && month <= 12); }
+    /**
+     * Checks is specificed parameters is valid day in month/year.
+     * 
+     * @param {Number} year The year value.
+     * @param {Number} month The month value.
+     * @param {Number} day The day value.
+     */
     static isValidDayInMonth(year, month, day) {
         let ret = true;
         let maxDay = DateTime.daysInMonth(year, month);
         if (day <= 0 || day > maxDay) ret = false;
         return ret;
     }
+    /**
+     * Gets number of days in specificed year/month.
+     */
     static daysInMonth(year, month) {
         let leap = DateTime.isLeapYear(year);
         let ret = DateTime.monthDays[month - 1];
@@ -249,10 +431,13 @@ class DateTime {
     }
 }
 
+/** This constant array is for internal used. @ignore */
 DateTime.constructors = [
     {
         length: 0,
-        init: () => { }
+        init: (dt) => { 
+            dt.span = new TimeSpan(Date.now());
+        }
     },
     {
         length: 1,
@@ -293,8 +478,10 @@ DateTime.constructors = [
     }
 ]
 
+/** This constant array is for internal used. @ignore */
 DateTime.monthDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
 
+/** This function is for internal used. @ignore */
 DateTime.getAddedDays = (currYear, currMonth, addMonths) => {
     let yr = currYear;
     let mn = currMonth;
@@ -311,6 +498,7 @@ DateTime.getAddedDays = (currYear, currMonth, addMonths) => {
     let r = { year: yr, month: mn, days: days };
     return r;
 }
+/** This function is for internal used. @ignore */
 DateTime.getRemovedDays = (currYear, currMonth, removeMonths) => {
     let yr = currYear;
     let mn = currMonth;
@@ -327,6 +515,7 @@ DateTime.getRemovedDays = (currYear, currMonth, removeMonths) => {
     let r = { year: yr, month: mn, days: -1 * days };
     return r;
 }
+/** This function is for internal used. @ignore */
 DateTime.calcAddMonthDays = (currYear, currMonth, months) => {
     let add = DateTime.getAddedDays;
     let rem = DateTime.getRemovedDays;
@@ -335,9 +524,12 @@ DateTime.calcAddMonthDays = (currYear, currMonth, months) => {
     let r = (months >= 0) ? add(y, m, months) : rem(y, m, months);
     return r;
 }
-
+/** This function is for internal used. @ignore */
 DateTime.pad = (number, len = 2) => String(number).padStart(len, "0")
-// EN Locale settings.
+
+/**
+ * The default Locale Setting (EN).
+ */
 DateTime.LocaleSettings = {
     dateCompsOrder: "mdy",
     minSupportedDate: "0000-01-01T00:00:00.000Z",
@@ -501,4 +693,4 @@ DateTime.test = () => {
     */
 };
 
-//DateTime.test();
+DateTime.test();
