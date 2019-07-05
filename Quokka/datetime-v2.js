@@ -1,17 +1,18 @@
+
 class TimeSpan {
     constructor() {
         let len = arguments.length;
         let plens = TimeSpan.constructors.map((item) => item.length);
         let idx = plens.indexOf(len);
         if (idx === -1) {
-            throw("No constructor of TimeSpan supports " + len + " arguments");
+            throw ("No constructor of TimeSpan supports " + len + " arguments");
         }
         // local variables
         this.ticks = 0; // total milliseconds elapsed from January 1, 1970
         // init variable by arguments.
         TimeSpan.constructors[idx].init(this, ...arguments);
     }
-    
+
     equals(timespan) { return this.ticks === timespan.ticks; }
     duration() { return new TimeSpan(Math.abs(this.ticks)); }
     toString() {
@@ -20,7 +21,7 @@ class TimeSpan {
         let hr = TimeSpan.pad(Math.abs(this.hours));
         let min = TimeSpan.pad(Math.abs(this.minutes));
         let sec = TimeSpan.pad(Math.abs(this.seconds));
-        let ms = Math.abs(this.milliseconds);
+        let ms = TimeSpan.pad(Math.abs(this.milliseconds), 3);
         return sign + dy + hr + ":" + min + ":" + sec + "." + ms;
     }
 
@@ -45,38 +46,38 @@ class TimeSpan {
 }
 
 TimeSpan.constructors = [
-    { 
+    {
         length: 0,
         init: (ts) => {
             ts.ticks = 0;
         }
     },
-    { 
+    {
         length: 1,
         init: (ts, milliseconds) => {
             ts.ticks = milliseconds;
         }
     },
-    { 
+    {
         length: 2,
         init: (ts, days, hours) => {
             ts.ticks = (days * 86400 + hours * 3600) * 1000;
             console.log(ts.ticks)
         }
     },
-    { 
+    {
         length: 3,
         init: (ts, hours, minutes, seconds) => {
             ts.ticks = (hours * 3600 + minutes * 60 + seconds) * 1000;
         }
     },
-    { 
+    {
         length: 4,
-        init: (ts, days, hours, minutes, seconds) => {                
+        init: (ts, days, hours, minutes, seconds) => {
             ts.ticks = (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000;
         }
     },
-    { 
+    {
         length: 5,
         init: (ts, days, hours, minutes, seconds, milliseconds) => {
             ts.ticks = (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000 + milliseconds;
@@ -84,7 +85,7 @@ TimeSpan.constructors = [
     }
 ];
 
-TimeSpan.pad = (number) => { return (number < 10 ? '0' : '') + number; }
+TimeSpan.pad = (number, len = 2) => String(number).padStart(len, "0")
 
 TimeSpan.test = () => {
     let ts;
@@ -114,9 +115,9 @@ class DateTime {
         let len = arguments.length;
         let plens = DateTime.constructors.map((item) => item.length);
         let idx = plens.indexOf(len);
-        
+
         if (idx === -1) {
-            throw("No constructor of DateTime supports " + len + " arguments");
+            throw ("No constructor of DateTime supports " + len + " arguments");
         }
 
         // local variables.
@@ -126,6 +127,13 @@ class DateTime {
         // keep Date object value.
         this.value = new Date(this.span.ticks);
     }
+    add(timespan) {
+        return new DateTime(this.span.ticks + timespan.ticks);
+    }
+    addYears(years) {
+        return new DateTime(this.year + years, this.month, this.day,
+            this.hour, this.minute, this.second, this.millisecond);
+    }
     addMonths(months, autoCalcDays) {
         let y = this.year;
         let m = this.month;
@@ -134,13 +142,13 @@ class DateTime {
         if (autoCalcDays) {
             ret = this.addDays(r.days);
         }
-        else {            
+        else {
             let endOfMonth = DateTime.daysInMonth(r.year, r.month);
             let newday = (this.isEndOfMonth) ? endOfMonth : this.day;
-            
+
             ret = new DateTime(
-                r.year, r.month, newday, 
-                this.hour, this.minute, this.second, 
+                r.year, r.month, newday,
+                this.hour, this.minute, this.second,
                 this.millisecond);
         }
         return ret;
@@ -174,10 +182,57 @@ class DateTime {
         return ret;
     }
 
+    format(mask, locale = DateTime.LocaleSettings) {
+        const token = /d{1,4}|M{1,4}|y{1,4}|([Hhms])\1?|tt|[Ll]|"[^"]*"|'[^']*'/g
+        const d = this.day;
+        const D = this.dayOfWeek;
+        const M = this.month;
+        const y = this.year;
+        const H = this.hour;
+        const m = this.minute;
+        const s = this.second;
+        const L = this.millisecond;
+        const flags = {
+            d,
+            dd: DateTime.pad(d),
+            ddd: locale.abbreviatedDayNames[D],
+            dddd: locale.dayNames[D],
+            M,
+            MM: DateTime.pad(M),
+            MMM: locale.abbreviatedMonthNames[M - 1],
+            MMMM: locale.monthNames[M - 1],
+            y: Number(String(y).slice(2)),
+            yy: String(y).slice(2),
+            yyy: DateTime.pad(y, 3),
+            yyyy: DateTime.pad(y, 4),
+            h: H % 12 || 12,
+            hh: DateTime.pad(H % 12 || 12),
+            H,
+            HH: DateTime.pad(H),
+            m,
+            mm: DateTime.pad(m),
+            s,
+            ss: DateTime.pad(s),
+            l: DateTime.pad(L, 3),
+            L: DateTime.pad(L > 99 ? Math.round(L / 10) : L),
+            tt: H < 12 ? "AM" : "PM",
+        };
+        return mask.replace(token, ($0) => {
+            return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1)
+        });
+    }
+    valueOf() {
+        return this.span.ticks;
+    }
+    toString(format = "yyyy-MM-dd HH:mm:ss.l") {
+        let fmt = (format) ? format : "yyyy-MM-dd HH:mm:ss.l";
+        return this.format(fmt);
+    }
+
     static get now() { return new DateTime(Date.now()) }
 
     static isLeapYear(year) {
-        return (((year % 4 === 0) && (year % 100 !== 0) ) || (year % 400 === 0))
+        return (((year % 4 === 0) && (year % 100 !== 0)) || (year % 400 === 0))
     }
     static isValidMonth(month) { return (month > 0 && month <= 12); }
     static isValidDayInMonth(year, month, day) {
@@ -195,42 +250,42 @@ class DateTime {
 }
 
 DateTime.constructors = [
-    { 
+    {
         length: 0,
-        init: () => {}
+        init: () => { }
     },
-    { 
+    {
         length: 1,
         init: (dt, millisecond) => { dt.span = new TimeSpan(millisecond); }
     },
-    { 
+    {
         length: 3,
         init: (dt, year, month, day) => {
-            if (!DateTime.isValidMonth(month) || 
+            if (!DateTime.isValidMonth(month) ||
                 !DateTime.isValidDayInMonth(year, month, day)) {
-                throw(`Invalid Date in ctor(3): (year: ${year}, month: ${month}, day: ${day})`);
+                throw (`Invalid Date in ctor(3): (year: ${year}, month: ${month}, day: ${day})`);
             }
             let d = new Date(year, month - 1, day);
             dt.span = new TimeSpan(d.getTime());
         }
     },
-    { 
+    {
         length: 6,
         init: (dt, year, month, day, hour, minute, second) => {
-            if (!DateTime.isValidMonth(month) || 
+            if (!DateTime.isValidMonth(month) ||
                 !DateTime.isValidDayInMonth(year, month, day)) {
-                throw(`Invalid Date in ctor(6): (year: ${year}, month: ${month}, day: ${day})`);
+                throw (`Invalid Date in ctor(6): (year: ${year}, month: ${month}, day: ${day})`);
             }
             let d = new Date(year, month - 1, day, hour, minute, second);
             dt.span = new TimeSpan(d.getTime());
         }
     },
-    { 
+    {
         length: 7,
         init: (dt, year, month, day, hour, minute, second, millisecond) => {
-            if (!DateTime.isValidMonth(month) || 
+            if (!DateTime.isValidMonth(month) ||
                 !DateTime.isValidDayInMonth(year, month, day)) {
-                throw(`Invalid Date in ctor(7): (year: ${year}, month: ${month}, day: ${day})`);
+                throw (`Invalid Date in ctor(7): (year: ${year}, month: ${month}, day: ${day})`);
             }
             let d = new Date(year, month - 1, day, hour, minute, second, millisecond);
             dt.span = new TimeSpan(d.getTime());
@@ -281,12 +336,104 @@ DateTime.calcAddMonthDays = (currYear, currMonth, months) => {
     return r;
 }
 
+DateTime.pad = (number, len = 2) => String(number).padStart(len, "0")
+// EN Locale settings.
+DateTime.LocaleSettings = {
+    dateCompsOrder: "mdy",
+    minSupportedDate: "0000-01-01T00:00:00.000Z",
+    maxSupportedDate: "9999-12-31T23:59:59.999Z",
+    abbreviatedDayNames: [
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+    ],
+    monthNames: [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+    ],
+    abbreviatedMonthNames: [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ],
+    dayNames: [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+    ],
+    shortDateTimePattern: "M/d/yyyy h:mm tt",
+    abbreviatedDatePattern: "d MMM yyyy",
+    abbreviatedShortDatePattern: "d MMM yyyy",
+    shortDatePattern: "M/d/yyyy",
+    shortestDatePattern: "M/d/yy",
+    abbreviatedMonthDayPattern: "d MMM",
+    shortMonthDayPattern: "M/d",
+    shortTimePattern: "h:mm tt",
+    twoDigitYearMax: 2029,
+
+    humanizeFormats: {
+        full: {
+            dateDaysAgo: "{0} days|ago",
+            dateInDays: "in {0}|days",
+            dateInWeek: "in a|week",
+            dateTimeAndZone: "{0} ({1})",
+            dateTimeCombined: "{0}, {1}",
+            dateToday: "today",
+            dateTomorrow: "tomorrow",
+            dateWeekAgo: "a week|ago",
+            dateYesterday: "yesterday",
+            dimeInSeconds: "in {0}|seconds",
+            timeHourAgo: "an hour|ago",
+            timeHoursAgo: "{0} hours|ago",
+            timeInHour: "in an|hour",
+            timeInHours: "in {0}|hours",
+            timeInMinute: "in a|minute",
+            timeInMinutes: "in {0}|minutes",
+            timeInSecond: "in a|second",
+            timeInSeconds: "in {0}|seconds",
+            timeMinuteAgo: "a minute|ago",
+            timeMinutesAgo: "{0} minutes|ago",
+            timeSecondAgo: "a second|ago",
+            timeSecondsAgo: "{0} seconds|ago",
+        },
+
+        short: {
+            dateDaysAgo: "{0}d|ago",
+            dateInDays: "in|{0}d",
+            dateInWeek: "in a|week",
+            dateTimeAndZone: "{0} ({1})",
+            dateTimeCombined: "{0}, {1}",
+            dateToday: "today",
+            dateTomorrow: "tomorrow",
+            dateWeekAgo: "a week|ago",
+            dateYesterday: "yesterday",
+            timeHourAgo: "1h|ago",
+            timeHoursAgo: "{0}h|ago",
+            timeInHour: "in|1h",
+            timeInHours: "in|{0}h",
+            timeInMinute: "in|1m",
+            timeInMinutes: "in|{0}m",
+            timeInSecond: "in|1s",
+            timeInSeconds: "in|{0}s",
+            timeMinuteAgo: "1m|ago",
+            timeMinutesAgo: "{0}m|ago",
+            timeSecondAgo: "1s|ago",
+            timeSecondsAgo: "{0}s|ago",
+        },
+    },
+
+    rangeFormats: {
+        dateTimeFromFormat: "from {0} {1}",
+        dateTimeToFormat: "to {0} {1}",
+        dateTimeRangeFormat: "from {0} to {1} {2}",
+        timeFromFormat: "from {0} {1}",
+        timeToFormat: "to {0} {1}",
+        timeRangeFormat: "from {0} to {1} {2}",
+    },
+}
+
 DateTime.test = () => {
     let dt;
 
     dt = DateTime.now;
     console.log('now:', dt)
-
+    console.log('now:', dt.toString("yyyy-MM-dd HH:mm:ss.l"))
+    /*
     dt = new DateTime(2019, 7, 5)
     console.log('DateTime(2019, 7, 5):', dt)
 
@@ -342,6 +489,16 @@ DateTime.test = () => {
     console.log('year:', dt.year)
     console.log('month:', dt.month)
     console.log('day:', dt.day)
+    
+    dt = new DateTime(2104, 4, 30)
+    console.log('year:', dt.year)
+    console.log('month:', dt.month)
+    console.log('day:', dt.day)
+    dt = dt.addYears(-100);
+    console.log('year:', dt.year)
+    console.log('month:', dt.month)
+    console.log('day:', dt.day)
+    */
 };
 
 //DateTime.test();
