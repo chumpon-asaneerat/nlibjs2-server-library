@@ -81,18 +81,25 @@ TimeSpan.constructors = [
 
 TimeSpan.pad = (number) => { return (number < 10 ? '0' : '') + number; }
 
-let ts;
-//ts = new TimeSpan(999); // milliseconds
-//console.log(ts.toString());
-//ts = new TimeSpan(1, 1); // days/hours
-//console.log(ts.toString());
-//ts = new TimeSpan(1, 1, 1, 1); // days/hours/minutes/seconds
-//console.log(ts.toString());
-ts = new TimeSpan(0, 23, 59, 59, 1000); // days/hours/minutes/seconds/milliseconds
-console.log(ts.toString());
+TimeSpan.test = () => {
+    let ts;
+    // milliseconds
+    ts = new TimeSpan(999);
+    console.log('TimeSpan(999): ', ts.toString());
+    // days/hours
+    ts = new TimeSpan(1, 1);
+    console.log('TimeSpan(1, 1): ', ts.toString());
+    // days/hours/minutes/seconds
+    ts = new TimeSpan(1, 1, 1, 1);
+    console.log('TimeSpan(1, 1, 1, 1): ', ts.toString());
+    // days/hours/minutes/seconds/milliseconds
+    ts = new TimeSpan(0, 23, 59, 59, 1000);
+    console.log('TimeSpan(0, 23, 59, 59, 1000): ', ts.toString());
+    console.log('totalDays:', ts.totalDays);
+    console.log('totalHours:', ts.totalHours);
+    console.log('totalMinutes:', ts.totalMinutes);
+    console.log('totalSeconds:', ts.totalSeconds);
+    console.log('totalMilliseconds:', ts.totalMilliseconds);
+}
 
-console.log(ts.totalDays);
-console.log(ts.totalHours);
-console.log(ts.totalMinutes);
-console.log(ts.totalSeconds);
-console.log(ts.totalMilliseconds);
+TimeSpan.test();
