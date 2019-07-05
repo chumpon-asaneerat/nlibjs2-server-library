@@ -95,6 +95,11 @@ const NLib = class {
      * @ignore
      */
     get DateTime() { return DateTime; }
+    /** 
+     * The NPM class. 
+     * @ignore
+     */
+    get NPM() { return NPM; }
 
     //#endregion
 }
@@ -895,6 +900,81 @@ DateTime.LocaleSettings = {
         timeToFormat: "to {0} {1}",
         timeRangeFormat: "from {0} to {1} {2}",
     },
+}
+
+//#endregion
+
+//#region NPM
+
+/**
+ * The node package management (npm) functions.
+ */
+const NPM = { }
+/**
+ * Install npm package.
+ * 
+ * @param {String} pkg The package name (include version see npm document for more information).
+ * @param {Boolean} dev True if package is used for development.
+ */
+NPM.install = async (pkg, dev = false) => {
+    let r = require;
+    let cmd = (dev) ? `npm install ${pkg} --save-dev` : `npm install ${pkg} --save`;
+    console.log('execute:' + cmd);
+    r('child_process').execSync(cmd);
+    await setImmediate(() => { });
+    return await NPM.isInstalled(pkg);
+}
+/**
+ * Uninstall npm package.
+ * 
+ * @param {String} pkg The package name (include version see npm document for more information).
+ */
+NPM.uninstall = async (pkg) => {
+    let r = require;
+    let cmd = `npm uninstall ${pkg} --save`;
+    console.log('execute:' + cmd);
+    r('child_process').execSync(cmd);
+    await setImmediate(() => { });
+    return await NPM.isUninstalled(pkg);
+}
+
+/**
+ * Checks is package is successfully installed.
+ * 
+ * @param {String} pkg The package name (include version see npm document for more information).
+ */
+NPM.isInstalled = async (pkg) => {
+    let r = require;
+    let ret = false;
+    try {
+        o = r.resolve(pkg) 
+        console.log(`"${pkg}" has been installed.`);
+        ret = true;
+    }
+    catch (err) {
+        console.log(`"${pkg}" not found.`);
+        ret = false;
+    }
+    return ret;
+}
+/**
+ * Checks is package is uninstalled completely.
+ * 
+ * @param {String} pkg The package name (include version see npm document for more information).
+ */
+NPM.isUninstalled = async (pkg) => {
+    let r = require;
+    let ret = false;
+    try {
+        o = r.resolve(pkg) 
+        console.log(`"${pkg}" cannot uninstalled completely.`);
+        ret = false;
+    }
+    catch (err) {
+        console.log(`"${pkg}" has been uninstalled.`);
+        ret = true;
+    }
+    return ret;
 }
 
 //#endregion

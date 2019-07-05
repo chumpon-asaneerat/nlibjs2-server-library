@@ -3,6 +3,8 @@ const path = require("path");
 const nlib = require("./src/server/js/nlib-core");
 const expSvr = require("./src/server/js/nlib-express");
 
+//#region Configuration test
+/*
 let cfg = nlib.Config;
 if (!cfg.exists()) {
     cfg.set('app', { 
@@ -22,6 +24,20 @@ console.log('paths:', nlib.paths);
 
 console.log('App:', expSvr.getAppName());
 
+let cfg2 = new nlib.Configuration(path.join(nlib.paths.root, 'custom.json'));
+cfg2.set('db', {
+    type: 'sqlserver',
+    host: 'localhost',
+    database: 'TestDb7x3',
+    user: 'sa',
+    pwd: 'winnt'
+})
+cfg2.update();
+*/
+//#endregion
+
+//#region DateTime and TimeSpan Test
+/*
 let dt = new nlib.DateTime();
 console.log('DateTime Now:', dt.toString());
 
@@ -34,17 +50,21 @@ console.log('Total Hours:', ts.totalHours);
 console.log('Total Minutes:', ts.totalMinutes);
 console.log('Total Seconds:', ts.totalSeconds);
 console.log('Total Milliseconds:', ts.totalMilliseconds);
+*/
+//#endregion
 
-let cfg2 = new nlib.Configuration(path.join(nlib.paths.root, 'custom.json'));
-cfg2.set('db', {
-    type: 'sqlserver',
-    host: 'localhost',
-    database: 'TestDb7x3',
-    user: 'sa',
-    pwd: 'winnt'
-})
-cfg2.update();
+//#region NPM test
+/*
+(async() => {
+    //await nlib.NPM.install('mssql');
+    //await nlib.NPM.uninstall('mssql');
+})().then(() => {
+    console.log('required package(s) installed.');
+});
+*/
+//#endregion
 
+//#region Original Express seting code
 /*
 const express = require("express");
 const morgan = require("morgan");
@@ -68,3 +88,4 @@ const server = app.listen(nlib.config.webserver.port, () => {
     console.log(`${nlib.config.app.name} listen on port: ${nlib.config.webserver.port}`);
 });
 */
+//#endregion
