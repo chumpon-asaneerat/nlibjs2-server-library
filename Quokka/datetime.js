@@ -1,517 +1,706 @@
-let __DateTimeUtils = { };
+// EN Locale
+const LocaleSettings = {
+    dateCompsOrder: "mdy",
+    minSupportedDate: "0000-01-01T00:00:00.000Z",
+    maxSupportedDate: "9999-12-31T23:59:59.999Z",
+    abbreviatedDayNames: [
+        "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat",
+    ],
+    monthNames: [
+        "January", "February", "March", "April", "May", "June",
+        "July", "August", "September", "October", "November", "December",
+    ],
+    abbreviatedMonthNames: [
+        "Jan", "Feb", "Mar", "Apr", "May", "Jun",
+        "Jul", "Aug", "Sep", "Oct", "Nov", "Dec",
+    ],
+    dayNames: [
+        "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday",
+    ],
+    shortDateTimePattern: "M/d/yyyy h:mm tt",
+    abbreviatedDatePattern: "d MMM yyyy",
+    abbreviatedShortDatePattern: "d MMM yyyy",
+    shortDatePattern: "M/d/yyyy",
+    shortestDatePattern: "M/d/yy",
+    abbreviatedMonthDayPattern: "d MMM",
+    shortMonthDayPattern: "M/d",
+    shortTimePattern: "h:mm tt",
+    twoDigitYearMax: 2029,
 
-__DateTimeUtils.isLeapYear = (year) => {
-    return (((year % 4 === 0) && (year % 100 !== 0) ) || (year % 400 === 0))
-}
-// constants for days in month.
-__DateTimeUtils.monthDays = [0, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-__DateTimeUtils.monthDaysLeapYear = [0, 31, 29, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+    humanizeFormats: {
+        full: {
+            dateDaysAgo: "{0} days|ago",
+            dateInDays: "in {0}|days",
+            dateInWeek: "in a|week",
+            dateTimeAndZone: "{0} ({1})",
+            dateTimeCombined: "{0}, {1}",
+            dateToday: "today",
+            dateTomorrow: "tomorrow",
+            dateWeekAgo: "a week|ago",
+            dateYesterday: "yesterday",
+            dimeInSeconds: "in {0}|seconds",
+            timeHourAgo: "an hour|ago",
+            timeHoursAgo: "{0} hours|ago",
+            timeInHour: "in an|hour",
+            timeInHours: "in {0}|hours",
+            timeInMinute: "in a|minute",
+            timeInMinutes: "in {0}|minutes",
+            timeInSecond: "in a|second",
+            timeInSeconds: "in {0}|seconds",
+            timeMinuteAgo: "a minute|ago",
+            timeMinutesAgo: "{0} minutes|ago",
+            timeSecondAgo: "a second|ago",
+            timeSecondsAgo: "{0} seconds|ago",
+        },
 
-__DateTimeUtils.getMonthArray = (year) => {
-    return !__DateTimeUtils.isLeapYear(year) ? 
-        __DateTimeUtils.monthDays : __DateTimeUtils.monthDaysLeapYear;
-}
-// get accumulate days from beginning until start of year.
-__DateTimeUtils.getDaysUntilYear = (year) => {
-    let val1 = 365 * year; // day in year.
-    let val2 = year / 4; // get days leap year (every 4 year add one day).
-    let val3 = year / 100; // get days leap year (every 100 year remove one day).
-    let val4 = year / 400; // get days leap year (every 400 year add one day).
-    return val1 + val2 - val3 + val4;
-}
-// get accumulate days from start of year until last month that specificed month parameter.
-__DateTimeUtils.getDaysUntilLastMonth = (year, month) => {
-    var num = 0;
-    var num2 = 1;
-    var numArray = __DateTimeUtils.getMonthArray(year);
-    while (num2 < month) {
-        num += numArray[num2++];
-    }
-    return num;
-}
-
-__DateTimeUtils.absoluteDays = (year, month, day) => {
-    let days = 0;
-    if(!year && !month && !day) {
-        days = 0;
-    }
-    // days from date 0/0/0 to begin of year.
-    let val1 = __DateTimeUtils.getDaysUntilYear(year - 1);
-    // days from begin of year to last month.
-    let num = __DateTimeUtils.getDaysUntilLastMonth(year, month);
-    // days from begin of year not include today.
-    let val2 = (day - 1 + num);
-    let totalDays = val1 + val2;
-    days = Math.round(totalDays);
-    return days;
-}
-
-__DateTimeUtils.fromSpan = (span, what) => {
-    let index = 1;
-    let daysmonth = __DateTimeUtils.monthDays;
-    let days = span.days;
-    let num = Math.round(days / 146097);
-    days -= num * 146097;
-    let num2 = Math.round(days / 36524);
-    if (num2 == 4) { num2 =3; }
-    days -= num2 * 36524;
-    let num3 = Math.round(days / 1461);
-    days -= num3 * 1461;
-    let num4 = Math.round(days / 365);
-    if (num4 === 4) { num = 3; }
-    if (what === "year") {
-        return (((((num * 400) + (num2 * 100)) + (num3 * 4)) + num4) + 1);
-    }
-    days -= num4 * 365;
-    if (what != "dayyear"){
-        if ((num4 === 3) && ((num2 === 3) || (num3 !== 24))) {
-            daysmonth = __DateTimeUtils.monthDaysLeapYear;
-        }
-        while (days >= daysmonth[index]) {
-            days -= daysmonth[index++];
-        }
-        if (what === "month") {
-            return index;
-        }
-    }
-    return days + 1;
-}
-
-__DateTimeUtils.getMinDays = (day, days) => {
-    if (day > days) {
-        day = days;
-    }
-    return day;
-}
-
-__DateTimeUtils.DateTimeInitializers = [
-    { 
-        len: 0, 
-        init: (dt) => {
-            let d = new Date();
-            let _year = d.getFullYear();
-            let _month = d.getMonth() + 1;
-            let _day = d.getDay();
-            let _hour = d.getHours();
-            let _minute = d.getMinutes();
-            let _second = d.getSeconds();
-            let _millisecond = d.getMilliseconds();
-            let _days = __DateTimeUtils.absoluteDays(_year, _month, _day);
-            dt.span = new TimeSpan(_days, _hour, _minute, _second, _millisecond);
-        } 
+        short: {
+            dateDaysAgo: "{0}d|ago",
+            dateInDays: "in|{0}d",
+            dateInWeek: "in a|week",
+            dateTimeAndZone: "{0} ({1})",
+            dateTimeCombined: "{0}, {1}",
+            dateToday: "today",
+            dateTomorrow: "tomorrow",
+            dateWeekAgo: "a week|ago",
+            dateYesterday: "yesterday",
+            timeHourAgo: "1h|ago",
+            timeHoursAgo: "{0}h|ago",
+            timeInHour: "in|1h",
+            timeInHours: "in|{0}h",
+            timeInMinute: "in|1m",
+            timeInMinutes: "in|{0}m",
+            timeInSecond: "in|1s",
+            timeInSeconds: "in|{0}s",
+            timeMinuteAgo: "1m|ago",
+            timeMinutesAgo: "{0}m|ago",
+            timeSecondAgo: "1s|ago",
+            timeSecondsAgo: "{0}s|ago",
+        },
     },
-    { 
-        len: 1, 
-        init: (dt, millisecond) => {
-            let _year = 0;
-            let _month = 0;
-            let _day = 0;
-            let _hour = 0;
-            let _minute = 0;
-            let _second = 0;
-            let _millisecond = millisecond;
-            let _days = __DateTimeUtils.absoluteDays(_year, _month, _day);
-            dt.span = new TimeSpan(_days, _hour, _minute, _second, _millisecond);
-        }
+
+    rangeFormats: {
+        dateTimeFromFormat: "from {0} {1}",
+        dateTimeToFormat: "to {0} {1}",
+        dateTimeRangeFormat: "from {0} to {1} {2}",
+        timeFromFormat: "from {0} {1}",
+        timeToFormat: "to {0} {1}",
+        timeRangeFormat: "from {0} to {1} {2}",
     },
-    { 
-        len: 3, 
-        init: (dt, year, month, day) => {
-            let _year = year;
-            let _month = month;
-            let _day = day;
-            let _hour = 0;
-            let _minute = 0;
-            let _second = 0;
-            let _millisecond = 0;
-            let _days = __DateTimeUtils.absoluteDays(_year, _month, _day);
-            dt.span = new TimeSpan(_days, _hour, _minute, _second, _millisecond);
-        } 
-    },
-    { 
-        len: 6, 
-        init: (dt, year, month, day, hour, minute, second) => {
-            let _year = year;
-            let _month = month;
-            let _day = day;
-            let _hour = hour;
-            let _minute = minute;
-            let _second = second;
-            let _millisecond = 0;
-            let _days = __DateTimeUtils.absoluteDays(_year, _month, _day);
-            dt.span = new TimeSpan(_days, _hour, _minute, _second, _millisecond);
-        }
-    },
-    { 
-        len: 7, 
-        init: (dt, year, month, day, hour, minute, second, millisecond) => {
-            let _year = year;
-            let _month = month;
-            let _day = day;
-            let _hour = hour;
-            let _minute = minute;
-            let _second = second;
-            let _millisecond = millisecond;
-            let _days = __DateTimeUtils.absoluteDays(_year, _month, _day);
-            dt.span = new TimeSpan(_days, _hour, _minute, _second, _millisecond);
-        }
-    }
-]
+}
+
+const DateTimeKind = {
+    unspecified: 0,
+    utc: 1,
+    local: 2,
+}
+
+const DateTimeMode = {
+    dateTime: 0,
+    date: 1,
+    time: 2,
+}
 
 class DateTime {
-    constructor() {
-        let len = arguments.length;
-        let plens = __DateTimeUtils.DateTimeInitializers.map((item) => item.len);
-        let idx = plens.indexOf(len);
-        
-        if (idx === -1) {
-            throw("No constructor of DateTime supports " + len + " arguments");
+    static msDateRe = /\/Date\((-?\d+)\)\//
+    static isoDateRe = /^(\d{4})(?:-?W(\d+)(?:-?(\d+)D?)?|(?:-(\d+))?-(\d+))(?:[T ](\d+):(\d+)(?::(\d+)(?:\.(\d+))?)?)?(?:Z(-?\d*))?$/
+
+    constructor(yearOrTicksOrDate, month, day, hour, minute, sec, msec) {
+        let ticksOrDate
+        this.kind = DateTimeKind.unspecified
+
+        if (typeof yearOrTicksOrDate === "undefined") {
+            ticksOrDate = new Date().getTime() + DateTime.getTimezoneOffsetTicks()
+            this.kind = DateTimeKind.local
         }
+        else if (typeof month === "undefined") {
+            ticksOrDate = yearOrTicksOrDate
 
-        // local variables.
-        this.span = new TimeSpan();
-        // init variable by arguments.
-        __DateTimeUtils.DateTimeInitializers[idx].init(this, ...arguments);
-    }
+            if (typeof ticksOrDate === "string") {
+                const ticks = DateTime.msDateRe.exec(ticksOrDate)
 
-    add(timespan) {
-        return new DateTime(this.span._millis + timespan._millis);
-    }
-    addYears(years) {
-        return this.addMonths(years * 12);
-    }
-    addMonths(months) {
-        let day = this.day;
-        let month = this.month + (months % 12);
-        let year = this.year + Math.round(months / 12);
-        
-        if (month < 1) {
-            month = 12 + month;
-        } else if (month > 12){
-            month -=12;
-            year++;
+                if (ticks !== null) {
+                    ticksOrDate = +ticks[1]
+                    this.kind = DateTimeKind.utc
+                }
+                else if (DateTime.isoDateRe.test(ticksOrDate))
+                    this.kind = DateTimeKind.utc
+            }
+            else if (ticksOrDate instanceof DateTime)
+                this.kind = yearOrTicksOrDate.kind
         }
-        
-        let days = DateTime.daysInMonth(year, month);
-        day = __DateTimeUtils.getMinDays(day, days);
-            
-        let time = new DateTime(year, month, day);
-        return time.add(this.timeOfDay);
-    }
-    addDays(days) {
-        return new DateTime(this.span._millis + days * 86400000);
-    }
-    addHours(hours) {
-        return new DateTime(this.span._millis + hours * 3600000);
-    }
-    addMinutes(minutes) {
-        return new DateTime(this.span._millis + minutes * 60000);
-    }
-    addSeconds(seconds) {
-        return new DateTime(this.span._millis + seconds * 1000);
-    }
-    addMilliseconds(milliseconds) {
-        return new DateTime(this.span._millis + milliseconds);
-    }
-    compareTo(datetime) {
-        return this.span.compareTo(datetime.span);
-    }
-    equals(datetime) {
-        return this.span.equals(datetime.span);
-    }
-    subtractDate(datetime) {
-        return new TimeSpan(this.span._millis - datetime.span._millis);
-    }
-    subtractTime(timespan) {
-        return new DateTime(this.span._millis - timespan._millis);
-    }
-
-    get date() {
-        return new DateTime(this.year, this.month, this.day);
-    }
-    get year() {
-        return __DateTimeUtils.fromSpan(this.span, "year");
-    }
-    get month() {
-        return __DateTimeUtils.fromSpan(this.span, "month");
-    }
-    get day() {
-        return __DateTimeUtils.fromSpan(this.span, "day");
-    }
-    get dayOfWeek() {
-        return (this.span.days + 1) % 7;
-    }
-    get dayOfYear() {
-        return __DateTimeUtils.fromSpan(this.span, "dayyear");
-    }
-    get hour() {
-        return this.span.hours;
-    }
-    get minute() {
-        return this.span.minutes;
-    }
-    get second() {
-        return this.span.seconds;
-    }
-    get millisecond() {
-        return this.span.milliseconds;
-    }
-    get timeOfDay() {
-        return new TimeSpan(this.span._millis % 86400000);
-    }
-
-    static daysInMonth(year, month) {
-        if (__DateTimeUtils.isLeapYear(year)) {
-            return __DateTimeUtils.monthDaysLeapYear[month];
-        } 
         else {
-            return __DateTimeUtils.monthDays[month];
-        }
-    }
-    static isLeapYear(year) {
-        return __DateTimeUtils.isLeapYear(year);
-    }
-    static get now() {
-        let d = new Date();
-        return new DateTime(
-            d.getFullYear(), d.getMonth() + 1, d.getDay(), 
-            d.getHours(), d.getMinutes(), d.getSeconds(), 
-            d.getMilliseconds()
-        );
-    }
-    static get utcNow() {
-        let d = new Date();
-        return new DateTime(
-            d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDay(), 
-            d.getUTCHours(), d.getUTCMinutes(), d.getUTCSeconds(), 
-            d.getUTCMilliseconds()
-        );
-    }
-    static get today() {
-        let now = DateTime.now;
-        return new DateTime(now.year(), now.month(), now.day());
-    }
-}
-
-let __TimeSpanUtils = {}
-__TimeSpanUtils.rounder = (number) =>{
-    if (this._millis < 0)
-        return Math.ceil(number);
-    return Math.floor(number);
-}
-
-__TimeSpanUtils.pad = (number) => {
-    return (number < 10 ? '0' : '') + number;
-}
-
-__TimeSpanUtils.TimeSpanInitializers = [
-    {
-        len: 0,
-        init: (ts) => {
-            ts._millis = 0;
-        }
-    },
-    {
-        len: 1,
-        init: (ts, milliseconds) => {
-            ts._millis = milliseconds;
-        }
-    },
-    {
-        len: 2,
-        init: (ts, days, hours) => {
-            ts._millis = (days * 86400 + hours * 3600);
-        }
-    },
-    {
-        len: 3,
-        init: (ts, hours, minutes, seconds) => {
-            ts._millis = (hours * 3600 + minutes * 60 + seconds);
-        }
-    },
-    {
-        len: 4,
-        init: (ts, days, hours, minutes, seconds) => {
-            ts._millis = (days * 86400 + hours * 3600 + minutes * 60 + seconds);
-        }
-    },
-    {
-        len: 5,
-        init: (ts, days, hours, minutes, seconds, milliseconds) => {
-            ts._millis = (days * 86400 + hours * 3600 + minutes * 60 + seconds) * 1000 + milliseconds;
-        }
-    }
-]
-
-class TimeSpan {
-    constructor() {
-        let len = arguments.length;
-        let plens = __TimeSpanUtils.TimeSpanInitializers.map((item) => item.len);
-        let idx = plens.indexOf(len);
-        
-        if (idx === -1) {
-            throw("No constructor of TimeSpan supports " + len + " arguments");
+            ticksOrDate = Date.UTC(yearOrTicksOrDate, month - 1, day || 1, hour || 0, minute || 0, sec || 0, msec || 0)
+            this.kind = DateTimeKind.local
         }
 
-        // local variables
-        this._millis = 0;
-        // init variable by arguments.
-        __TimeSpanUtils.TimeSpanInitializers[idx].init(this, ...arguments);
+        this.value = new Date(ticksOrDate instanceof DateTime ? ticksOrDate.getTicks() : ticksOrDate)
     }
-    add(timespan) {
-        console.log(timespan._millis)
-        console.log(this._millis)
-        console.log(timespan._millis + this._millis)
-        return new TimeSpan(timespan._millis + this._millis);
+
+    getYears() { return this.value.getUTCFullYear() }
+    getMonths() { return this.value.getUTCMonth() + 1 }
+    getTotalMonths() { return Math.abs(this.getYears()) * 12 + this.getMonths() }
+    getDays() { return this.value.getUTCDate() }
+    getDayOfWeek() { return this.value.getUTCDay() }
+    getHours() { return this.value.getUTCHours() }
+    getMinutes() { return this.value.getUTCMinutes() }
+    getSeconds() { return this.value.getUTCSeconds() }
+    getMilliseconds() { return this.value.getUTCMilliseconds() }
+    getTicks() { return this.value.getTime() }
+    getKind() { return this.kind }
+
+    setYears(value) { this.value.setUTCFullYear(value); return this }
+    setMonths(value) { this.value.setUTCMonth(value - 1); return this }
+    setDays(value) { this.value.setUTCDate(value); return this }
+    setHours(value) { this.value.setUTCHours(value); return this }
+    setMinutes(value) { this.value.setUTCMinutes(value); return this }
+    setSeconds(value) { this.value.setUTCSeconds(value); return this }
+    setMilliseconds(value) { this.value.setUTCMilliseconds(value); return this }
+    setTicks(value) { this.value = new Date(value); return this }
+    setKind(value) { this.kind = value; return this }
+
+    incYears(value = 1) { return this.setYears(this.getYears() + value) }
+    incMonths(value = 1) { return this.setMonths(this.getMonths() + value) }
+    incDays(value = 1) { return this.setDays(this.getDays() + value) }
+    incHours(value = 1) { return this.setHours(this.getHours() + value) }
+    incMinutes(value = 1) { return this.setMinutes(this.getMinutes() + value) }
+    incSeconds(value = 1) { return this.setSeconds(this.getSeconds() + value) }
+    incMilliseconds(value = 1) { return this.setMilliseconds(this.getMilliseconds() + value) }
+    incTicks(value = 1) { return this.setTicks(this.getTicks() + value) }
+
+    addYears(value = 1) { return new DateTime(this).incYears(value) }
+    addMonths(value = 1) { return new DateTime(this).incMonths(value) }
+    addDays(value = 1) { return new DateTime(this).incDays(value) }
+    addHours(value = 1) { return new DateTime(this).incHours(value) }
+    addMinutes(value = 1) { return new DateTime(this).incMinutes(value) }
+    addSeconds(value = 1) { return new DateTime(this).incSeconds(value) }
+    addMilliseconds(value = 1) { return new DateTime(this).incMilliseconds(value) }
+    addTicks(value = 1) { return new DateTime(this).incTicks(value) }
+
+    floor(to) { return this.setTicks(DateTime._floorTicks(this, to)) }
+
+    toLocalTime() { return this._convertTime(true) }
+    toUniversalTime() { return this._convertTime(false) }
+
+    getDate() {
+        return new DateTime(this).floor("day").setKind(DateTimeKind.unspecified)
     }
-    compareTo(timespan) {
-        let ret = 0
-        if (this._millis > timespan._millis) ret = 1;        
-        if (this._millis < timespan._millis) ret = -1;
-        //if (this._millis === timespan._millis) ret = 0;
-        return ret;
+
+    setDate(value, month, day) {
+        if (value instanceof Date
+            || value instanceof DateTime
+            || typeof month === "undefined") {
+            const temp = DateTime.cast(value)
+            value = temp.getYears()
+            month = temp.getMonths()
+            day = temp.getDays()
+        }
+
+        return this
+            .setYears(value)
+            .setMonths(month)
+            .setDays(day || 1)
     }
-    duration() {
-        return new TimeSpan(Math.abs(this._millis));
+
+    getTime() {
+        return new DateTime(1970, 1, 1, this.getHours(), this.getMinutes(), this.getSeconds(), this.getMilliseconds())
+            .setKind(DateTimeKind.unspecified)
     }
-    equals(timespan) {
-        return this._millis === timespan._millis;
+
+    setTime(value, min, sec, msec) {
+        if (value instanceof Date
+            || value instanceof DateTime
+            || typeof min === "undefined") {
+            const temp = DateTime.cast(value)
+            value = temp.getHours()
+            min = temp.getMinutes()
+            sec = temp.getSeconds()
+            msec = temp.getMilliseconds()
+        }
+
+        return this
+            .setHours(value)
+            .setMinutes(min)
+            .setSeconds(sec || 0)
+            .setMilliseconds(msec || 0)
     }
-    negate() {
-        this._millis *= -1;
+
+    valueOf() {
+        return this.getTicks()
     }
-    subtract(timespan) {
-        return new TimeSpan(this._millis - timespan._millis);
-    }
+
     toString() {
-        let sign = (this._millis < 0 ? "-" : "");
-        let dy = (Math.abs(this.days) ? __TimeSpanUtils.pad(Math.abs(this.days))  + ".": "");
-        let hr = __TimeSpanUtils.pad(Math.abs(this.hours));
-        let min = __TimeSpanUtils.pad(Math.abs(this.minutes));
-        let sec = __TimeSpanUtils.pad(Math.abs(this.seconds));
-        let ms = Math.abs(this.milliseconds);
-        return sign + dy + hr + ":" + min + ":" + sec + "." + ms;
+        return this.format("yyyy-MM-dd HH:mm:ss.l")
+            + (this.getKind() === DateTimeKind.local ? " (local)" : "")
+            + (this.getKind() === DateTimeKind.utc ? " (utc)" : "")
     }
-    get days() { 
-        return __TimeSpanUtils.rounder(this._millis / (24 * 3600 * 1000));
+
+    compareTo(value, floorTo) {
+        const dateTime1 = this
+        let dateTime2 = DateTime.cast(value)
+
+        if (dateTime1.getKind() !== dateTime2.getKind()
+            && dateTime1.getKind() !== DateTimeKind.unspecified
+            && dateTime2.getKind() !== DateTimeKind.unspecified) {
+            dateTime2 = dateTime1.getKind() === DateTimeKind.utc
+                ? dateTime2.toUniversalTime()
+                : dateTime2.toLocalTime()
+        }
+
+        return DateTime._floorTicks(dateTime1, floorTo) - DateTime._floorTicks(dateTime2, floorTo)
     }
-    get hours() {
-        return __TimeSpanUtils.rounder( (this._millis % (24 * 3600 * 1000)) / (3600 * 1000));
+
+    humanize(
+        options,
+        locale = LocaleSettings,
+        humanizeFormats
+    ) {
+        options = Object.assign({
+            useDate: true,
+            useTime: true,
+            alwaysWithTime: true,
+            singleLine: true,
+            separator: "|",
+        }, options)
+
+        if (!options.useDate && !options.useTime)
+            throw "DateTime.toSimpleText: one of the 'options.useDate' or 'options.useTime' must be true"
+
+        const fmts = humanizeFormats == null ? locale.humanizeFormats.short : humanizeFormats
+        const dateTimeNow = DateTime.cast(options.dateTimeNow)
+        let dateStr = ""
+        let timeStr = ""
+
+        if (options.useDate) {
+            const temp = new DateTime(dateTimeNow)
+            const crLeft = this.compareTo(temp.incDays(-7), "day")
+            const crRight = this.compareTo(temp.incDays(14), "day")
+
+            if (crLeft >= 0 && crRight <= 0) {
+                const res = []
+                res[0] = fmts.dateWeekAgo
+                res[6] = fmts.dateYesterday
+                res[7] = fmts.dateToday
+                res[8] = fmts.dateTomorrow
+                res[14] = fmts.dateInWeek
+
+                for (let i = -7; i <= 7; i++) {
+                    if (this.compareTo(dateTimeNow.addDays(i), "day") === 0) {
+                        dateStr = res[i + 7] || (i < 0 ? fmts.dateDaysAgo.replace("{0}", String(-i)) : fmts.dateInDays.replace("{0}", String(i)))
+                        break
+                    }
+                }
+            }
+            else {
+                if (this.getYears() === dateTimeNow.getYears())
+                    dateStr = this.format(locale.abbreviatedMonthDayPattern)
+                else if (this.getYears() > locale.twoDigitYearMax - 100 && this.getYears() <= locale.twoDigitYearMax)
+                    dateStr = this.format(locale.abbreviatedShortDatePattern)
+                else
+                    dateStr = this.format(locale.abbreviatedDatePattern)
+            }
+        }
+
+        if (options.useTime) {
+            if (this.compareTo(dateTimeNow, "day") === 0)
+                dateStr = ""
+
+            const periodMsecs = ((23 * 60 + 29) * 60 + 59) * 1000 + 999 // number of milliseconds in 23:29:59.999
+            const temp = new DateTime(dateTimeNow)
+            const crLeft = this.compareTo(temp.incMilliseconds(-periodMsecs))
+            const crRight = this.compareTo(temp.incMilliseconds(periodMsecs * 2))
+
+            if (crLeft >= 0 && crRight <= 0) {
+                dateStr = ""
+                const diffMsecs = this.getTicks() - dateTimeNow.getTicks()
+
+                if (Math.abs(diffMsecs) < 59 * 1000 + 500) {
+                    const val = +(diffMsecs / 1000).toFixed()
+                    timeStr = (Math.abs(val) <= 1)
+                        ? (val <= 0
+                            ? fmts.timeSecondAgo
+                            : fmts.timeInSecond)
+                        : (val < 0
+                            ? fmts.timeSecondsAgo.replace("{0}", String(Math.abs(val)))
+                            : fmts.timeInSeconds.replace("{0}", String(val)))
+                }
+                else if (Math.abs(diffMsecs) < (59 * 60 + 29) * 1000 + 500) {
+                    const val = +(diffMsecs / (60 * 1000)).toFixed()
+                    timeStr = (Math.abs(val) <= 1)
+                        ? (val <= 0
+                            ? fmts.timeMinuteAgo
+                            : fmts.timeInMinute)
+                        : (val < 0
+                            ? fmts.timeMinutesAgo.replace("{0}", String(Math.abs(val)))
+                            : fmts.timeInMinutes.replace("{0}", String(val)))
+                }
+                else {
+                    const val = +(diffMsecs / (60 * 60 * 1000)).toFixed()
+                    timeStr = (Math.abs(val) <= 1)
+                        ? (val <= 0
+                            ? fmts.timeHourAgo
+                            : fmts.timeInHour)
+                        : (val < 0
+                            ? fmts.timeHoursAgo.replace("{0}", String(Math.abs(val)))
+                            : fmts.timeInHours.replace("{0}", String(val)))
+                }
+            }
+            else if (options.alwaysWithTime)
+                timeStr = this.format(locale.shortTimePattern)
+        }
+
+        return options.singleLine
+            ? (dateStr && timeStr
+                ? fmts.dateTimeCombined
+                    .replace("{0}", dateStr.replace(options.separator, " "))
+                    .replace("{1}", timeStr.replace(options.separator, " "))
+                : dateStr.replace(options.separator, " ") + timeStr.replace(options.separator, " "))
+            : (dateStr && timeStr
+                ? [dateStr.replace(options.separator, " "), timeStr.replace(options.separator, " ")]
+                : (dateStr
+                    ? dateStr.split(options.separator)
+                    : timeStr.split(options.separator)))
     }
-    get minutes() {
-        return __TimeSpanUtils.rounder( (this._millis % (3600 * 1000)) / (60 * 1000));
+
+    toDisplayString(options, localeConfig = LocaleSettings.config) {
+        options = Object.assign({}, options)
+        options.dateTimeNow = DateTime.now().setYears(localeConfig.twoDigitYearMax - 100 - 1)
+        return this.humanize(options, localeConfig)
     }
-    get seconds() {
-        return __TimeSpanUtils.rounder((this._millis % 60000) / 1000);
+
+    // http://blog.stevenlevithan.com/archives/date-time-format/comment-page-3
+    format(mask, locale = LocaleSettings) {
+        const token = /d{1,4}|M{1,4}|y{1,4}|([Hhms])\1?|tt|[Ll]|"[^"]*"|'[^']*'/g
+        const pad = (val, len = 2) => String(val).padStart(len, "0")
+
+        const d = this.getDays(),
+            D = this.getDayOfWeek(),
+            M = this.getMonths(),
+            y = this.getYears(),
+            H = this.getHours(),
+            m = this.getMinutes(),
+            s = this.getSeconds(),
+            L = this.getMilliseconds(),
+            flags = {
+                d,
+                dd: pad(d),
+                ddd: locale.abbreviatedDayNames[D],
+                dddd: locale.dayNames[D],
+                M,
+                MM: pad(M),
+                MMM: locale.abbreviatedMonthNames[M - 1],
+                MMMM: locale.monthNames[M - 1],
+                y: Number(String(y).slice(2)),
+                yy: String(y).slice(2),
+                yyy: pad(y, 3),
+                yyyy: pad(y, 4),
+                h: H % 12 || 12,
+                hh: pad(H % 12 || 12),
+                H,
+                HH: pad(H),
+                m,
+                mm: pad(m),
+                s,
+                ss: pad(s),
+                l: pad(L, 3),
+                L: pad(L > 99 ? Math.round(L / 10) : L),
+                tt: H < 12 ? "AM" : "PM",
+            }
+
+        return mask.replace(token, function ($0) {
+            return $0 in flags ? flags[$0] : $0.slice(1, $0.length - 1)
+        })
     }
-    get milliseconds() {
-        return __TimeSpanUtils.rounder(this._millis % 1000);
+
+    _convertTime(toLocal) {
+        const result = new DateTime(this)
+
+        if ((toLocal && (result.getKind() !== DateTimeKind.local))
+            || (!toLocal && (result.getKind() !== DateTimeKind.utc))) {
+            return result
+                .incMilliseconds(DateTime.getTimezoneOffsetTicks() * (toLocal ? 1 : -1))
+                .setKind(toLocal ? DateTimeKind.local : DateTimeKind.utc)
+        }
+
+        return result
     }
-    get totalDays() {
-        return this._millis / (24 * 3600 * 1000);
+
+    static getTimezoneOffsetTicks() {
+        const now = new Date()
+
+        const nowUtc = new Date(
+            now.getUTCFullYear(),
+            now.getUTCMonth(),
+            now.getUTCDate(),
+            now.getUTCHours(),
+            now.getUTCMinutes(),
+            now.getUTCSeconds(),
+            now.getUTCMilliseconds()
+        )
+
+        return now.getTime() - nowUtc.getTime()
     }
-    get totalHours() {
-        return this._millis / (3600 * 1000);
+
+    static cast(value) {
+        return (value instanceof DateTime) ? value : new DateTime(value)
     }
-    get totalMinutes() {
-        return this._millis / (60 * 1000);
+
+    static utcNow() {
+        return new DateTime().toUniversalTime()
     }
-    get totalSeconds() {
-        return this._millis / 1000;
+
+    static now() {
+        return new DateTime()
     }
-    get totalMilliseconds() {
-        return this._millis;
+
+    static getTimezoneOffset() {
+        return +(DateTime.getTimezoneOffsetTicks() / 60 / 60 / 1000).toFixed(1)
+    }
+
+    static is24HoursPattern(pattern) {
+        const hourFormat = new RegExp("h+", "i").exec(pattern)
+        const ch = hourFormat ? hourFormat[0] : null
+
+        return !hourFormat
+            || (ch.toLocaleLowerCase() !== ch.toLocaleUpperCase()
+                && ch.toLocaleUpperCase() === ch)
+    }
+
+    static parseDate(s, locale = LocaleSettings) {
+        const re = /^(\d{1,4})(([.\-/ ] ?(\d{1,2})([.\-/ ] ?(\d{1,4}))?(?:$| +.*$))|$)/i
+        const matches = re.exec(s.trim())
+
+        if (matches) {
+            const parts = [matches[1]]
+
+            if (matches[4] != null)
+                parts[1] = matches[4]
+
+            if (matches[6] != null)
+                parts[2] = matches[6]
+
+            const curDate = DateTime.now()
+            const co = locale.dateCompsOrder
+            let year = (parts.length === 3) ? +parts[co.indexOf("y")] : curDate.getYears()
+            const month = (parts.length >= 2) ? +parts[(parts.length === 2 ? co.replace("y", "") : co).indexOf("m")] : curDate.getMonths()
+            const day = (parts.length === 1) ? +parts[0] : +parts[(parts.length === 2 ? co.replace("y", "") : co).indexOf("d")]
+
+            if ((year >= 1) && (year <= 9999)
+                && (month >= 1) && (month <= 12)
+                && (day >= 1) && (day <= 31)) {
+                if (year < 100) {
+                    const major = Math.round(locale.twoDigitYearMax / 100) * 100
+                    const minor = locale.twoDigitYearMax - major
+
+                    year = (year <= minor) ? (major + year) : (major + year - 100)
+                }
+
+                const date = new DateTime(year, month, day)
+
+                if (!isNaN(date.getTicks())
+                    && date.getYears() === year
+                    && date.getMonths() === month
+                    && date.getDays() === day
+                    && date.getTicks() >= DateTime.cast(locale.minSupportedDate).getTicks()
+                    && date.getTicks() <= DateTime.cast(locale.maxSupportedDate).getTicks()) {
+                    return date
+                }
+            }
+        }
+
+        return null
+    }
+
+    static parseTime(s) {
+        const re = /^(0?\d|1\d|2[0-3]|am?|pm?)(([.: ](0?\d|[1-5]\d|am?|pm?)([.: ](0?\d|[1-5]\d|am?|pm?))?(?:$| +.*$))|$)/i
+        const matches = re.exec(s.trim())
+
+        if (matches) {
+            const parts = [matches[1]]
+
+            if (matches[4] != null)
+                parts[1] = matches[4]
+
+            if (matches[6] != null)
+                parts[2] = matches[6]
+
+            let periodCount = 0
+            const numbers = []
+            let am = true
+
+            for (let i = 0, j = 0; i < parts.length; i++) {
+                let n = parseInt(parts[i], 10)
+
+                if (isNaN(n)) {
+                    am = (parts[i][0].toLowerCase() === "a")
+                    n = (am ? -1 : -2)
+                    periodCount++
+                }
+                else
+                    numbers[j++] = n
+
+                if (periodCount > 1 || (parts.length === 3 && i === 1 && n < 0))
+                    return null
+            }
+
+            if (!numbers.length)
+                return null
+
+            let hours = numbers[0]
+            const mins = (numbers.length > 1) ? numbers[1] : 0
+
+            if (hours > 12 && periodCount && am)
+                return null
+
+            if (hours === 12 && periodCount && am)
+                hours = 0
+
+            if (hours < 12 && !am)
+                hours += 12
+
+            return new DateTime(0).setTime(hours, mins)
+        }
+
+        return null
+    }
+
+    static parseDateTime(s, locale = LocaleSettings) {
+        const parts = s.trim().split(/\s+/)
+        let timeStartIndex = -1
+        let periodIndex = -1
+
+        for (let i = parts.length - 1; i >= 0; i--) {
+            if ((timeStartIndex < 0) && (parts[i].indexOf(":") >= 0))
+                timeStartIndex = i
+
+            if ((periodIndex < 0) && parts[i].toLowerCase().match(/^am?|pm?$/))
+                periodIndex = i
+        }
+
+        if ((periodIndex >= 0) && (timeStartIndex >= 0) && (periodIndex < timeStartIndex))
+            timeStartIndex = periodIndex
+        else if ((periodIndex >= 0) && (timeStartIndex < 0))
+            timeStartIndex = periodIndex + ((periodIndex === parts.length - 1) ? -1 : 0)
+        else if (timeStartIndex < 0)
+            timeStartIndex = parts.length - (parts.length >= 5 ? 2 : (parts.length > 1 ? 1 : 0))
+
+        const dateParts = parts.slice(0, timeStartIndex)
+        const timeParts = parts.slice(timeStartIndex)
+
+        if (!dateParts.length && !timeParts.length)
+            return null
+
+        const date = dateParts.length
+            ? DateTime.parseDate(dateParts.join(" "), locale)
+            : DateTime.now().setTime(0)
+
+        if (!date)
+            return null
+
+        if (timeParts.length) {
+            const time = DateTime.parseTime(timeParts.join(" "))
+            if (!time)
+                return null
+            date.setTime(time)
+        }
+
+        return date.setKind(DateTimeKind.unspecified)
+    }
+
+    static getShortenedRangeText(from, to, mode, locale = LocaleSettings) {
+        let valueFrom = from ? DateTime.cast(from) : null
+        let valueTo = to ? DateTime.cast(to) : null
+
+        if (mode === DateTimeMode.dateTime) {
+            if (valueFrom)
+                valueFrom = valueFrom.toLocalTime()
+
+            if (valueTo)
+                valueTo = valueTo.toLocalTime()
+        }
+
+        const now = DateTime.now()
+
+        const fromFormat = (mode === DateTimeMode.time ? locale.rangeFormats.timeFromFormat : locale.rangeFormats.dateTimeFromFormat)
+        const toFormat = (mode === DateTimeMode.time ? locale.rangeFormats.timeToFormat : locale.rangeFormats.dateTimeToFormat)
+        const rangeFormat = (mode === DateTimeMode.time ? locale.rangeFormats.timeRangeFormat : locale.rangeFormats.dateTimeRangeFormat)
+
+        const formatDate = function (date) {
+            const year = date.getYears()
+
+            if (now.getYears() === year)
+                return date.format(locale.shortMonthDayPattern)
+
+            if (year > locale.twoDigitYearMax - 100 && year <= locale.twoDigitYearMax)
+                return date.format(locale.shortestDatePattern)
+
+            return date.format(locale.shortDatePattern)
+        }
+
+        const formatTime = (time) => time.format(locale.shortTimePattern)
+
+        const formatValue = (dateTime) => {
+            let subMode = mode
+
+            if (mode === DateTimeMode.dateTime)
+                if (valueFrom
+                    && valueTo
+                    && dateTime === valueTo
+                    && valueFrom.compareTo(valueTo) !== 0
+                    && valueFrom.compareTo(valueTo, "day") === 0) {
+                    subMode = DateTimeMode.time
+                }
+                else if (dateTime.getTime().getTicks() === 0
+                    && (!valueFrom || !valueTo || valueTo.compareTo(valueFrom.addDays()) >= 0)) {
+                    subMode = DateTimeMode.date
+
+                    if (dateTime === valueTo)
+                        dateTime = valueTo.addDays(-1)
+                }
+
+            switch (subMode) {
+                case DateTimeMode.dateTime: return formatDate(dateTime) + " " + formatTime(dateTime)
+                case DateTimeMode.date: return formatDate(dateTime)
+                case DateTimeMode.time: return formatTime(dateTime)
+                default: throw "DateTime.getShortenedRangeText: invalid mode"
+            }
+        }
+
+        const valueFromFormatted = valueFrom ? formatValue(valueFrom) : ""
+        const valueToFormatted = valueTo ? formatValue(valueTo) : ""
+
+        let text = valueFrom && valueTo
+            ? (valueFromFormatted === valueToFormatted
+                ? valueFromFormatted
+                : rangeFormat.replace("{0}", valueFromFormatted).replace("{1}", valueToFormatted))
+            : (valueFrom
+                ? fromFormat.replace("{0}", valueFromFormatted)
+                : toFormat.replace("{0}", valueToFormatted))
+
+        text = text.replace("{1}", "").replace("{2}", "").trim()
+
+        return text
+    }
+
+    static _floorTicks(dateTime, floorTo = "none") {
+        const toYear = (floorTo === "year")
+        const toMonth = (floorTo === "month")
+        const toDay = (floorTo === "day")
+        const toHour = (floorTo === "hour")
+        const toMinute = (floorTo === "minute")
+        const toSecond = (floorTo === "second")
+        const noFloor = (floorTo === "none")
+
+        if (!toYear && !toMonth && !toDay && !toHour && !toMinute && !toSecond && !noFloor)
+            throw "DateTime.compareTo: invalid 'floorTo' format"
+
+        return noFloor ? dateTime.getTicks() : Date.UTC(
+            dateTime.getYears(),
+            toYear ? 0 : dateTime.getMonths() - 1,
+            (toYear || toMonth) ? 1 : dateTime.getDays(),
+            (toYear || toMonth || toDay) ? 0 : dateTime.getHours(),
+            (toYear || toMonth || toDay || toHour) ? 0 : dateTime.getMinutes(),
+            (toYear || toMonth || toDay || toHour || toMinute) ? 0 : dateTime.getSeconds(),
+            (toYear || toMonth || toDay || toHour || toMinute || toSecond) ? 0 : dateTime.getMilliseconds()
+        )
     }
 }
-
-// TimeSpan class test.
-/*
-let ts = new TimeSpan(99, 23, 59, 59, 1000)
-console.log(`Days: ${ts.days}`)
-console.log(`Hours: ${ts.hours}`)
-console.log(`Minutes: ${ts.minutes}`)
-console.log(`Seconds: ${ts.seconds}`)
-console.log(`Milliseconds: ${ts.milliseconds}`)
-
-ts.negate() // * -1
-console.log(`Total days: ${ts.totalDays}`)
-console.log(`Total hours: ${ts.totalHours}`)
-console.log(`Total minutes: ${ts.totalMinutes}`)
-console.log(`Total seconds: ${ts.totalSeconds}`)
-console.log(`Total milliseconds: ${ts.totalMilliseconds}`)
-console.log(ts.toString())
-
-let ts2 = ts.duration() // make abs value.
-
-console.log(`Total days: ${ts2.totalDays}`)
-console.log(`Total hours: ${ts2.totalHours}`)
-console.log(`Total minutes: ${ts2.totalMinutes}`)
-console.log(`Total seconds: ${ts2.totalSeconds}`)
-console.log(`Total milliseconds: ${ts2.totalMilliseconds}`)
-console.log(ts2.toString())
-
-let ts3 = ts2.add(new TimeSpan(1, 1, 1, 1, 1));
-
-console.log(`Total days: ${ts3.totalDays}`)
-console.log(`Total hours: ${ts3.totalHours}`)
-console.log(`Total minutes: ${ts3.totalMinutes}`)
-console.log(`Total seconds: ${ts3.totalSeconds}`)
-console.log(`Total milliseconds: ${ts3.totalMilliseconds}`)
-console.log(ts3.toString())
-
-ts.negate(); // make is positive again.
-console.log('same:', ts.equals(ts2));
-console.log('ts = ts2:', ts.compareTo(ts2));
-console.log('ts < ts3', ts.compareTo(ts3));
-console.log('ts3 < ts', ts3.compareTo(ts));
-*/
-
-// DateTime class test.
-/*
-let o = new DateTime(2019, 7, 3, 23, 58, 58, 999)
-let dt;
-//console.log(dt)
-//dt = o.addYears(1);
-//dt = o.addMinutes(48); // NOT OK seem to be if day change the calculation is not work.
-//dt = o.addSeconds(60); // OK
-//dt = o.addMilliseconds(667); // OK
-//dt = o.addMinutes(1).addSeconds(1).addMilliseconds(1); // OK
-//dt = o.addMinutes(46).addSeconds(60).addMilliseconds(667); // NOT OK
-dt = o;
-dt = dt.addMilliseconds(1);
-dt = dt.addSeconds(1);
-dt = dt.addMinutes(1); //! at this step the day not work correctly.
-
-console.log(`${dt.year}-${dt.month}-${dt.day} ${dt.hour}:${dt.minute}:${dt.second}.${dt.millisecond}`);
-*/
-
-// JavaScript Date class test.
-
-let d = new Date(2019, 1, 28);
-console.log(`Date (src): ${d}`);
-
-//let ms = d.getTime() - (d.getTimezoneOffset() * 60000); // UTC time
-let ms = d.getTime(); // local time
-
-let totalms = ms;
-console.log(`ms: ${totalms}`);
-
-let d2 = new Date(totalms);
-console.log(`Date from ms: ${d2}`);
-
-// note: month start from 0 to 11
-let offset = (new Date(1970, 0, 1).getTimezoneOffset() * 60000);
-console.log('offset:', offset)
-let dd1 = new Date(1970, 0, 1) // elapsed from January 1, 1970
-console.log(dd1);
-let dd2 = new Date(2019, 6, 4) // date only
-//let dd2 = new Date() // date with time
-console.log(dd2);
-let diffMillsecs = (dd2 - (dd1.getTime() - offset))
-console.log('diff in ms:', diffMillsecs)
-let diffDays = diffMillsecs / (24 * 3600 * 1000)
-console.log('diff in days:', diffDays)
-
-let d3 = new Date(diffMillsecs);
-console.log(`Date from ms: ${d3}`)
-
