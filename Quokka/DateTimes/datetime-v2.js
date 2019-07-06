@@ -1,4 +1,3 @@
-
 /** 
  * The TimeSpan class. 
  */
@@ -294,6 +293,14 @@ const DateTime = class  {
      */
     addMilliseconds(milliseconds) {
         return new DateTime(this.span.ticks + milliseconds);
+    }
+
+    /**
+     * For every occurance value.
+     * @param {Number} value The occurance value.
+     */
+    every(value) {
+        return new TimeSchedule(value);
     }
 
     /**
@@ -701,4 +708,57 @@ DateTime.test = () => {
     */
 };
 
-DateTime.test();
+//DateTime.test();
+
+const TimeSchedule = class {
+    constructor(value) {
+        this.value = value;
+        this.multiply = 0;
+    }
+    get day() {
+        this.multiply = 24 * 3600000;
+        return this;
+    }
+    get hour() {
+        this.multiply = 3600000;
+        return this;
+    }
+    get minute() {
+        this.multiply = 60000;
+        return this;
+    }
+    get second() {
+        this.multiply = 1000;
+        return this;
+    }
+    get millisecond() { 
+        this.multiply = 1;
+        return this;
+    }
+    do(execCallback, exitCallback) {
+        let conti = false;
+        let handle = setInterval(() => {
+            conti = (exitCallback) ? !exitCallback() : false;
+            if (conti) execCallback();
+            else clearInterval(handle);
+        }, this.value * this.multiply);
+    }
+}
+
+TimeSchedule.test = () => {
+    let dt = new DateTime();    
+    let cnt = 0;
+    let runfn = () => {
+        console.log(cnt + ' second passed.');
+        cnt++;
+    };
+    let exitfn = () => { 
+        let isExit = (cnt > 5);
+        if (isExit) console.log('exit loop.');
+        return isExit;
+    };
+
+    dt.every(1).second.do(runfn, exitfn);
+}
+
+TimeSchedule.test();
