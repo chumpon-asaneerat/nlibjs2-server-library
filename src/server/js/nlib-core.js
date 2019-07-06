@@ -102,6 +102,15 @@ const NLib = class {
     get NPM() { return NPM; }
 
     //#endregion
+
+    //#region static methods and properties
+
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
+
+    //#endregion
 }
 
 //#endregion
@@ -157,6 +166,10 @@ const Objects = class {
             dest[key] = (!src[dKey]) ? (!overwrite) ? dest[key] : null : src[dKey];
         });
     }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 //#endregion
@@ -194,6 +207,10 @@ const JSONFile = class {
     static exists(fileName) {
         return fs.existsSync(fileName);
     }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 //#endregion
@@ -295,6 +312,10 @@ const Configuration = class {
     update() {
         return JSONFile.save(this._fileName, this._data);
     }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 //#endregion
@@ -412,6 +433,10 @@ const TimeSpan = class {
      * @param {Number} hours The seconds value.
      */
     static fromSeconds(seconds) { return new TimeSpan(0, 0, seconds); }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 /** This constant array is for internal used. @ignore */
@@ -712,6 +737,10 @@ const DateTime = class  {
         if (month === 2 && leap) ret = 29; // leap year Feb has 29 days.
         return ret;
     }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 /** This constant array is for internal used. @ignore */
@@ -976,6 +1005,11 @@ NPM.isUninstalled = async (pkg) => {
     }
     return ret;
 }
+/**
+ * Gets class version.
+ */
+NPM.version = "2.0.0";
+
 
 //#endregion
 

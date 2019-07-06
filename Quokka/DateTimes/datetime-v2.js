@@ -110,6 +110,10 @@ const TimeSpan = class {
      * @param {Number} hours The seconds value.
      */
     static fromSeconds(seconds) { return new TimeSpan(0, 0, seconds); }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 /** This constant array is for internal used. @ignore */
@@ -429,6 +433,10 @@ const DateTime = class  {
         if (month === 2 && leap) ret = 29; // leap year Feb has 29 days.
         return ret;
     }
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 }
 
 /** This constant array is for internal used. @ignore */
