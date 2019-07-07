@@ -14,9 +14,11 @@
     "default": {
       "server": "localhost",
       "database": "master",
-      "username": "sa",
-      "password": "winnt@123",
-      "optional": {
+      "user": "sa",
+      "password": "winnt123",
+      "pool": {
+        "max": 10,
+        "min": 0,
         "timeout": 1000
       }
     }

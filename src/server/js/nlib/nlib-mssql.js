@@ -15,9 +15,11 @@ const mssqlCfg = {
     default: {
         server: 'localhost',
         database: 'master',
-        username: 'sa',
-        password: 'winnt@123',
-        optional: {
+        user: 'sa',
+        password: 'winnt123',
+        pool: {
+            max: 10,
+            min: 0,
             timeout: 1000
         }
     }
@@ -79,7 +81,8 @@ const SqlServer = class {
         try {
             await this.connection.connect();
         }
-        catch {
+        catch (err) {
+            //console.log(err)
             this.connection = null;
         }
         
@@ -107,9 +110,10 @@ const SqlServer = class {
      */
     async disconnect() {
         if (this.connected) {
-            await this.connection.disconnect();
+            await this.connection.close();
             this.connection = null;
-        }
+            //console.log('database is disconnected.');
+        }        
     }
 
     //#endregion
@@ -120,7 +124,7 @@ const SqlServer = class {
      * Checks is connected to target database server.
      */
     get connected() {
-        return (!mssql && this.connection);
+        return (mssql && this.connection && this.connection.connected);
     }
 
     //#endregion

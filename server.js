@@ -88,6 +88,7 @@ let test = async () => {
         console.log('database connect failed.');
     }
     await mssqlSvr.disconnect();
+    console.log('database is disconnected.');
 };
 
 test();
