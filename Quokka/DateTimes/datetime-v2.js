@@ -1,3 +1,5 @@
+//#region TimeSpan
+
 /** 
  * The TimeSpan class. 
  */
@@ -180,6 +182,10 @@ TimeSpan.test = () => {
 }
 
 //TimeSpan.test();
+
+//#endregion
+
+//#region DateTime
 
 /** 
  * DateTime class.
@@ -710,6 +716,10 @@ DateTime.test = () => {
 
 //DateTime.test();
 
+//#endregion
+
+//#region TimeSchedule
+
 const TimeSchedule = class {
     constructor(value) {
         this.value = value;
@@ -762,3 +772,5 @@ TimeSchedule.test = () => {
 }
 
 TimeSchedule.test();
+
+//#endregion

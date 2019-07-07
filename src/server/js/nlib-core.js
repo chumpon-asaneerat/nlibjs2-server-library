@@ -91,12 +91,12 @@ const NLib = class {
      */
     get TimeSpan() { return TimeSpan; }
     /** 
-     * The DateTime class. 
+     * The DateTime class. Provide various methods and property to work with Date and Time.
      * @ignore
      */
     get DateTime() { return DateTime; }
     /** 
-     * The NPM class. 
+     * The NPM class. Provide node package management (npm) related functions.
      * @ignore
      */
     get NPM() { return NPM; }
@@ -121,6 +121,8 @@ const NLib = class {
  * The Objects management and utilities class.
  */
 const Objects = class {
+    //#region static methods and properties
+
     /**
      * Assign value to target Object's property.
      * @param {Object} obj Target Object.
@@ -170,6 +172,8 @@ const Objects = class {
      * Gets class version.
      */
     static get version() { return "2.0.0"; }
+
+    //#endregion
 }
 
 //#endregion
@@ -180,6 +184,8 @@ const Objects = class {
  * The JSON File Class.
  */
 const JSONFile = class {
+    //#region static methods and properties
+
     /**
      * Save object to json file.
      * @param {String} fileName Target File Name.
@@ -211,6 +217,8 @@ const JSONFile = class {
      * Gets class version.
      */
     static get version() { return "2.0.0"; }
+
+    //#endregion
 }
 
 //#endregion
@@ -235,6 +243,8 @@ const JSONFile = class {
  * cfg.update();
  */
 const Configuration = class {
+    //#region constructor
+
     /**
      * Create new instace of Configuration class.
      * @param {String} fileName The Configuration File Name.
@@ -244,6 +254,11 @@ const Configuration = class {
         this._data = {};
         this.load();
     }
+
+    //#endregion
+
+    //#region public methods
+
     /**
      * gets property value.
      * @param {String} property The nested object property in string.
@@ -280,20 +295,10 @@ const Configuration = class {
             }
         }
     }
-    /** 
-     * Gets configuration object.
-     * @return {Object} Returns configuration object.
-     */
-    get data() { return this._data; }
-    /** 
-     * Gets configuration file name.
-     * @return {String} Returns configuration file name.
-     */
-    get fileName() { return this._fileName; }
     /**
      * Checks is configuration file exists.
      * @return {Boolean} Returns true if file is already exists.
-     */
+     */    
     exists() {
         return JSONFile.exists(this._fileName);
     }
@@ -312,10 +317,32 @@ const Configuration = class {
     update() {
         return JSONFile.save(this._fileName, this._data);
     }
+
+    //#endregion
+
+    //#region public properties
+
+    /** 
+     * Gets configuration object.
+     * @return {Object} Returns configuration object.
+     */
+    get data() { return this._data; }
+    /** 
+     * Gets configuration file name.
+     * @return {String} Returns configuration file name.
+     */
+    get fileName() { return this._fileName; }
+
+    //#endregion
+
+    //#region static methods and properties
+
     /**
      * Gets class version.
      */
     static get version() { return "2.0.0"; }
+
+    //#endregion
 }
 
 //#endregion
@@ -326,6 +353,8 @@ const Configuration = class {
  * The TimeSpan class. 
  */
 const TimeSpan = class {
+    //#region constructor
+
     /**
      * Create new instace of Timespoan class.
      */
@@ -341,6 +370,11 @@ const TimeSpan = class {
         // init variable by arguments.
         TimeSpan.constructors[idx].init(this, ...arguments);
     }
+
+    //#endregion
+
+    //#region public methods
+
     /**
      * Checks is TimeSpan is equals.
      * @param {TimeSpan} timespan The TimeSpan object to compare.
@@ -372,6 +406,11 @@ const TimeSpan = class {
      * @param {TimeSpan} timespan The TimeSpan object to subtract.
      */
     subtract(timespan) { return new TimeSpan(this.ticks - timespan.ticks); }
+
+    //#endregion
+
+    //#region public properties
+
     /**
      * Gets days part.
      */
@@ -413,6 +452,10 @@ const TimeSpan = class {
      */
     get totalMilliseconds() { return this.ticks; }
 
+    //#endregion
+
+    //#region static methods and properties
+
     /**
      * Create new TimeSpan from specificed days.
      * @param {Number} days The days value.
@@ -433,11 +476,16 @@ const TimeSpan = class {
      * @param {Number} hours The seconds value.
      */
     static fromSeconds(seconds) { return new TimeSpan(0, 0, seconds); }
+
     /**
      * Gets class version.
      */
     static get version() { return "2.0.0"; }
+
+    //#endregion
 }
+
+//#region TimeSpan Internal consts and methods
 
 /** This constant array is for internal used. @ignore */
 TimeSpan.constructors = [
@@ -484,10 +532,12 @@ TimeSpan.pad = (number, len = 2) => String(number).padStart(len, "0")
 
 //#endregion
 
+//#endregion
+
 //#region DateTime
 
 /** 
- * DateTime class.
+ * The DateTime class. Provide various methods and property to work with Date and Time.
  * 
  * @example
  * // nlib load module.
@@ -498,6 +548,8 @@ TimeSpan.pad = (number, len = 2) => String(number).padStart(len, "0")
  * console.log(dt.toString());
  */
 const DateTime = class  {
+    //#region constructor
+
     /**
      * Create new instace of DateTime class.
      */
@@ -517,6 +569,11 @@ const DateTime = class  {
         // keep Date object value.
         this.value = new Date(this.span.ticks);
     }
+
+    //#endregion
+
+    //#region public methods
+
     /**
      * Add timespan to current DateTime object.
      * @param {TimeSpan} timespan The TimeSpan object.
@@ -601,45 +658,6 @@ const DateTime = class  {
     }
 
     /**
-     * Gets the year part.
-     */
-    get year() { return this.value.getFullYear(); }
-    /**
-     * Gets the month part.
-     */
-    get month() { return this.value.getMonth() + 1; }
-    /**
-     * Gets the day part.
-     */
-    get day() { return this.value.getDate(); }
-    /**
-     * Gets the day of week value (0-sunday, 1-monday, ...).
-     */
-    get dayOfWeek() { return this.value.getDay(); }
-    /**
-     * Gets the hour part.
-     */
-    get hour() { return this.value.getHours(); }
-    /**
-     * Gets the minute part.
-     */
-    get minute() { return this.value.getMinutes(); }
-    /**
-     * Gets the second part.
-     */
-    get second() { return this.value.getSeconds(); }
-    /**
-     * Gets the millisecond part.
-     */
-    get millisecond() { return this.value.getMilliseconds(); }
-    /**
-     * Checks current day is end of month.
-     */
-    get isEndOfMonth() {
-        let ret = (DateTime.daysInMonth(this.year, this.month) === this.day);
-        return ret;
-    }
-    /**
      * Format Current DateTime object with specificed format's mask.
      */
     format(mask, locale = DateTime.LocaleSettings) {
@@ -696,6 +714,54 @@ const DateTime = class  {
         return this.format(fmt);
     }
 
+    //#endregion
+
+    //#region public properties
+
+    /**
+     * Gets the year part.
+     */
+    get year() { return this.value.getFullYear(); }
+    /**
+     * Gets the month part.
+     */
+    get month() { return this.value.getMonth() + 1; }
+    /**
+     * Gets the day part.
+     */
+    get day() { return this.value.getDate(); }
+    /**
+     * Gets the day of week value (0-sunday, 1-monday, ...).
+     */
+    get dayOfWeek() { return this.value.getDay(); }
+    /**
+     * Gets the hour part.
+     */
+    get hour() { return this.value.getHours(); }
+    /**
+     * Gets the minute part.
+     */
+    get minute() { return this.value.getMinutes(); }
+    /**
+     * Gets the second part.
+     */
+    get second() { return this.value.getSeconds(); }
+    /**
+     * Gets the millisecond part.
+     */
+    get millisecond() { return this.value.getMilliseconds(); }
+    /**
+     * Checks current day is end of month.
+     */
+    get isEndOfMonth() {
+        let ret = (DateTime.daysInMonth(this.year, this.month) === this.day);
+        return ret;
+    }
+
+    //#endregion
+
+    //#region static methods and properties
+
     /**
      * Gets Current DateTime.
      * @return {DateTime} Returns the DateTime object of current time.
@@ -741,7 +807,11 @@ const DateTime = class  {
      * Gets class version.
      */
     static get version() { return "2.0.0"; }
+
+    //#endregion
 }
+
+//#region DateTime Internal consts and methods
 
 /** This constant array is for internal used. @ignore */
 DateTime.constructors = [
@@ -839,6 +909,10 @@ DateTime.calcAddMonthDays = (currYear, currMonth, months) => {
 /** This function is for internal used. @ignore */
 DateTime.pad = (number, len = 2) => String(number).padStart(len, "0")
 
+//#endregion
+
+//#region DateTime.LocaleSettings
+
 /**
  * The default Locale Setting (EN).
  */
@@ -933,83 +1007,79 @@ DateTime.LocaleSettings = {
 
 //#endregion
 
+//#endregion
+
 //#region NPM
 
 /**
- * The node package management (npm) functions.
+ * The NPM class. Provide node package management (npm) related functions.
  */
-const NPM = { }
-/**
- * Install npm package.
- * 
- * @param {String} pkg The package name (include version see npm document for more information).
- * @param {Boolean} dev True if package is used for development.
- */
-NPM.install = async (pkg, dev = false) => {
-    let r = require;
-    let cmd = (dev) ? `npm install ${pkg} --save-dev` : `npm install ${pkg} --save`;
-    console.log('execute:' + cmd);
-    r('child_process').execSync(cmd);
-    await setImmediate(() => { });
-    return await NPM.isInstalled(pkg);
-}
-/**
- * Uninstall npm package.
- * 
- * @param {String} pkg The package name (include version see npm document for more information).
- */
-NPM.uninstall = async (pkg) => {
-    let r = require;
-    let cmd = `npm uninstall ${pkg} --save`;
-    console.log('execute:' + cmd);
-    r('child_process').execSync(cmd);
-    await setImmediate(() => { });
-    return await NPM.isUninstalled(pkg);
-}
+const NPM = class  {
+    //#region static methods and properties
 
-/**
- * Checks is package is successfully installed.
- * 
- * @param {String} pkg The package name (include version see npm document for more information).
- */
-NPM.isInstalled = async (pkg) => {
-    let r = require;
-    let ret = false;
-    try {
-        o = r.resolve(pkg) 
-        console.log(`"${pkg}" has been installed.`);
-        ret = true;
+    /**
+     * Checks is package is exists.
+     * 
+     * @param {String} pkg The package name (include version see npm document for more information).
+     */
+    static exists(pkg) {
+        let r = require;
+        let ret = false;
+        let o;
+        try {
+            o = r.resolve(pkg) 
+            //console.log(`"${pkg}" has been installed.`);
+        }
+        catch {
+            //console.log(`"${pkg}" not installed.`);
+        }
+        ret = (o) ? true : false;
+        return ret;
     }
-    catch (err) {
-        console.log(`"${pkg}" not found.`);
-        ret = false;
+    /**
+     * Install npm package.
+     * 
+     * @param {String} pkg The package name (include version see npm document for more information).
+     * @param {Boolean} dev True if package is used for development.
+     */
+    static install(pkg, dev = false) {
+        let ret = NPM.exists(pkg);
+        if (!ret) {
+            let r = require;
+            let cmd = (dev) ? `npm install ${pkg} --save-dev` : `npm install ${pkg} --save`;            
+            console.log(`installing: "${pkg}" please wait.`);
+            //console.log('execute:' + cmd);
+            r('child_process').execSync(cmd, { stdio: 'ignore' });
+            //setImmediate(() => { });
+            ret = NPM.exists(pkg);
+        }
+        return ret;
     }
-    return ret;
-}
-/**
- * Checks is package is uninstalled completely.
- * 
- * @param {String} pkg The package name (include version see npm document for more information).
- */
-NPM.isUninstalled = async (pkg) => {
-    let r = require;
-    let ret = false;
-    try {
-        o = r.resolve(pkg) 
-        console.log(`"${pkg}" cannot uninstalled completely.`);
-        ret = false;
+    /** 
+     * Uninstall npm package.
+     * 
+     * @param {String} pkg The package name (include version see npm document for more information).
+     */
+    static uninstall(pkg) {
+        let ret = NPM.exists(pkg);
+        if (ret) {
+            let r = require;
+            let cmd = `npm uninstall ${pkg} --save`;            
+            console.log(`uninstalling: "${pkg}" please wait.`);
+            //console.log('execute:' + cmd);
+            r('child_process').execSync(cmd, { stdio: 'ignore' });
+            //setImmediate(() => { });            
+            ret = NPM.exists(pkg);
+        }
+        return ret;
     }
-    catch (err) {
-        console.log(`"${pkg}" has been uninstalled.`);
-        ret = true;
-    }
-    return ret;
-}
-/**
- * Gets class version.
- */
-NPM.version = "2.0.0";
+    /**
+     * Gets class version.
+     */
+    static get version() { return "2.0.0"; }
 
+    //#endregion
+}
 
 //#endregion
 
