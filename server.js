@@ -2,39 +2,6 @@ const path = require("path");
 
 const nlib = require("./src/server/js/nlib/nlib");
 
-//#region Configuration test
-/*
-let cfg = nlib.Config;
-if (!cfg.exists()) {
-    cfg.set('app', { 
-        name:'NLib Web Application', 
-        version:'2.0.0', 
-        updated: '2019-07-01 19:30' 
-    });
-    cfg.set('webserver', { 
-        port: 3000 
-    });
-    cfg.update();
-}
-
-cfg.set('app.name', 'NLib Express Server Application');
-
-console.log('paths:', nlib.paths);
-
-console.log('App:', expSvr.getAppName());
-
-let cfg2 = new nlib.Configuration(path.join(nlib.paths.root, 'custom.json'));
-cfg2.set('db', {
-    type: 'sqlserver',
-    host: 'localhost',
-    database: 'TestDb7x3',
-    user: 'sa',
-    pwd: 'winnt'
-})
-cfg2.update();
-*/
-//#endregion
-
 //#region DateTime and TimeSpan Test
 /*
 let dt = new nlib.DateTime();
@@ -112,8 +79,12 @@ else {
 
 const WebServer = require('./src/server/js/nlib/nlib-express');
 let wsvr = new WebServer();
-wsvr.app.set('name', 'Express server.');
-console.log('name:' + wsvr.app.get('name'));
+
+wsvr.app.get('/', (req, res) => {
+    res.status(200).send(`It's work!!!`);
+});
+
+wsvr.listen();
 
 const mssqlSvr = require('./src/server/js/nlib/nlib-mssql');
 console.log(mssqlSvr.getAppName())
