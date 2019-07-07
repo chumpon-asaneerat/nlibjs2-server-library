@@ -110,12 +110,12 @@ else {
 
 //#region NLib module related methods test.
 
-const expSvr = require('./src/server/js/nlib/modules/express/index');
-console.log(expSvr.getAppName())
-let app = expSvr.app();
-app.use();
+const WebServer = require('./src/server/js/nlib/nlib-express');
+let wsvr = new WebServer();
+wsvr.app.set('name', 'Express server.');
+console.log('name:' + wsvr.app.get('name'));
 
-const mssqlSvr = require('./src/server/js/nlib/modules/mssql/index');
+const mssqlSvr = require('./src/server/js/nlib/nlib-mssql');
 console.log(mssqlSvr.getAppName())
 
 //#endregion

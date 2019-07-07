@@ -1,4 +1,4 @@
-const nlib = require('./../../nlib');
+const nlib = require('./nlib');
 
 const mssqlServer = {
     /** Gets the sql server name. */
