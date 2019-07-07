@@ -79,10 +79,19 @@ else {
 
 const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 console.log('SqlServer class version:', SqlServer.version)
-let mssqlSvr = new SqlServer();
-mssqlSvr.connect();
+let test = async () => {
+    let mssqlSvr = new SqlServer();
+    if (await mssqlSvr.connect()) {
+        console.log('database is connected.');
+    }
+    else {
+        console.log('database connect failed.');
+    }
+    await mssqlSvr.disconnect();
+};
 
-mssqlSvr.disconnect();
+test();
+
 
 //#endregion
 

@@ -9,5 +9,16 @@
     "cookies": {
       "secret": "YOUR_SECURE_KEY@123"
     }
+  },
+  "mssql": {
+    "default": {
+      "server": "localhost",
+      "database": "master",
+      "username": "sa",
+      "password": "winnt@123",
+      "optional": {
+        "timeout": 1000
+      }
+    }
   }
 }

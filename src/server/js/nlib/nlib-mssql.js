@@ -1,20 +1,46 @@
 const nlib = require('./nlib');
-let mssql;
-let mssql_module_name = 'mssql';
 
 //#region Internal methods
 
 const check_modules = () => {
-    if (!nlib.NPM.exists(mssql_module_name)) {
-        nlib.NPM.install(mssql_module_name); // install if required.
+    if (!nlib.NPM.exists('mssql')) {
+        nlib.NPM.install('mssql'); // install if required.
     }
 }
 // check if node module installed.
 check_modules();
 
-if (nlib.NPM.exists(mssql_module_name)) {
-    mssql = require(mssql_module_name)
+const mssql = require('mssql'); // assume install successfully.
+const mssqlCfg = {
+    default: {
+        server: 'localhost',
+        database: 'master',
+        username: 'sa',
+        password: 'winnt@123',
+        optional: {
+            timeout: 1000
+        }
+    }
 }
+
+const check_config = (name = 'default') => {
+    let dbCfg;
+    let cfg = nlib.Config;
+    if (!cfg.exists()) {
+        cfg.set('mssql', mssqlCfg);
+        // save to file.
+        cfg.update();
+    }
+
+    let sName = name.trim().toLowerCase();
+    if (!cfg.get('mssql.' + sName)) {
+        cfg.set('mssql.' + sName, mssqlCfg.default);
+        cfg.update();
+    }
+
+    return cfg.get('mssql.' + sName);
+}
+
 
 //#endregion
 
@@ -44,16 +70,26 @@ const SqlServer = class {
      * 
      * @return {Boolean} Return true if database server is connected.
      */
-    connect() {
+    async connect(name = 'default') {
         let ret;
         if (!mssql) ret = false;
+        let cfg = check_config(name);
 
+        this.connection = new mssql.ConnectionPool(cfg);
+        try {
+            await this.connection.connect();
+        }
+        catch {
+            this.connection = null;
+        }
+        
+        ret = this.connected;
         return ret;
     }
     /**
      * Run Query.
      */
-    query() {
+    async query() {
         let ret;
         if (!this.connected) ret = false;
         return ret;
@@ -61,7 +97,7 @@ const SqlServer = class {
     /**
      * Execute Stored Procedure.
      */
-    execute() {
+    async execute() {
         let ret;
         if (!this.connected) ret = false;
         return ret;
@@ -69,8 +105,9 @@ const SqlServer = class {
     /**
      * Disconnect from database.
      */
-    disconnect() {
+    async disconnect() {
         if (this.connected) {
+            await this.connection.disconnect();
             this.connection = null;
         }
     }
