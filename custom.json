@@ -1,9 +1,0 @@
-{
-  "db": {
-    "type": "sqlserver",
-    "host": "localhost",
-    "database": "TestDb7x3",
-    "user": "sa",
-    "pwd": "winnt"
-  }
-}

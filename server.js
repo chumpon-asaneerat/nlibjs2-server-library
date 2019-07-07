@@ -75,19 +75,37 @@ else {
 */
 //#endregion
 
-//#region NLib module related methods test.
+//#region MSSqlServer test.
+
+const mssqlSvr = require('./src/server/js/nlib/nlib-mssql');
+console.log(mssqlSvr.getAppName())
+
+//#endregion
+
+//#region WebServer test.
 
 const WebServer = require('./src/server/js/nlib/nlib-express');
 let wsvr = new WebServer();
 
-wsvr.app.get('/', (req, res) => {
-    res.status(200).send(`It's work!!!`);
-});
+// add middleware(s) here!!
+//wsvr.app.use(XXXXXX);
 
-wsvr.listen();
+// add route(s) here!!
+const routes = {
+    /** @type {WebServer.RequestHandler} */
+    home: (req, res) => {
+        res.status(200).send(`It's work from home 2!!!`);
+    }
+}
 
-const mssqlSvr = require('./src/server/js/nlib/nlib-mssql');
-console.log(mssqlSvr.getAppName())
+//wsvr.app.get('/', wsvr.home);
+//wsvr.get('/', (req, res, next) => { res.status(200).send(`It's work from custom home!!!`); })
+wsvr.get('/', routes.home)
+
+let svr = wsvr.listen();
+if (svr) {
+    console.log('Create server success.');
+}
 
 //#endregion
 
