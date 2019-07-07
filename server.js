@@ -77,8 +77,12 @@ else {
 
 //#region MSSqlServer test.
 
-const mssqlSvr = require('./src/server/js/nlib/nlib-mssql');
-console.log(mssqlSvr.getAppName())
+const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+console.log('SqlServer class version:', SqlServer.version)
+let mssqlSvr = new SqlServer();
+mssqlSvr.connect();
+
+mssqlSvr.disconnect();
 
 //#endregion
 
