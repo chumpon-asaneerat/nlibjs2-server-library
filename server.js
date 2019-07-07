@@ -1,7 +1,6 @@
 const path = require("path");
 
-const nlib = require("./src/server/js/nlib-core");
-const expSvr = require("./src/server/js/nlib-express");
+const nlib = require("./src/server/js/nlib/nlib");
 
 //#region Configuration test
 /*
@@ -107,6 +106,18 @@ else {
     }
 }
 */
+//#endregion
+
+//#region NLib module related methods test.
+
+const expSvr = require('./src/server/js/nlib/modules/express/index');
+console.log(expSvr.getAppName())
+let app = expSvr.app();
+app.use();
+
+const mssqlSvr = require('./src/server/js/nlib/modules/mssql/index');
+console.log(mssqlSvr.getAppName())
+
 //#endregion
 
 //#region Original Express seting code

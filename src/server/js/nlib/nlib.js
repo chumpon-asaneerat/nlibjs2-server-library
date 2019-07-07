@@ -19,7 +19,7 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
  * The NLib Class.
  * 
  * @example <caption>Usage of NLib Core Library.</caption>
- * const nlib = require("./src/server/js/nlib-core");
+ * const nlib = require("./src/server/js/nlib/nlib");
  */
 const NLib = class {
     //#region constructor
@@ -61,6 +61,19 @@ const NLib = class {
      * @param {Boolean} overwrite The true to overwrite value if property match.
      */
     setValues(dest, src, overwrite) { Objects.setValues(dest, src, overwrite); }
+
+    //#endregion
+
+    //#region nlib modules related methods
+    
+    /**
+     * Gets module path.
+     * @param {String} name The module name.
+     * @return {String} Returns module .js path name.
+     */
+    module(name) {
+        return path.join(__dirname, 'modules', name, 'index');
+    }
 
     //#endregion
 
@@ -231,7 +244,7 @@ const JSONFile = class {
  * @example <caption>Usage of Application Configuration.</caption>
  * 
  * // nlib load module.
- * const nlib = require("./src/server/js/nlib-core");
+ * const nlib = require("./src/server/js/nlib/nlib");
  * // Set variable to access application configuration.
  * const cfg = nlib.Config;
  * // To set app.name to 'App1'
@@ -541,7 +554,7 @@ TimeSpan.pad = (number, len = 2) => String(number).padStart(len, "0")
  * 
  * @example
  * // nlib load module.
- * const nlib = require("./src/server/js/nlib-core");
+ * const nlib = require("./src/server/js/nlib/nlib");
  * // create new DateTime instance.
  * let dt = new nlib.DateTime();
  * // show current DateTime.
