@@ -12,6 +12,7 @@ const check_modules = () => {
 check_modules();
 
 const mssql = require('mssql'); // assume install successfully.
+// default config.
 const mssqlCfg = {
     default: {
         server: 'localhost',
@@ -25,7 +26,6 @@ const mssqlCfg = {
         }
     }
 }
-
 const check_config = (name = 'default') => {
     let dbCfg;
     let cfg = nlib.Config;
@@ -43,17 +43,15 @@ const check_config = (name = 'default') => {
 
     return cfg.get('mssql.' + sName);
 }
-
 const get_type = (sStr, sidx) => {
     return (sidx !== -1) ? sStr.substring(0, sidx).trim() : sStr.trim();
 }
-
 const get_params = (sStr, sidx, eidx) => {
     return (sidx !== -1 && eidx !== -1) 
         ? sStr.substring(sidx + 1, eidx).split(',').map(p => Number(p))
         : null;
 }
-
+// extract datatype information from string.
 const extract = (str) => {
     let sStr = str.trim().toLowerCase();
     let sidx = sStr.indexOf('(');
@@ -66,7 +64,6 @@ const extract = (str) => {
 
     return result;
 }
-
 /**
  * Mapped Type Convert functions.
  */
@@ -105,19 +102,15 @@ const Convert = {
     "guid": mssql.UniqueIdentifier,
     "UniqueIdentifier": mssql.UniqueIdentifier
 }
-
 const clone = (pObj, caseSensitive) => {
     return (pObj) ? nlib.clone(pObj, caseSensitive) : {}
 }
-
 const get_1_params = (tObj) => { 
     return (tObj.params && tObj.params.length >= 1) ? tObj.params[0] : null;
 }
-
 const get_2_params = (tObj) => { 
     return (tObj.params && tObj.params.length >= 2) ? tObj.params[1] : null;
 }
-
 const parse = (str) => {
     let tObj = extract(str);
     let sType = tObj.type;
@@ -125,7 +118,6 @@ const parse = (str) => {
     let p2 = get_2_params(tObj);
     return (p1) ? (p2) ? Convert[sType](p1, p2) : Convert[sType](p1) : Convert[sType]();
 }
-
 const checkInputs = (inputs) => {
     let ret = true;
     if (!inputs || inputs.length <= 0) ret = false;
@@ -136,11 +128,9 @@ const checkOutputs = (outputs) => {
     if (!outputs || outputs.length <= 0) ret = false;
     return ret;
 }
-
 const getSqlType = (p) => {
     return (p.type) ? parse(p.type) : null;
 }
-
 const getDefaultValue = (p) => {
     return (p && p.default) ? p.default : null;
 }
@@ -148,7 +138,6 @@ const getValue = (p, name, pObj) => {
     val = (pObj && (name in pObj || pObj.name)) ? pObj[name] : getDefaultValue(p);
     return val;
 }
-
 const formatBit = (value) => {
     let ret = null;
     if (value) {
@@ -175,30 +164,28 @@ const formatBit = (value) => {
     }
     return ret;
 }
+const dateFormats = [
+    'YYYY-MM-DD HH.mm.ss.SSS',
+    'YYYY/MM/DD HH.mm.ss.SSS',
+    'YYYY-MM-DD HH:mm:ss.SSS',
+    'YYYY/MM/DD HH:mm:ss.SSS'
+]
 const formatDateTime = (value) => {
     let ret = null;
-    if (!val || (val instanceof Date)) {
-        //console.log('DATE (js)');
-        ret = val;
+    try {
+        let dt = moment(value, dateFormats);
+        //ret = (dt.isValid()) ? new Date(dt.utc()) : null;
+        ret = (dt.isValid()) ? dt.toDate() : null;
+        //console.log('OTHER DATE (try to used moment.js):', ret);
     }
-    else {
-        try {
-            let dt = moment(val, 'YYYY-MM-DD HH.mm.ss.SSS');
-            if (!dt.isValid()) dt = moment(val, 'YYYY-MM-DD HH:mm:ss.SSS');
-            if (!dt.isValid()) dt = moment(val);
-            //ret = (dt.isValid()) ? new Date(dt.utc()) : null;
-            ret = (dt.isValid()) ? dt.toDate() : null;
-            console.log('OTHER DATE (try to used moment.js):', ret);
-        }
-        catch (ex) {
-            console.log(ex);
-            console.log('OTHER DATE (try to used moment.js): failed.');
-        }
+    catch (ex) {
+        console.log(ex);
+        console.log('OTHER DATE (try to used moment.js): failed.');
     }
 
     return ret;
 }
-
+// value formatter array.
 const ValueFormatters = [
     { type: mssql.Bit, format: formatBit },
     { type: mssql.Date, format: formatDateTime },
@@ -206,19 +193,15 @@ const ValueFormatters = [
     { type: mssql.DateTime2, format: formatDateTime },
     { type: mssql.DateTimeOffset, format: formatDateTime }
 ];
-
 const formatValue = (sqlType, value) => {
     let types = ValueFormatters.map(fmt => { return fmt.type; })
     let idx = types.indexOf(sqlType.type);
     let ret = value;
-
     if (idx !== -1) {
         ret = ValueFormatters[idx].format(value);
     }
-
     return ret;
 }
-
 const assignInput = (rq, p, pObj) => {
     let name = p.name.toLowerCase();
     let tsqltype = getSqlType(p);
@@ -231,7 +214,6 @@ const assignInput = (rq, p, pObj) => {
     }
     else rq.input(name, val);
 }
-
 const assignOutput = (rq, p, pObj) => {
     let name = p.name.toLowerCase();
     let tsqltype = getSqlType(p);
@@ -244,7 +226,6 @@ const assignOutput = (rq, p, pObj) => {
     }
     else rq.output(name, val);    
 }
-
 const prepareInputs = (rq, pObj, inputs) => {
     if (rq) {
         if (checkInputs(inputs)) {
@@ -254,7 +235,6 @@ const prepareInputs = (rq, pObj, inputs) => {
         }
     }
 }
-
 const prepareOutputs = (rq, pObj, outputs) => {
     if (rq) {
         if (checkOutputs(outputs)) {
@@ -264,12 +244,12 @@ const prepareOutputs = (rq, pObj, outputs) => {
         }
     }
 }
-
+// prepare
 const prepare = (rq, pObj, inputs, outputs) => {
     prepareInputs(rq, pObj, inputs);
     prepareOutputs(rq, pObj, outputs);
 }
-
+// create result object.
 const createResult = () => {
     return {
         multiple: false,
@@ -281,11 +261,9 @@ const createResult = () => {
         } 
     };
 }
-
 const hasRecordSets = (dbResult) => {
     return (dbResult && dbResult.recordsets && dbResult.recordsets.length > 0);
 }
-
 const updateResult = (result, dbResult) => {
     if (hasRecordSets(dbResult)) {
         let recordsets = dbResult.recordsets;
@@ -299,7 +277,6 @@ const updateResult = (result, dbResult) => {
         }
     }
 }
-
 const getOutputValue = (rq, p, output) => {
     let p1 = rq.parameters[p.name.toLowerCase()];
     let p2 = output[p.name.toLowerCase()];
@@ -311,7 +288,6 @@ const getOutputValue = (rq, p, output) => {
     let ret = (v2) ? v2 : v1;
     return ret;
 }
-
 const readOutputs = (rq, outputs, dbResult) => {
     let ret = {}
     if (rq) {
@@ -323,14 +299,14 @@ const readOutputs = (rq, outputs, dbResult) => {
     }
     return ret;
 }
-
+// prepare statement
 const prepareStatement = async (ps, text) => {
     let isPrepared = false;
     await ps.prepare(text); // let its error if something invalid.
     isPrepared = true;
     return isPrepared;
 }
-
+// unprepare statement
 const unprepareStatement = async (ps, isPrepared) => {
     if (isPrepared) await ps.unprepare();
 }

@@ -76,10 +76,10 @@ else {
 //#endregion
 
 //#region MSSqlServer test.
-
+/*
 const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 console.log('SqlServer class version:', SqlServer.version)
-let test = async () => {
+let testSQL = async () => {
     let mssqlSvr = new SqlServer();
     if (await mssqlSvr.connect()) {
         console.log('database is connected.');
@@ -89,95 +89,86 @@ let test = async () => {
     }
 
     // GetCustomers
-    /*
-    let sp1 = {
-        name: 'GetCustomers',
-        inputs: [
-            { name: "langId", type: "nvarchar(3)", default: null },
-            { name: "customerId", type: "nvarchar(30)", default: null },
-            { name: "enabled", type: "bit", default: null }
-        ],
-        outputs: []
-    }
-    let pObj1 = { langId: 'TH' };
-    //let pObj1 = {}
-    let ret1 = await mssqlSvr.execute(sp1.name, pObj1, sp1.inputs, sp1.outputs);
-    console.log(ret1);
-    */
+    // let sp1 = {
+    //     name: 'GetCustomers',
+    //     inputs: [
+    //         { name: "langId", type: "nvarchar(3)", default: null },
+    //         { name: "customerId", type: "nvarchar(30)", default: null },
+    //         { name: "enabled", type: "bit", default: null }
+    //     ],
+    //     outputs: []
+    // }
+    // let pObj1 = { langId: 'TH' };
+    // //let pObj1 = {}
+    // let ret1 = await mssqlSvr.execute(sp1.name, pObj1, sp1.inputs, sp1.outputs);
+    // console.log(ret1);
 
     // GetVoteSummaries
-    /*
-    let sp2 = {
-        name: 'GetVoteSummaries',
-        inputs: [
-            { name: "customerId", type: "nvarchar(30)", default: null },
-            { name: "qSetId", type: "nvarchar(30)", default: null },
-            { name: "qSeq", type: "int", default: null },
-            { name: "beginDate", type: "datetime", default: null },
-            { name: "endDate", type: "datetime", default: null },
-            { name: "orgId", type: "nvarchar(30)", default: null },
-            { name: "deviceId", type: "nvarchar(30)", default: null },
-            { name: "userId", type: "nvarchar(30)", default: null }
-        ],
-        outputs: [
-            { name: "errNum", type: "int", default: null },
-            { name: "errMsg", type: "nvarchar(max)", default: null }
-        ]
-    }
-    //let pObj2 = { customerId: 'EDL-C2018080001', qSetId: null, qSeq: null };
-    let pObj2 = { customerId: 'EDL-C2018080001', qSetId: 'QS00001', qSeq: 1 };
-    let ret2 = await mssqlSvr.execute(sp2.name, pObj2, sp2.inputs, sp2.outputs);
-    console.log(ret2);
-    */
+    // let sp2 = {
+    //     name: 'GetVoteSummaries',
+    //     inputs: [
+    //         { name: "customerId", type: "nvarchar(30)", default: null },
+    //         { name: "qSetId", type: "nvarchar(30)", default: null },
+    //         { name: "qSeq", type: "int", default: null },
+    //         { name: "beginDate", type: "datetime", default: null },
+    //         { name: "endDate", type: "datetime", default: null },
+    //         { name: "orgId", type: "nvarchar(30)", default: null },
+    //         { name: "deviceId", type: "nvarchar(30)", default: null },
+    //         { name: "userId", type: "nvarchar(30)", default: null }
+    //     ],
+    //     outputs: [
+    //         { name: "errNum", type: "int", default: null },
+    //         { name: "errMsg", type: "nvarchar(max)", default: null }
+    //     ]
+    // }
+    // let pObj2 = { customerId: 'EDL-C2018080001', qSetId: null, qSeq: null };
+    // let pObj2 = { customerId: 'EDL-C2018080001', qSetId: 'QS00001', qSeq: 1 };
+    // let ret2 = await mssqlSvr.execute(sp2.name, pObj2, sp2.inputs, sp2.outputs);
+    // console.log(ret2);
     
     // simple query with input/output    
-    /*
-    let qr3 = {
-        text: 'select @inVal as value; select @outVal = 10',
-        inputs: [
-            { name: "inVal", type: "int", default: 0 }
-        ],
-        outputs: [
-            { name: "outVal", type: "int", default: 0 }
-        ]
-    }
-    let pObj3 = { inVal: 1234 }
-    let ret3 = await mssqlSvr.query(qr3.text, pObj3, qr3.inputs, qr3.outputs);
-    console.log(ret3);
-    */
+    // let qr3 = {
+    //     text: 'select @inVal as value; select @outVal = 10',
+    //     inputs: [
+    //         { name: "inVal", type: "int", default: 0 }
+    //     ],
+    //     outputs: [
+    //         { name: "outVal", type: "int", default: 0 }
+    //     ]
+    // }
+    // let pObj3 = { inVal: 1234 }
+    // let ret3 = await mssqlSvr.query(qr3.text, pObj3, qr3.inputs, qr3.outputs);
+    // console.log(ret3);
 
     // simple query
-    /*
-    let qr4 = {
-        text: 'select 10 as Item'
-    }
-    let ret4 = await mssqlSvr.query(qr4.text);
-    console.log(ret4);
-    */
+    // let qr4 = {
+    //     text: 'select 10 as Item'
+    // }
+    // let ret4 = await mssqlSvr.query(qr4.text);
+    // console.log(ret4);
 
     // simple query with date
-    /*
-    let qr5 = {
-        text: 'select @inDate as currdate',
-        inputs: [
-            { name: "inDate", type: "datetime", default: null }
-        ]
-    }
-    let pObj5 = {
-        //inDate: new Date(2019, 07, 31, 13, 45, 22, 879) // js date.
-        //inDate: '2019-07-31 13:45:22.878'
-        inDate: '2019-07-31 13.45.22.877'
-    }
-    let ret5 = await mssqlSvr.query(qr5.text, pObj5, qr5.inputs);
-    console.log(ret5);
-    */
+    // let qr5 = {
+    //     text: 'select @inDate as currdate',
+    //     inputs: [
+    //         { name: "inDate", type: "datetime", default: null }
+    //     ]
+    // }
+    // let pObj5 = {
+    //     inDate: new Date(2019, 6, 31, 13, 45, 22, 879) // js date (month is zero based).
+    //     //inDate: '2019-07-31 13:45:22.878'
+    //     //inDate: '2019-07-31 13.45.22.877'
+    //     //inDate: '2019-07-31'
+    //     //inDate: null
+    // }
+    // let ret5 = await mssqlSvr.query(qr5.text, pObj5, qr5.inputs);
+    // console.log(ret5);
 
     await mssqlSvr.disconnect();
     console.log('database is disconnected.');
 };
-
-test();
-
+testSQL();
+*/
 
 //#endregion
 
