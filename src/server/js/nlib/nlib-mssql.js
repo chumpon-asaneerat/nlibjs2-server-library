@@ -64,9 +64,7 @@ const extract = (str) => {
 
     return result;
 }
-/**
- * Mapped Type Convert functions.
- */
+// Mapped Type Convert functions.
 const Convert = {
     "nvarchar": mssql.NVarChar,
     "nchar": mssql.NChar,

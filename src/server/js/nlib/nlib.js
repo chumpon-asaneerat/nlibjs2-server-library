@@ -64,19 +64,6 @@ const NLib = class {
 
     //#endregion
 
-    //#region nlib modules related methods
-    
-    /**
-     * Gets module path.
-     * @param {String} name The module name.
-     * @return {String} Returns module .js path name.
-     */
-    module(name) {
-        return path.join(__dirname, 'modules', name, 'index');
-    }
-
-    //#endregion
-
     //#endregion
 
     //#region public properties

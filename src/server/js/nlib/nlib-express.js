@@ -127,5 +127,6 @@ module.exports = exports = WebServer;
 /**
  * export Express RequestHandler type definition.
  * @type {express.RequestHandler}
+ * @ignore
  */
 module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
