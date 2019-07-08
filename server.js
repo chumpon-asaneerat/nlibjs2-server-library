@@ -87,15 +87,47 @@ let test = async () => {
     else {
         console.log('database connect failed.');
     }
-    let inputs = [
-        { name: "langId", type: "nvarchar(3)", default: null },
-        { name: "customerId", type: "nvarchar(30)", default: null },
-        { name: "enabled", type: "bit", default: null }
-    ]
 
-    let pObj = { langId: 'TH' };
-    let ret = await mssqlSvr.execute('GetCustomers', pObj, inputs);
-    console.log(ret);
+    // GetCustomers
+    /*
+    let sp1 = {
+        name: 'GetCustomers',
+        inputs: [
+            { name: "langId", type: "nvarchar(3)", default: null },
+            { name: "customerId", type: "nvarchar(30)", default: null },
+            { name: "enabled", type: "bit", default: null }
+        ],
+        outputs: []
+    }
+    let pObj1 = { langId: 'TH' };
+    let ret1 = await mssqlSvr.execute(sp1.name, pObj1, sp1.inputs, sp1.outputs);
+    console.log(ret1);
+    */
+
+    // GetVoteSummaries
+    let sp2 = {
+        name: 'GetVoteSummaries',
+        inputs: [
+            { name: "customerId", type: "nvarchar(30)", default: null },
+            { name: "qSetId", type: "nvarchar(30)", default: null },
+            { name: "qSeq", type: "int", default: null },
+            { name: "beginDate", type: "datetime", default: null },
+            { name: "endDate", type: "datetime", default: null },
+            { name: "orgId", type: "nvarchar(30)", default: null },
+            { name: "deviceId", type: "nvarchar(30)", default: null },
+            { name: "userId", type: "nvarchar(30)", default: null }
+        ],
+        outputs: [
+            { name: "errNum", type: "int", default: null },
+            { name: "errMsg", type: "nvarchar(max)", default: null }
+        ]
+    }
+    let pObj2 = { customerId: 'EDL-C2018080001', qSetId: null, qSeq: null };
+    //let pObj2 = { customerId: 'EDL-C2018080001', qSetId: 'QS00001', qSeq: 1 };
+    let ret2 = await mssqlSvr.execute(sp2.name, pObj2, sp2.inputs, sp2.outputs);
+    console.log(ret2);
+
+
     await mssqlSvr.disconnect();
     console.log('database is disconnected.');
 };

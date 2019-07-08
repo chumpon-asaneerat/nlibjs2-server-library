@@ -192,6 +192,60 @@ const prepare = (rq, pObj, inputs, outputs) => {
     prepareOutputs(rq, pObj, outputs);
 }
 
+const createResult = () => {
+    return {
+        multiple: false,
+        data: null,
+        datasets: null,
+        errors: {
+            hasError: false,
+            ErrMsg: ''
+        } 
+    };
+}
+
+const hasRecordSets = (dbResult) => {
+    return (dbResult && dbResult.recordsets && dbResult.recordsets.length > 0);
+}
+
+const updateResult = (result, dbResult) => {
+    if (hasRecordSets(dbResult)) {
+        let recordsets = dbResult.recordsets;
+        if (recordsets.length > 1) {
+            result.multiple = true;
+            result.datasets = recordsets;
+        }
+        else {
+            result.multiple = false;
+            result.data = recordsets[0];
+        }
+    }
+}
+
+const getOutputValue = (rq, p, output) => {
+    let p1 = rq.parameters[p.name.toLowerCase()];
+    let p2 = output[p.name.toLowerCase()];
+    // note:
+    // for newer version the parameter value always null but keep code for reference.
+    // So use Result.output[name] to get data instead of req.paramters[name].value.
+    let v1 = (p1) ? p1.value : null; 
+    let v2 = (p2) ? p2 : null;
+    let ret = (v2) ? v2 : v1;
+    return ret;
+}
+
+const readOutputs = (rq, outputs, dbResult) => {
+    let ret = {}
+    if (rq) {
+        if (checkOutputs(outputs)) {
+            outputs.forEach(p => {
+                ret[p.name] = getOutputValue(rq, p, dbResult.output);
+            });
+        }
+    }
+    return ret;
+}
+
 //#endregion
 
 //#region SqlServer
@@ -241,7 +295,7 @@ const SqlServer = class {
      * Run Query.
      */
     async query(text, pObj, inputs, outputs) {
-        let ret = { data: null, errors: { hasError: false, ErrNum: 0, ErrMsg: '' } };
+        let ret = createResult();
         if (this.connected) {
             let ps = new mssql.PreparedStatement(this.connection);
 
@@ -251,11 +305,11 @@ const SqlServer = class {
             await ps.prepare(text);
             try {
                 let dbResult = await ps.execute(name);
-                ret.data = dbResult.recordsets[0];
+                updateResult(ret, dbResult);
+                ret.out = readOutputs(ps, outputs, dbResult);
             }
             catch (err) {
                 ret.errors.hasError = true;
-                ret.errors.ErrNum = err.code;
                 ret.errors.ErrMsg = err.message;
             }
             finally {
@@ -269,7 +323,7 @@ const SqlServer = class {
      * Execute Stored Procedure.
      */
     async execute(name, pObj, inputs, outputs) {
-        let ret = { data: null, errors: { hasError: false, ErrNum: 0, ErrMsg: '' } };
+        let ret = createResult();
         if (this.connected) {
             let req = new mssql.Request(this.connection);
 
@@ -278,11 +332,11 @@ const SqlServer = class {
 
             try {
                 let dbResult = await req.execute(name);
-                ret.data = dbResult.recordsets[0];
+                updateResult(ret, dbResult);
+                ret.out = readOutputs(req, outputs, dbResult);
             }
             catch (err) {
                 ret.errors.hasError = true;
-                ret.errors.ErrNum = err.code;
                 ret.errors.ErrMsg = err.message;
             }
         }
