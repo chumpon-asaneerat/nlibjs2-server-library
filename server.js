@@ -19,31 +19,6 @@ console.log('Total Milliseconds:', ts.totalMilliseconds);
 */
 //#endregion
 
-//#region NPM test
-
-// installed.
-/*
-if (!nlib.NPM.exists('mssql')) {
-    if (nlib.NPM.install('mssql')) console.log('mssql is installed.');
-    else console.log('mssql cannot install.');
-}
-else {
-    console.log('mssql is already installed');
-}
-*/
-// uninstalled.
-/*
-if (nlib.NPM.exists('mssql')) {
-    if (nlib.NPM.uninstall('mssql')) console.log('mssql is uninstalled');
-    else console.log('mssql cannot uninstall. restart server may requured.');
-}
-else {
-    console.log('mssql is not installed');
-}
-*/
-
-//#endregion
-
 //#region package.json test
 /*
 let file = path.join(nlib.paths.root, 'package.json');

@@ -1016,12 +1016,32 @@ DateTime.LocaleSettings = {
  * The NPM class. Provide node package management (npm) related functions.
  */
 const NPM = class  {
+    //#region constructor
+
+    /**
+     * The NPM class has only static method(s). So not need to create instance of NPM class
+     * before used.
+     */
+    constructor() {}
+
+    //#endregion
+
     //#region static methods and properties
 
     /**
      * Checks is package is exists.
      * 
      * @param {String} pkg The package name (include version see npm document for more information).
+     * 
+     * @example <caption>Usage of exists method.</caption>
+     * 
+     * const nlib = require("./src/server/js/nlib/nlib");
+     * 
+     * // check mssql package is exists.
+     * if (nlib.NPM.exists('mssql')) {
+     *     console.log('mssql is already installed');
+     * }
+     * 
      */
     static exists(pkg) {
         let r = require;
@@ -1042,6 +1062,21 @@ const NPM = class  {
      * 
      * @param {String} pkg The package name (include version see npm document for more information).
      * @param {Boolean} dev True if package is used for development.
+     * 
+     * @example <caption>Usage of install method.</caption>
+     * 
+     * const nlib = require("./src/server/js/nlib/nlib");
+     * 
+     * // check mssql package is exists.
+     * if (!nlib.NPM.exists('mssql')) {
+     *     if (nlib.NPM.install('mssql')) 
+     *         console.log('mssql is installed.');
+     *     else console.log('mssql cannot install.');
+     * }
+     * else {
+     *     console.log('mssql is already installed');
+     * }
+     * 
      */
     static install(pkg, dev = false) {
         let ret = NPM.exists(pkg);
@@ -1060,6 +1095,21 @@ const NPM = class  {
      * Uninstall npm package.
      * 
      * @param {String} pkg The package name (include version see npm document for more information).
+     * 
+     * @example <caption>Usage of install method.</caption>
+     * 
+     * const nlib = require("./src/server/js/nlib/nlib");
+     * 
+     * // check mssql package is exists.
+     * if (nlib.NPM.exists('mssql')) {
+     *     if (nlib.NPM.uninstall('mssql')) 
+     *         console.log('mssql is uninstalled');
+     *     else console.log('mssql cannot uninstall. restart server may requured.');
+     * }
+     * else {
+     *     console.log('mssql is not installed');
+     * }
+     * 
      */
     static uninstall(pkg) {
         let ret = NPM.exists(pkg);
