@@ -357,7 +357,12 @@ const SqlServer = class {
         return ret;
     }
     /**
-     * Run Query.
+     * Execute Query.
+     * 
+     * @param {String} text The query text.
+     * @param {Object} pObj The parameter object.
+     * @param {Array} inputs The input parameter information array.
+     * @param {Array} outputs The output parameter information array.
      */
     async query(text, pObj, inputs, outputs) {
         let ret = createResult();
@@ -387,6 +392,11 @@ const SqlServer = class {
     }
     /**
      * Execute Stored Procedure.
+     * 
+     * @param {String} name The Stored Procedure name.
+     * @param {Object} pObj The parameter object.
+     * @param {Array} inputs The input parameter information array.
+     * @param {Array} outputs The output parameter information array.
      */
     async execute(name, pObj, inputs, outputs) {
         let ret = createResult();
