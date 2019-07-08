@@ -372,18 +372,85 @@ const SqlServer = class {
      * @param {Array} inputs The input parameter information array.
      * @param {Array} outputs The output parameter information array.
      * 
-     * @example <caption>Execute Query Example.</caption>
+     * @example <caption>Run Query Example 1 (simple query).</caption>
      * 
      * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
-     * let runSQL = async () => {
+     * let runSP = async () => {
      *     let mssqlSvr = new SqlServer();
      *     if (await mssqlSvr.connect()) {
      *         console.log('database is connected.');
+     *         let qry = {
+     *             text: text: 'select 10 as Item'
+     *         }
+     *         let pObj = { inVal: 1234 };
+     *         let ret = await mssqlSvr.query(qry.text);
+     *         console.log(ret);
      * 
+     *         await mssqlSvr.disconnect();
+     *         console.log('database is disconnected.');
      *     }
      * }
      * 
-     * runSQL();
+     * runSP();
+     * 
+     * @example <caption>Run Query Example 2 (query with input/output parameter(s)).</caption>
+     * 
+     * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+     * let runSP = async () => {
+     *     let mssqlSvr = new SqlServer();
+     *     if (await mssqlSvr.connect()) {
+     *         console.log('database is connected.');
+     *         let qry = {
+     *             text: 'select @inVal as value; select @outVal = 10',
+     *             inputs: [
+     *                 { name: "inVal", type: "int", default: 0 }
+     *             ],
+     *             outputs: [
+     *                 { name: "outVal", type: "int", default: 0 }
+     *             ],
+     *         }
+     *         let pObj = { inVal: 1234 };
+     *         let ret = await mssqlSvr.query(qry.text, pObj, qry.inputs, qry.outputs);
+     *         console.log(ret);
+     * 
+     *         await mssqlSvr.disconnect();
+     *         console.log('database is disconnected.');
+     *     }
+     * }
+     * 
+     * runSP();
+     * 
+     * 
+     * @example <caption>Run Query Example 3 (query with date parameter).</caption>
+     * 
+     * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+     * let runSP = async () => {
+     *     let mssqlSvr = new SqlServer();
+     *     if (await mssqlSvr.connect()) {
+     *         console.log('database is connected.');
+     *         let qry = {
+     *             text: 'select @inDate as currdate',
+     *             inputs: [
+     *                 { name: "inDate", type: "datetime", default: null }
+     *             ]
+     *         }
+     *         let pObj = { 
+     *             inDate: new Date(2019, 6, 31, 13, 45, 22, 879) // js date (month is zero based)
+     *             //inDate: '2019-07-31 13:45:22.878' // The date in string that match supports date format.
+     *             //inDate: '2019-07-31 13.45.22.877' // The date in string that match supports date format.
+     *             //inDate: '2019-07-31' // The date in string that match supports date format.
+     *             //inDate: null // The date is null
+     *         }
+     * 
+     *         let ret = await mssqlSvr.query(qry.text, pObj, qry.inputs);
+     *         console.log(ret);
+     * 
+     *         await mssqlSvr.disconnect();
+     *         console.log('database is disconnected.');
+     *     }
+     * }
+     * 
+     * runSP();
      */
     async query(text, pObj, inputs, outputs) {
         let ret = createResult();
@@ -419,7 +486,7 @@ const SqlServer = class {
      * @param {Array} inputs The input parameter information array.
      * @param {Array} outputs The output parameter information array.
      * 
-     * @example <caption>Execute Stored Procedure Example 1.</caption>
+     * @example <caption>Execute Stored Procedure Example 1 (sp without output parameter).</caption>
      * 
      * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
      * let runSP = async () => {
@@ -446,7 +513,7 @@ const SqlServer = class {
      * 
      * runSP();
      * 
-     * @example <caption>Execute Stored Procedure Example 2.</caption>
+     * @example <caption>Execute Stored Procedure Example 2 (sp with output parameters).</caption>
      * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
      * let runSP = async () => {
      *     let mssqlSvr = new SqlServer();

@@ -75,65 +75,6 @@ else {
 */
 //#endregion
 
-//#region MSSqlServer test.
-/*
-const SqlServer = require('./src/server/js/nlib/nlib-mssql');
-console.log('SqlServer class version:', SqlServer.version)
-let testSQL = async () => {
-    let mssqlSvr = new SqlServer();
-    if (await mssqlSvr.connect()) {
-        console.log('database is connected.');
-    }
-    else {
-        console.log('database connect failed.');
-    }
-    
-    // simple query with input/output    
-    // let qr3 = {
-    //     text: 'select @inVal as value; select @outVal = 10',
-    //     inputs: [
-    //         { name: "inVal", type: "int", default: 0 }
-    //     ],
-    //     outputs: [
-    //         { name: "outVal", type: "int", default: 0 }
-    //     ]
-    // }
-    // let pObj3 = { inVal: 1234 }
-    // let ret3 = await mssqlSvr.query(qr3.text, pObj3, qr3.inputs, qr3.outputs);
-    // console.log(ret3);
-
-    // simple query
-    // let qr4 = {
-    //     text: 'select 10 as Item'
-    // }
-    // let ret4 = await mssqlSvr.query(qr4.text);
-    // console.log(ret4);
-
-    // simple query with date
-    // let qr5 = {
-    //     text: 'select @inDate as currdate',
-    //     inputs: [
-    //         { name: "inDate", type: "datetime", default: null }
-    //     ]
-    // }
-    // let pObj5 = {
-    //     inDate: new Date(2019, 6, 31, 13, 45, 22, 879) // js date (month is zero based).
-    //     //inDate: '2019-07-31 13:45:22.878'
-    //     //inDate: '2019-07-31 13.45.22.877'
-    //     //inDate: '2019-07-31'
-    //     //inDate: null
-    // }
-    // let ret5 = await mssqlSvr.query(qr5.text, pObj5, qr5.inputs);
-    // console.log(ret5);
-
-    await mssqlSvr.disconnect();
-    console.log('database is disconnected.');
-};
-testSQL();
-*/
-
-//#endregion
-
 //#region WebServer test.
 
 const WebServer = require('./src/server/js/nlib/nlib-express');
