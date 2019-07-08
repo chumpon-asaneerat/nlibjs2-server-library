@@ -197,9 +197,19 @@ const Objects = class {
 //#region JSONFile
 
 /**
- * The JSON File Class.
+ * The JSONFile Class. Provide methods to save and load json object.
  */
 const JSONFile = class {
+    //#region constructor
+
+    /**
+     * The JSONFile class has only static method(s). So not need to create instance of 
+     * JSONFile class before used.
+     */
+    constructor() {}
+
+    //#endregion
+
     //#region static methods and properties
 
     /**
