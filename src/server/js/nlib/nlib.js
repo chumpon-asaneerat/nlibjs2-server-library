@@ -51,7 +51,7 @@ const NLib = class {
      * @param {Object} o The Target Object.
      * @param {Boolean} caseSensitive The true for checks property with case sensitive.
      */
-    clone(o, caseSensitive) { Objects.clone(o, caseSensitive); }
+    clone(o, caseSensitive) { return Objects.clone(o, caseSensitive); }
     /** 
      * Set dest object's properties that match src object's property with case insensitive.
      * If dest property not exist in src obj and overwrite flag is set so null value is assigned
@@ -158,6 +158,7 @@ const Objects = class {
      * Create New object with clone all properties with supports ignore case sensitive.     
      * @param {Object} o The Target Object.
      * @param {Boolean} caseSensitive The true for checks property with case sensitive.
+     * @return {Object} Returns new object that clone al source properties with specificed caseSensitive.
      */
     static clone(o, caseSensitive) {
         let result = {}

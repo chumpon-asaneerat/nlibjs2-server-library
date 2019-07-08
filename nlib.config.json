@@ -13,7 +13,7 @@
   "mssql": {
     "default": {
       "server": "localhost",
-      "database": "master",
+      "database": "TestDb7x3",
       "user": "sa",
       "password": "winnt123",
       "pool": {

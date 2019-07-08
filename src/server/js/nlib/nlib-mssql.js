@@ -132,23 +132,64 @@ const checkOutputs = (outputs) => {
     return ret;
 }
 
-const prepareInputs = (rq, inputs) => {
+const getSqlType = (p) => {
+    return (p.type) ? null : parse(p.type);
+}
+
+const getDefaultValue = (p) => {
+    return (p && p.default) ? null : p.default;
+}
+const getValue = (p, name, pObj) => {
+    val = (pObj && (name in pObj || pObj.name)) ? pObj[name] : getDefaultValue(p);
+    return val;
+}
+
+const formatValue = (sqlType, value) => {
+    // to implements.
+    return value;
+}
+
+const assignInput = (rq, p, pObj) => {
+    let name = p.name.toLowerCase();
+    let tsqltype = getSqlType(p);
+    let val = getValue(p, name, pObj);
+    if (tsqltype)
+        rq.input(name, tsqltype, formatValue(tsqltype, val));
+    else rq.input(name, val);
+}
+
+const assignOutput = (rq, p, pObj) => {
+    let name = p.name.toLowerCase();
+    let tsqltype = getSqlType(p);
+    let val = getValue(p, name, pObj);
+    if (tsqltype)
+        rq.output(name, tsqltype, formatValue(tsqltype, val));
+    else rq.output(name, val);
+}
+
+const prepareInputs = (rq, pObj, inputs) => {
     if (rq) {
         if (checkInputs(inputs)) {
             inputs.forEach(p => {
-                req.input(p.name, parse(p.type), p.value);
+                assignInput(rq, p, pObj);
             });
         }
     }
 }
-const prepareOutputs = (rq, outputs) => {
+
+const prepareOutputs = (rq, pObj, outputs) => {
     if (rq) {
-        if (checkOutputs(inputs)) {
+        if (checkOutputs(outputs)) {
             outputs.forEach(p => {
-                req.input(p.name, parse(p.type), p.value);
+                assignOutput(rq, p, pObj);
             });
         }
     }
+}
+
+const prepare = (rq, pObj, inputs, outputs) => {
+    prepareInputs(rq, pObj, inputs);
+    prepareOutputs(rq, pObj, outputs);
 }
 
 //#endregion
@@ -199,17 +240,27 @@ const SqlServer = class {
     /**
      * Run Query.
      */
-    async query(opts, pObj) {
-        let ret = {};
+    async query(text, pObj, inputs, outputs) {
+        let ret = { data: null, errors: { hasError: false, ErrNum: 0, ErrMsg: '' } };
         if (this.connected) {
             let ps = new mssql.PreparedStatement(this.connection);
 
-            prepareInputs(ps, opts.inputs);
-            prepareOutputs(ps, opts.outputs);
-
-            await ps.prepare(opts.text);
-            ret = await ps.execute(opts.value);
-            await ps.unprepare();
+            let o = nlib.clone(pObj);
+            prepare(ps, o, inputs, outputs);
+            
+            await ps.prepare(text);
+            try {
+                let dbResult = await ps.execute(name);
+                ret.data = dbResult.recordsets[0];
+            }
+            catch (err) {
+                ret.errors.hasError = true;
+                ret.errors.ErrNum = err.code;
+                ret.errors.ErrMsg = err.message;
+            }
+            finally {
+                await ps.unprepare();
+            }
         }
 
         return ret;
@@ -217,15 +268,23 @@ const SqlServer = class {
     /**
      * Execute Stored Procedure.
      */
-    async execute(opts, pObj) {
-        let ret = {};
-        if (!this.connected) {
+    async execute(name, pObj, inputs, outputs) {
+        let ret = { data: null, errors: { hasError: false, ErrNum: 0, ErrMsg: '' } };
+        if (this.connected) {
             let req = new mssql.Request(this.connection);
 
-            prepareInputs(req, opts.inputs);
-            prepareOutputs(req, opts.outputs);
+            let o = nlib.clone(pObj, false);
+            prepare(req, o, inputs, outputs);
 
-            ret = await req.execute(opts.name);
+            try {
+                let dbResult = await req.execute(name);
+                ret.data = dbResult.recordsets[0];
+            }
+            catch (err) {
+                ret.errors.hasError = true;
+                ret.errors.ErrNum = err.code;
+                ret.errors.ErrMsg = err.message;
+            }
         }
 
         return ret;

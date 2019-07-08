@@ -87,6 +87,15 @@ let test = async () => {
     else {
         console.log('database connect failed.');
     }
+    let inputs = [
+        { name: "langId", type: "nvarchar(3)", default: null },
+        { name: "customerId", type: "nvarchar(30)", default: null },
+        { name: "enabled", type: "bit", default: null }
+    ]
+
+    let pObj = { langId: 'TH' };
+    let ret = await mssqlSvr.execute('GetCustomers', pObj, inputs);
+    console.log(ret);
     await mssqlSvr.disconnect();
     console.log('database is disconnected.');
 };
