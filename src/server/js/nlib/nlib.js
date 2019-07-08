@@ -164,7 +164,7 @@ const Objects = class {
         let result = {}
         let ignoreCase = (caseSensitive) ? false : true;
         let keys = Object.keys(o);
-        keys.forEach((key) => { result[(ignoreCase) ? key.toLowerCase() : key] = o[key]; });
+        keys.forEach((key) => { result[(ignoreCase) ? key.toLowerCase() : key] = o[key]; });        
         return result;
     }
     /** 

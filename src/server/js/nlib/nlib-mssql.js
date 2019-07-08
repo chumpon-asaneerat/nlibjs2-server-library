@@ -105,6 +105,10 @@ const Convert = {
     "UniqueIdentifier": mssql.UniqueIdentifier
 }
 
+const clone = (pObj, caseSensitive) => {
+    return (pObj) ? nlib.clone(pObj, caseSensitive) : {}
+}
+
 const get_1_params = (tObj) => { 
     return (tObj.params && tObj.params.length >= 1) ? tObj.params[0] : null;
 }
@@ -133,11 +137,11 @@ const checkOutputs = (outputs) => {
 }
 
 const getSqlType = (p) => {
-    return (p.type) ? null : parse(p.type);
+    return (p.type) ? parse(p.type) : null;
 }
 
 const getDefaultValue = (p) => {
-    return (p && p.default) ? null : p.default;
+    return (p && p.default) ? p.default : null;
 }
 const getValue = (p, name, pObj) => {
     val = (pObj && (name in pObj || pObj.name)) ? pObj[name] : getDefaultValue(p);
@@ -246,6 +250,17 @@ const readOutputs = (rq, outputs, dbResult) => {
     return ret;
 }
 
+const prepareStatement = async (ps, text) => {
+    let isPrepared = false;
+    await ps.prepare(text); // let its error if something invalid.
+    isPrepared = true;
+    return isPrepared;
+}
+
+const unprepareStatement = async (ps, isPrepared) => {
+    if (isPrepared) await ps.unprepare();
+}
+
 //#endregion
 
 //#region SqlServer
@@ -298,13 +313,14 @@ const SqlServer = class {
         let ret = createResult();
         if (this.connected) {
             let ps = new mssql.PreparedStatement(this.connection);
-
-            let o = nlib.clone(pObj);
-            prepare(ps, o, inputs, outputs);
             
-            await ps.prepare(text);
+            let o = clone(pObj);
+            prepare(ps, o, inputs, outputs);
+            let isPrepared = false;
+
             try {
-                let dbResult = await ps.execute(name);
+                isPrepared = await prepareStatement(ps, text);
+                let dbResult = await ps.execute(o);
                 updateResult(ret, dbResult);
                 ret.out = readOutputs(ps, outputs, dbResult);
             }
@@ -313,7 +329,7 @@ const SqlServer = class {
                 ret.errors.ErrMsg = err.message;
             }
             finally {
-                await ps.unprepare();
+                await unprepareStatement(ps, isPrepared);
             }
         }
 
@@ -327,7 +343,7 @@ const SqlServer = class {
         if (this.connected) {
             let req = new mssql.Request(this.connection);
 
-            let o = nlib.clone(pObj, false);
+            let o = clone(pObj);
             prepare(req, o, inputs, outputs);
 
             try {

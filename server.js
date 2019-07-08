@@ -100,11 +100,13 @@ let test = async () => {
         outputs: []
     }
     let pObj1 = { langId: 'TH' };
+    //let pObj1 = {}
     let ret1 = await mssqlSvr.execute(sp1.name, pObj1, sp1.inputs, sp1.outputs);
     console.log(ret1);
     */
 
     // GetVoteSummaries
+    /*
     let sp2 = {
         name: 'GetVoteSummaries',
         inputs: [
@@ -122,11 +124,36 @@ let test = async () => {
             { name: "errMsg", type: "nvarchar(max)", default: null }
         ]
     }
-    let pObj2 = { customerId: 'EDL-C2018080001', qSetId: null, qSeq: null };
-    //let pObj2 = { customerId: 'EDL-C2018080001', qSetId: 'QS00001', qSeq: 1 };
+    //let pObj2 = { customerId: 'EDL-C2018080001', qSetId: null, qSeq: null };
+    let pObj2 = { customerId: 'EDL-C2018080001', qSetId: 'QS00001', qSeq: 1 };
     let ret2 = await mssqlSvr.execute(sp2.name, pObj2, sp2.inputs, sp2.outputs);
     console.log(ret2);
+    */
+    
+    // simple query with input/output    
+    /*
+    let qr3 = {
+        text: 'select @inVal as value; select @outVal = 10',
+        inputs: [
+            { name: "inVal", type: "int", default: 0 }
+        ],
+        outputs: [
+            { name: "outVal", type: "int", default: 0 }
+        ]
+    }
+    let pObj3 = { inVal: 1234 }
+    let ret3 = await mssqlSvr.query(qr3.text, pObj3, qr3.inputs, qr3.outputs);
+    console.log(ret3);
+    */
 
+    // simple query
+    /*
+    let qr4 = {
+        text: 'select 10 as Item'
+    }
+    let ret4 = await mssqlSvr.query(qr4.text);
+    console.log(ret4);
+    */
 
     await mssqlSvr.disconnect();
     console.log('database is disconnected.');
