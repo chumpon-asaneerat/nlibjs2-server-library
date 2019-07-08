@@ -155,6 +155,23 @@ let test = async () => {
     console.log(ret4);
     */
 
+    // simple query with date
+    /*
+    let qr5 = {
+        text: 'select @inDate as currdate',
+        inputs: [
+            { name: "inDate", type: "datetime", default: null }
+        ]
+    }
+    let pObj5 = {
+        //inDate: new Date(2019, 07, 31, 13, 45, 22, 879) // js date.
+        //inDate: '2019-07-31 13:45:22.878'
+        inDate: '2019-07-31 13.45.22.877'
+    }
+    let ret5 = await mssqlSvr.query(qr5.text, pObj5, qr5.inputs);
+    console.log(ret5);
+    */
+
     await mssqlSvr.disconnect();
     console.log('database is disconnected.');
 };

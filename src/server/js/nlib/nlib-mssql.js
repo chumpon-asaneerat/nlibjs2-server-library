@@ -1,3 +1,4 @@
+const moment = require('moment');
 const nlib = require('./nlib');
 
 //#region Internal methods
@@ -148,17 +149,83 @@ const getValue = (p, name, pObj) => {
     return val;
 }
 
+const formatBit = (value) => {
+    let ret = null;
+    if (value) {
+        let val = String(value).toLocaleUpperCase();
+        let true_list = ['1', 'TRUE', 'YES', 'Y'];
+        let false_list = ['0', 'FALSE', 'NO', 'N'];
+        
+        if (true_list.indexOf(val) !== -1) {
+            ret = true;
+        }
+        else if (false_list.indexOf(val) !== -1) {
+            ret = false;
+        }
+        else if (val === 'NULL') {
+            ret = null;
+        }
+        else {
+            console.log('no match boolean string. value is :', value);
+            ret = value;
+        }
+    }
+    return ret;
+}
+const formatDateTime = (value) => {
+    let ret = null;
+    if (!val || (val instanceof Date)) {
+        //console.log('DATE (js)');
+        ret = val;
+    }
+    else {
+        try {
+            let dt = moment(val, 'YYYY-MM-DD HH.mm.ss.SSS');
+            if (!dt.isValid()) dt = moment(val, 'YYYY-MM-DD HH:mm:ss.SSS');
+            if (!dt.isValid()) dt = moment(val);
+            //ret = (dt.isValid()) ? new Date(dt.utc()) : null;
+            ret = (dt.isValid()) ? dt.toDate() : null;
+            console.log('OTHER DATE (try to used moment.js):', ret);
+        }
+        catch (ex) {
+            console.log(ex);
+            console.log('OTHER DATE (try to used moment.js): failed.');
+        }
+    }
+
+    return ret;
+}
+
+const ValueFormatters = [
+    { type: mssql.Bit, format: formatBit },
+    { type: mssql.Date, format: formatDateTime },
+    { type: mssql.DateTime, format: formatDateTime },
+    { type: mssql.DateTime2, format: formatDateTime },
+    { type: mssql.DateTimeOffset, format: formatDateTime }
+];
+
 const formatValue = (sqlType, value) => {
-    // to implements.
-    return value;
+    let types = ValueFormatters.map(fmt => { return fmt.type; })
+    let idx = types.indexOf(sqlType.type);
+    let ret = value;
+
+    if (idx !== -1) {
+        ret = ValueFormatters[idx].format(value);
+    }
+
+    return ret;
 }
 
 const assignInput = (rq, p, pObj) => {
     let name = p.name.toLowerCase();
     let tsqltype = getSqlType(p);
     let val = getValue(p, name, pObj);
-    if (tsqltype)
-        rq.input(name, tsqltype, formatValue(tsqltype, val));
+    if (tsqltype) {
+        let newVal = formatValue(tsqltype, val);
+        rq.output(name, tsqltype, newVal);
+        // update value back to proper type required for new version of node-mssql.
+        pObj[name] = newVal;
+    }
     else rq.input(name, val);
 }
 
@@ -166,9 +233,13 @@ const assignOutput = (rq, p, pObj) => {
     let name = p.name.toLowerCase();
     let tsqltype = getSqlType(p);
     let val = getValue(p, name, pObj);
-    if (tsqltype)
-        rq.output(name, tsqltype, formatValue(tsqltype, val));
-    else rq.output(name, val);
+    if (tsqltype) {
+        let newVal = formatValue(tsqltype, val);
+        rq.output(name, tsqltype, newVal);
+        // update value back to proper type required for new version of node-mssql.
+        pObj[name] = newVal;
+    }
+    else rq.output(name, val);    
 }
 
 const prepareInputs = (rq, pObj, inputs) => {
