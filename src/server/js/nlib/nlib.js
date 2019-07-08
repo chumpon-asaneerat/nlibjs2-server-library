@@ -76,6 +76,11 @@ const NLib = class {
     //#region method for export classes
 
     /** 
+     * The Objects class 
+     * @ignore
+     */
+    get Objects() { return Objects; }
+    /** 
      * The JSON File class 
      * @ignore
      */
@@ -121,6 +126,16 @@ const NLib = class {
  * The Objects management and utilities class.
  */
 const Objects = class {
+    //#region constructor
+
+    /**
+     * The Objects class has only static method(s). So not need to create instance of 
+     * Objects class before used.
+     */
+    constructor() {}
+
+    //#endregion
+
     //#region static methods and properties
 
     /**
