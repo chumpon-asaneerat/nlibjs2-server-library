@@ -1,17 +1,26 @@
-const moment = require('moment');
 const nlib = require('./nlib');
 
 //#region Internal methods
 
+// check is mssql npm package is installed if not auto install it.
 const check_modules = () => {
+    // node-mssql
     if (!nlib.NPM.exists('mssql')) {
-        nlib.NPM.install('mssql'); // install if required.
+        // install if required.
+        nlib.NPM.install('mssql');
+    }
+    // moment.js
+    if (!nlib.NPM.exists('moment')) {
+        // install if required.
+        nlib.NPM.install('moment');
     }
 }
 // check if node module installed.
 check_modules();
 
-const mssql = require('mssql'); // assume install successfully.
+// assume install package(s) successfully.
+const moment = require('moment');
+const mssql = require('mssql');
 // default config.
 const mssqlCfg = {
     default: {
@@ -162,6 +171,7 @@ const formatBit = (value) => {
     }
     return ret;
 }
+// The moment custom date formats.
 const dateFormats = [
     'YYYY-MM-DD HH.mm.ss.SSS',
     'YYYY/MM/DD HH.mm.ss.SSS',
@@ -361,6 +371,19 @@ const SqlServer = class {
      * @param {Object} pObj The parameter object.
      * @param {Array} inputs The input parameter information array.
      * @param {Array} outputs The output parameter information array.
+     * 
+     * @example <caption>Execute Query Example.</caption>
+     * 
+     * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+     * let runSQL = async () => {
+     *     let mssqlSvr = new SqlServer();
+     *     if (await mssqlSvr.connect()) {
+     *         console.log('database is connected.');
+     * 
+     *     }
+     * }
+     * 
+     * runSQL();
      */
     async query(text, pObj, inputs, outputs) {
         let ret = createResult();
@@ -395,6 +418,74 @@ const SqlServer = class {
      * @param {Object} pObj The parameter object.
      * @param {Array} inputs The input parameter information array.
      * @param {Array} outputs The output parameter information array.
+     * 
+     * @example <caption>Execute Stored Procedure Example 1.</caption>
+     * 
+     * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+     * let runSP = async () => {
+     *     let mssqlSvr = new SqlServer();
+     *     if (await mssqlSvr.connect()) {
+     *         console.log('database is connected.');
+     *         let sp = {
+     *             name: 'GetCustomers',
+     *             inputs: [
+     *                 { name: "langId", type: "nvarchar(3)", default: null },
+     *                 { name: "customerId", type: "nvarchar(30)", default: null },       
+     *                 { name: "enabled", type: "bit", default: null }
+     *             ],
+     *             outputs: []
+     *         }
+     *         let pObj = { langId: 'TH' };
+     *         let ret = await mssqlSvr.execute(sp.name, pObj, sp.inputs, sp.outputs);
+     *         console.log(ret);
+     * 
+     *         await mssqlSvr.disconnect();
+     *         console.log('database is disconnected.');
+     *     }
+     * }
+     * 
+     * runSP();
+     * 
+     * @example <caption>Execute Stored Procedure Example 2.</caption>
+     * const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+     * let runSP = async () => {
+     *     let mssqlSvr = new SqlServer();
+     *     if (await mssqlSvr.connect()) {
+     *         console.log('database is connected.');
+     *         let sp = {
+     *             name: 'GetVoteSummaries',
+     *             inputs: [
+     *                 { name: "customerId", type: "nvarchar(30)", default: null },
+     *                 { name: "qSetId", type: "nvarchar(30)", default: null },
+     *                 { name: "qSeq", type: "int", default: null },
+     *                 { name: "beginDate", type: "datetime", default: null },
+     *                 { name: "endDate", type: "datetime", default: null },
+     *                 { name: "orgId", type: "nvarchar(30)", default: null },
+     *                 { name: "deviceId", type: "nvarchar(30)", default: null },
+     *                 { name: "userId", type: "nvarchar(30)", default: null }
+     *             ],
+     *             outputs: [
+     *                 { name: "errNum", type: "int", default: null },
+     *                 { name: "errMsg", type: "nvarchar(max)", default: null }
+     *             ]
+     *         }
+     * 
+     *         // All required parameters is set so result should return data from database.
+     *         let pObj = { customerId: 'EDL-C2018080001', qSetId: 'QS00001', qSeq: 1 };
+     * 
+     *         // Some required parameters is set not set so errNum and errMsg will
+     *         // returns from stored procedure (out paramter).
+     *         //let pObj = { customerId: 'EDL-C2018080001', qSetId: null, qSeq: null };
+     * 
+     *         let ret = await mssqlSvr.execute(sp.name, pObj, sp.inputs, sp.outputs);
+     *         console.log(ret);
+     * 
+     *         await mssqlSvr.disconnect();
+     *         console.log('database is disconnected.');
+     *     }
+     * }
+     * 
+     * runSP();
      */
     async execute(name, pObj, inputs, outputs) {
         let ret = createResult();
