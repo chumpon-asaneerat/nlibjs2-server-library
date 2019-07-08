@@ -153,17 +153,20 @@ const formatBit = (value) => {
     let ret = null;
     if (value) {
         let val = String(value).toLocaleUpperCase();
-        let true_list = ['1', 'TRUE', 'YES', 'Y'];
-        let false_list = ['0', 'FALSE', 'NO', 'N'];
-        
-        if (true_list.indexOf(val) !== -1) {
-            ret = true;
-        }
-        else if (false_list.indexOf(val) !== -1) {
-            ret = false;
-        }
-        else if (val === 'NULL') {
-            ret = null;
+        let valList = [
+            { code: '1', value: true },
+            { code: 'TRUE', value: true },
+            { code: 'YES', value: true },
+            { code: 'Y', value: true },
+            { code: '0', value: false },
+            { code: 'FALSE', value: false },
+            { code: 'NO', value: false },
+            { code: 'N', value: false },
+            { code: 'NULL', value: null }
+        ]
+        let idx = valList.indexOf(val);
+        if (idx !== -1) {
+            ret = valList[idx];
         }
         else {
             console.log('no match boolean string. value is :', value);
