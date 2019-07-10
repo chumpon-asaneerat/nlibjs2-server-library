@@ -1,5 +1,3 @@
-/** @namespace NLib */
-
 //#region NLib (local)Storage
 
 /**
