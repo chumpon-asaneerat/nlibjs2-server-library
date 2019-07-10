@@ -1,7 +1,9 @@
+/** @module client/nlib */
+
 //#region NLib Utils
 
 /**
- * module: NLib Utils.
+ * name: NLib Utils.
  * version  1.0.8
  * required: none.
  */

@@ -1,8 +1,5 @@
-/**
- * 
- * @module NLib
- * @namespace NLib
- */
+/** @module server/nlib */
+
 const path = require('path');
 const fs = require('fs');
 
@@ -18,12 +15,20 @@ let cfgFile = path.join(rootPath, 'nlib.config.json');
 /**
  * The NLib Class.
  * 
+ * @exports server/nlib
+ * 
  * @example <caption>Usage of NLib Core Library.</caption>
  * const nlib = require("./src/server/js/nlib/nlib");
+ * 
  */
 const NLib = class {
     //#region constructor
 
+    /**
+     * The NLib class is used internally. So not need to create instance of 
+     * NLib class before used.
+     * @ignore
+     */
     constructor() {
         this._config = new Configuration(cfgFile);
         /** The commmon paths for nlib. */
@@ -41,13 +46,15 @@ const NLib = class {
     
     /**
      * Assign value to target Object's property.
+     * 
      * @param {Object} obj Target Object.
      * @param {String} property The Object's property name.
      * @param {Object} value The value to apply on object.
      */
     assignTo(obj, property, value) { Objects.assignTo(obj, property, value); }
     /** 
-     * Create New object with clone all properties with supports ignore case sensitive.     
+     * Create New object with clone all properties with supports ignore case sensitive. 
+     *    
      * @param {Object} o The Target Object.
      * @param {Boolean} caseSensitive The true for checks property with case sensitive.
      */
@@ -56,6 +63,7 @@ const NLib = class {
      * Set dest object's properties that match src object's property with case insensitive.
      * If dest property not exist in src obj and overwrite flag is set so null value is assigned
      * otherwise if overwrite flag is not set the original dest property will not changed.
+     * 
      * @param {Object} dest The Target Object.
      * @param {Object} src The Source Object.
      * @param {Boolean} overwrite The true to overwrite value if property match.
@@ -123,7 +131,7 @@ const NLib = class {
 //#region Objects
 
 /**
- * The Objects management and utilities class.
+ * The Objects management and utilities class. 
  */
 const Objects = class {
     //#region constructor

@@ -1,3 +1,5 @@
+/** @module server/nlib-mssql */
+
 const nlib = require('./nlib');
 
 //#region Internal methods

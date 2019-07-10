@@ -1,7 +1,9 @@
+/** @module client/nlib */
+
 //#region NLib Cookies
 
 /**
- * module: NLib Cookies.
+ * name: NLib Cookies.
  * version: 1.0.8
  * required: none.
  * Source: JavaScript Cookie v2.1.3 from https://github.com/js-cookie/js-cookie

@@ -1,7 +1,9 @@
+/** @module client/nlib */
+
 //#region NLib (local)Storage
 
 /**
- * module: NLib (local)Storage.
+ * name: NLib (local)Storage.
  * version: 1.0.8
  * required: none.
  * Source: simpleStorage.js (0.2.1) from https://github.com/ZaDarkSide/simpleStorage

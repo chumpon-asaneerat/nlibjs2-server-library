@@ -1,7 +1,9 @@
+/** @module client/nlib */
+
 //#region NLib Core
 
 /**
- * module: NLib Core.
+ * name: NLib Core.
  * version: 1.0.8
  * required: none.
  */
