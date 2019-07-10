@@ -1,6 +1,4 @@
-/** 
- * @namespace NLib 
- */
+/** @namespace NLib */
 
 //#region NLib Core
 
