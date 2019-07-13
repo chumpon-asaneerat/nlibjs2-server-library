@@ -4,7 +4,44 @@ const nlib = require('./nlib');
 
 //#region Internal variable and methods
 
+// The newline character.
 const newline = '\r\n';
+
+// common queries.
+const queries = {}
+// get stored procedures and functions list.
+queries.getProcedures = () => {
+    let ret = '';
+
+    ret = ret + "SELECT ROUTINE_NAME AS name" + newline;
+    ret = ret + "     , ROUTINE_TYPE AS type" + newline;
+    ret = ret + "     , CREATED AS created" + newline;
+    ret = ret + "     , LAST_ALTERED AS updated" + newline;
+    ret = ret + "  FROM INFORMATION_SCHEMA.ROUTINES" + newline;
+    ret = ret + " WHERE ROUTINE_NAME NOT LIKE 'sp_%'" + newline;
+    ret = ret + "   AND ROUTINE_NAME NOT LIKE 'fn_%'" + newline;
+    ret = ret + " ORDER BY LAST_ALTERED" + newline;
+
+    return ret;
+}
+
+queries.getProcedureParameters = (name) => {
+    let ret = '';
+
+    ret = ret + "SELECT ORDINAL_POSITION AS no" + newline;
+    ret = ret + "     , PARAMETER_NAME AS name" + newline;
+    ret = ret + "     , DATA_TYPE AS type" + newline;
+    ret = ret + "     , PARAMETER_MODE AS mode" + newline;
+    ret = ret + "     , CHARACTER_MAXIMUM_LENGTH AS size" + newline;
+    ret = ret + "     , NUMERIC_PRECISION AS precusion" + newline;
+    ret = ret + "     , NUMERIC_SCALE AS scale" + newline;
+    ret = ret + "     , LAST_ALTERED AS updated" + newline;
+    ret = ret + "  FROM INFORMATION_SCHEMA.PARAMETERS" + newline;
+    ret = ret + " WHERE SPECIFIC_NAME = '" + name + "'" + newline;
+    ret = ret + " ORDER BY ORDINAL_POSITION" + newline;
+
+    return ret;
+};
 
 // check is mssql npm package is installed if not auto install it.
 const check_modules = () => {
@@ -615,25 +652,59 @@ const SqlServer = class {
      */
     static async getSchema(name = 'default') {
         let sqldb = new SqlServer();
-        console.log('connect to:', name);
         await sqldb.connect(name);
 
-        let allSPquery = '';
-        allSPquery = allSPquery + "SELECT ROUTINE_NAME AS NAME" + newline;
-        allSPquery = allSPquery + "     , ROUTINE_TYPE AS TYPE" + newline;
-        allSPquery = allSPquery + "     , CREATED AS CREATED" + newline;
-        allSPquery = allSPquery + "     , LAST_ALTERED AS UPDATED" + newline;
-        allSPquery = allSPquery + "  FROM INFORMATION_SCHEMA.ROUTINES" + newline;
-        allSPquery = allSPquery + " WHERE ROUTINE_NAME NOT LIKE 'sp_%'" + newline;
-        allSPquery = allSPquery + "   AND ROUTINE_NAME NOT LIKE 'fn_%'" + newline;
-        allSPquery = allSPquery + " ORDER BY LAST_ALTERED" + newline;
+        let allProcs = queries.getProcedures();
+        let allParams, paramList, spParams;
+        let ret = {}
 
-        console.log('execute query:', allSPquery);
-        let allSPs = await sqldb.query(allSPquery);
-        console.log('Results:', allSPs);
+        let allSPs = await sqldb.query(allProcs);
+
+        let parseParams = async (sp) => {            
+            paramList = ret[sp.name].parameters;
+            allParams = queries.getProcedureParameters(sp.name);
+            spParams = await sqldb.query(allParams);
+            console.log(spParams);
+        }
+
+        let parseSPs = () => {
+            allSPs.data.forEach(sp => {
+                ret[sp.name] = {
+                    "type": sp.type,
+                    "created": sp.created,
+                    "updated": sp.updated,
+                    "paramsters": []
+                }
+                return await parseParams(sp);
+            });
+        };
+
+        await parseSPs();
+
+        /*
+        let parseParam = async () => {
+            allSPs.data.forEach(sp => {
+                ret[sp.name] = {
+                    "type": sp.type,
+                    "created": sp.created,
+                    "updated": sp.updated,
+                    "paramsters": []
+                };
+                let paramList = ret[sp.name].parameters;
+                allParams = queries.getProcedureParameters(sp.name);
+                let spParams = sqldb.query(allParams).then(() => {
+                    spParams.data.forEach(para => {
+                        paramList.push(para)
+                    })
+                });
+            })
+        }
+        await parseParam();
+        */
 
         await sqldb.disconnect();
-        console.log('close connection');
+
+        console.log(ret);
     }
 
     //#endregion
