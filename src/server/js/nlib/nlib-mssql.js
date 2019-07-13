@@ -1,6 +1,8 @@
 /** @module server/nlib-mssql */
 
 const nlib = require('./nlib');
+const path = require('path');
+const fs = require('fs');
 
 //#region Internal variable and methods
 
@@ -13,7 +15,7 @@ const queries = {}
 queries.getProcedures = () => {
     let ret = '';
 
-    ret = ret + "SELECT TOP 1 ROUTINE_NAME AS name" + newline;
+    ret = ret + "SELECT ROUTINE_NAME AS name" + newline;
     ret = ret + "     , ROUTINE_TYPE AS type" + newline;
     ret = ret + "     , CREATED AS created" + newline;
     ret = ret + "     , LAST_ALTERED AS updated" + newline;
@@ -661,18 +663,21 @@ const SqlServer = class {
             let sp = procs[i];
             ret[sp.name] = {
                 type: sp.type,
-                created: sp.created,
-                updated: sp.updated,
-                parameters: []
+                //created: sp.created,
+                updated: sp.updated
             }
             dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
             let params = dbRet.data;
-            ret[sp.name].parameters.push(...params);
+            ret[sp.name].parameters = (params) ? params : [];
         }
 
         await sqldb.disconnect();
-        let retJ = JSON.stringify(ret, null, 2)
-        console.log(retJ);
+
+        // write file.
+        let cfg = check_config(name);
+        let dbName = (cfg) ? cfg.database : name; // get database name.
+        let file = path.join(nlib.paths.root, dbName + '.schema.json');
+        fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8')
     }
 
     //#endregion
