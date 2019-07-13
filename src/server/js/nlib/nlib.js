@@ -795,9 +795,7 @@ const DateTime = class  {
      * Gets Current DateTime.
      * @return {DateTime} Returns the DateTime object of current time.
      */
-    get now() {
-        return DateTime.now;
-    }
+    get now() { return DateTime.now; }
 
     //#endregion
 
