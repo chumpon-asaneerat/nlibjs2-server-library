@@ -796,6 +796,13 @@ const DateTime = class  {
      * @return {DateTime} Returns the DateTime object of current time.
      */
     get now() { return DateTime.now; }
+    /**
+     * Gets Elapsed TimeSpan.
+     * @return {TimeSpan} Returns the TimeSpan object from Now - Current DateTime (self).
+     */
+    get elapsed() {
+        return new TimeSpan(DateTime.now.span.ticks - this.span.ticks);
+    }
 
     //#endregion
 
