@@ -655,56 +655,11 @@ const SqlServer = class {
         await sqldb.connect(name);
 
         let allProcs = queries.getProcedures();
-        let allParams, paramList, spParams;
-        let ret = {}
-
-        let allSPs = await sqldb.query(allProcs);
-
-        let parseParams = async (sp) => {            
-            paramList = ret[sp.name].parameters;
-            allParams = queries.getProcedureParameters(sp.name);
-            spParams = await sqldb.query(allParams);
-            console.log(spParams);
-        }
-
-        let parseSPs = () => {
-            allSPs.data.forEach(sp => {
-                ret[sp.name] = {
-                    "type": sp.type,
-                    "created": sp.created,
-                    "updated": sp.updated,
-                    "paramsters": []
-                }
-                return await parseParams(sp);
-            });
-        };
-
-        await parseSPs();
-
-        /*
-        let parseParam = async () => {
-            allSPs.data.forEach(sp => {
-                ret[sp.name] = {
-                    "type": sp.type,
-                    "created": sp.created,
-                    "updated": sp.updated,
-                    "paramsters": []
-                };
-                let paramList = ret[sp.name].parameters;
-                allParams = queries.getProcedureParameters(sp.name);
-                let spParams = sqldb.query(allParams).then(() => {
-                    spParams.data.forEach(para => {
-                        paramList.push(para)
-                    })
-                });
-            })
-        }
-        await parseParam();
-        */
+        let ret1 = await sqldb.query(allProcs)
+        console.log(ret1.data);
 
         await sqldb.disconnect();
 
-        console.log(ret);
     }
 
     //#endregion
