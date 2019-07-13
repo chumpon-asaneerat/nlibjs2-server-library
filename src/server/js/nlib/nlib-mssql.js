@@ -611,8 +611,15 @@ const SqlServer = class {
     /**
      * Gets schema of database.
      */
-    static getSchema() {
+    static async getSchema(name = 'default') {
+        let sqldb = new SqlServer();
+        console.log('connect to:', name);
+        await sqldb.connect(name);
 
+        console.log('do someting....');
+
+        await sqldb.disconnect();
+        console.log('close connection');
     }
 
     //#endregion

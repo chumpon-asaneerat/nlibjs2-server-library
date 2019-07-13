@@ -50,29 +50,41 @@ else {
 */
 //#endregion
 
-//#region WebServer test.
+//#region SqlServer test
 
-const WebServer = require('./src/server/js/nlib/nlib-express');
-let wsvr = new WebServer();
+const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 
-// add middleware(s) here!!
-//wsvr.app.use(XXXXXX);
+let getSchema = (async() =>{
+    SqlServer.getSchema();
+})
 
-// add route(s) here!!
-const routes = {
-    /** @type {WebServer.RequestHandler} */
-    home: (req, res) => {
-        res.status(200).send(`It's work from home 2!!!`);
-    }
-}
+getSchema();
 
-//wsvr.app.get('/', wsvr.home);
-//wsvr.get('/', (req, res, next) => { res.status(200).send(`It's work from custom home!!!`); })
-wsvr.get('/', routes.home)
+//#endregion
 
-let svr = wsvr.listen();
-if (svr) {
-    console.log('Create server success.');
-}
+//#region WebServer test
+
+// const WebServer = require('./src/server/js/nlib/nlib-express');
+// let wsvr = new WebServer();
+
+// // add middleware(s) here!!
+// //wsvr.app.use(XXXXXX);
+
+// // add route(s) here!!
+// const routes = {
+//     /** @type {WebServer.RequestHandler} */
+//     home: (req, res) => {
+//         res.status(200).send(`It's work from home 2!!!`);
+//     }
+// }
+
+// //wsvr.app.get('/', wsvr.home);
+// //wsvr.get('/', (req, res, next) => { res.status(200).send(`It's work from custom home!!!`); })
+// wsvr.get('/', routes.home)
+
+// let svr = wsvr.listen();
+// if (svr) {
+//     console.log('Create server success.');
+// }
 
 //#endregion
