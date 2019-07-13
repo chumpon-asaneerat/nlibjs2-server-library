@@ -653,13 +653,26 @@ const SqlServer = class {
     static async getSchema(name = 'default') {
         let sqldb = new SqlServer();
         await sqldb.connect(name);
+        let dbRet;
+        let ret = {};
+        dbRet = await sqldb.query(queries.getProcedures());
+        let procs = dbRet.data;
+        await procs.forEach(async (sp) => {
+            ret[sp.name] = {
+                type: sp.type,
+                created: sp.created,
+                updated: sp.updated
+            }
 
-        let allProcs = queries.getProcedures();
-        let ret1 = await sqldb.query(allProcs)
-        console.log(ret1.data);
-
+            dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
+            console.log(dbRet)
+            //let params = dbRet.data;
+            //ret[sp.name].parameters = params;
+        });
+        
         await sqldb.disconnect();
 
+        console.log(ret);
     }
 
     //#endregion
