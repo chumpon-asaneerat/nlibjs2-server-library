@@ -608,6 +608,13 @@ const SqlServer = class {
      */
     static get version() { return "2.0.0"; }
 
+    /**
+     * Gets schema of database.
+     */
+    static getSchema() {
+
+    }
+
     //#endregion
 }
 
