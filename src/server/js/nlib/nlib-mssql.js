@@ -2,7 +2,9 @@
 
 const nlib = require('./nlib');
 
-//#region Internal methods
+//#region Internal variable and methods
+
+const newline = '\r\n';
 
 // check is mssql npm package is installed if not auto install it.
 const check_modules = () => {
@@ -616,7 +618,19 @@ const SqlServer = class {
         console.log('connect to:', name);
         await sqldb.connect(name);
 
-        console.log('do someting....');
+        let allSPquery = '';
+        allSPquery = allSPquery + "SELECT ROUTINE_NAME AS NAME" + newline;
+        allSPquery = allSPquery + "     , ROUTINE_TYPE AS TYPE" + newline;
+        allSPquery = allSPquery + "     , CREATED AS CREATED" + newline;
+        allSPquery = allSPquery + "     , LAST_ALTERED AS UPDATED" + newline;
+        allSPquery = allSPquery + "  FROM INFORMATION_SCHEMA.ROUTINES" + newline;
+        allSPquery = allSPquery + " WHERE ROUTINE_NAME NOT LIKE 'sp_%'" + newline;
+        allSPquery = allSPquery + "   AND ROUTINE_NAME NOT LIKE 'fn_%'" + newline;
+        allSPquery = allSPquery + " ORDER BY LAST_ALTERED" + newline;
+
+        console.log('execute query:', allSPquery);
+        let allSPs = await sqldb.query(allSPquery);
+        console.log('Results:', allSPs);
 
         await sqldb.disconnect();
         console.log('close connection');
