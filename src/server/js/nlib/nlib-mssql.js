@@ -13,7 +13,7 @@ const queries = {}
 queries.getProcedures = () => {
     let ret = '';
 
-    ret = ret + "SELECT ROUTINE_NAME AS name" + newline;
+    ret = ret + "SELECT TOP 1 ROUTINE_NAME AS name" + newline;
     ret = ret + "     , ROUTINE_TYPE AS type" + newline;
     ret = ret + "     , CREATED AS created" + newline;
     ret = ret + "     , LAST_ALTERED AS updated" + newline;
@@ -28,14 +28,13 @@ queries.getProcedures = () => {
 queries.getProcedureParameters = (name) => {
     let ret = '';
 
-    ret = ret + "SELECT ORDINAL_POSITION AS no" + newline;
+    ret = ret + "SELECT ORDINAL_POSITION AS No" + newline;
     ret = ret + "     , PARAMETER_NAME AS name" + newline;
     ret = ret + "     , DATA_TYPE AS type" + newline;
     ret = ret + "     , PARAMETER_MODE AS mode" + newline;
     ret = ret + "     , CHARACTER_MAXIMUM_LENGTH AS size" + newline;
-    ret = ret + "     , NUMERIC_PRECISION AS precusion" + newline;
+    ret = ret + "     , NUMERIC_PRECISION AS precision" + newline;
     ret = ret + "     , NUMERIC_SCALE AS scale" + newline;
-    ret = ret + "     , LAST_ALTERED AS updated" + newline;
     ret = ret + "  FROM INFORMATION_SCHEMA.PARAMETERS" + newline;
     ret = ret + " WHERE SPECIFIC_NAME = '" + name + "'" + newline;
     ret = ret + " ORDER BY ORDINAL_POSITION" + newline;
@@ -657,22 +656,23 @@ const SqlServer = class {
         let ret = {};
         dbRet = await sqldb.query(queries.getProcedures());
         let procs = dbRet.data;
-        await procs.forEach(async (sp) => {
+        let procCnt = procs.length;
+        for (let i = 0; i < procCnt; i++) {
+            let sp = procs[i];
             ret[sp.name] = {
                 type: sp.type,
                 created: sp.created,
-                updated: sp.updated
+                updated: sp.updated,
+                parameters: []
             }
-
             dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
-            console.log(dbRet)
-            //let params = dbRet.data;
-            //ret[sp.name].parameters = params;
-        });
-        
-        await sqldb.disconnect();
+            let params = dbRet.data;
+            ret[sp.name].parameters.push(...params);
+        }
 
-        console.log(ret);
+        await sqldb.disconnect();
+        let retJ = JSON.stringify(ret, null, 2)
+        console.log(retJ);
     }
 
     //#endregion
