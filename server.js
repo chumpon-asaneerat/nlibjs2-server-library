@@ -16,13 +16,12 @@ console.log('Total Hours:', ts.totalHours);
 console.log('Total Minutes:', ts.totalMinutes);
 console.log('Total Seconds:', ts.totalSeconds);
 console.log('Total Milliseconds:', ts.totalMilliseconds);
-*/
+
 let dt = new nlib.DateTime();
 setTimeout(() => {
     console.log('elapse (ms):', dt.elapsed.totalMilliseconds);
 }, 250);
-
-
+*/
 //#endregion
 
 //#region package.json test
@@ -57,7 +56,7 @@ else {
 //#endregion
 
 //#region SqlServer test
-/*
+
 const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 
 let getSchema = (async() =>{
@@ -65,7 +64,7 @@ let getSchema = (async() =>{
 })
 
 getSchema();
-*/
+
 //#endregion
 
 //#region WebServer test
