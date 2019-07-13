@@ -791,6 +791,13 @@ const DateTime = class  {
         let ret = (DateTime.daysInMonth(this.year, this.month) === this.day);
         return ret;
     }
+    /**
+     * Gets Current DateTime.
+     * @return {DateTime} Returns the DateTime object of current time.
+     */
+    get now() {
+        return DateTime.now;
+    }
 
     //#endregion
 
