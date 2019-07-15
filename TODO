@@ -1,8 +1,17 @@
-Project Sample Todo template:
-Sub Tasks:
-    TasK1:
-        ☐ Sample
-        ☐ Sample 2
-    Task2:
-        ✔ finished task
-        ☐ bbb 
+NLib:
+    Server:
+        Core:
+            ☐ Add Array helper class.
+            ☐ 
+        MSSql:
+            ☐ Add Convert function from database to js type (with size/precision/scale).
+            ☐ Add js file builder for generate database access class.
+    Client:
+        Refactor:
+            ☐ Core and Utils.
+            ☐ Cookie helper class.
+            ☐ Local Storage helper class.
+            ☐ Array helper class.
+        Task2:
+            ✔ finished task
+            ☐ bbb 
