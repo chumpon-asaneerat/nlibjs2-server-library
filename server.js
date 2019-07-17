@@ -57,16 +57,15 @@ else {
 
 //#region SqlServer test
 
-/*
 const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 
 let getSchema = (async() =>{
     SqlServer.generateSchema();
 })
 getSchema();
-*/
 
 
+/*
 const TestDb7x3 = require('./TestDb7x3.db');
 const db = new TestDb7x3();
 let ret;
@@ -90,8 +89,7 @@ let getErrMsg = async () => {
 
 //getHexCode();
 getErrMsg();
-
-
+*/
 
 //#endregion
 

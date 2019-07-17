@@ -32,13 +32,15 @@ const queries = {}
 queries.getProcedures = () => {
     let ret = '';
 
-    ret = ret + "SELECT ROUTINE_NAME AS name" + newline;
+    ret = ret + "SELECT TOP 1 ROUTINE_NAME AS name" + newline;
     ret = ret + "     , ROUTINE_TYPE AS type" + newline;
     ret = ret + "     , CREATED AS created" + newline;
     ret = ret + "     , LAST_ALTERED AS updated" + newline;
+    ret = ret + ", ROUTINE_DEFINITION AS code" + newline;
     ret = ret + "  FROM INFORMATION_SCHEMA.ROUTINES" + newline;
     ret = ret + " WHERE ROUTINE_NAME NOT LIKE 'sp_%'" + newline;
     ret = ret + "   AND ROUTINE_NAME NOT LIKE 'fn_%'" + newline;
+    ret = ret + "   AND ROUTINE_NAME = 'GetBranchs'" + newline;    
     ret = ret + " ORDER BY LAST_ALTERED" + newline;
 
     return ret;
@@ -95,6 +97,8 @@ queries.parseParameter = (param) => {
         o.name = param.name.substring(1, param.name.length)
     else o.name = '__ret'
     o.type = param.type;
+    // sqlserver not keep default value so need to manually edit json file.
+    //o.default = undefined;
     queries.checkParameterType(param, o);
 
     return o;
@@ -248,7 +252,7 @@ const getSqlType = (p) => {
     return (p.type) ? parse(p.type) : null;
 }
 const getDefaultValue = (p) => {
-    return (p && p.default) ? p.default : null;
+    return (p && p.default) ? p.default : undefined;
 }
 const getValue = (p, name, pObj) => {
     val = (pObj && (name in pObj || pObj.name)) ? pObj[name] : getDefaultValue(p);
@@ -740,6 +744,59 @@ const SqlServer = class {
                 //created: sp.created,
                 updated: sp.updated
             }
+
+            let code = sp.code.toUpperCase();
+            let ucode = sp.code.toUpperCase();
+            
+            let idx1, idx2, idx3, idx4, idx5, idx6, idx7, idx8;
+            let lf, rg, name, value;
+            idx1 = code.indexOf('CREATE ');
+            code = code.substring(idx1 + 'CREATE '.length, code.length);
+            if (sp.type === 'PROCEDURE') {
+                // procedure.
+                idx1 = code.indexOf(' PROCEDURE ');
+                code = code.substring(idx1 + ' PROCEDURE '.length, code.length);
+            }
+            else {
+                // function.
+                idx1 = code.indexOf(' FUNCTION ');
+                code = code.substring(idx1 + ' FUNCTION '.length, code.length);
+            }            
+            idx2 = code.indexOf('AS');
+            code = code.substring(0, idx2);
+
+            idx3 = code.indexOf('@');            
+            let pList = [];
+            let pItem, sItem;
+            while (idx3 !== -1) {
+                code = code.substring(idx3 + 1, code.length)
+                idx4 = code.indexOf('@') // find next param position
+                if (idx4 === -1)
+                    pItem = code
+                else pItem = code.substring(0, idx4)
+                
+                if (pItem.indexOf('=') !== -1) {
+                    idx5 = ucode.indexOf(pItem);
+                    sItem = sp.code.substring(idx5, idx5 + pItem.length);
+                    idx6 = sItem.indexOf('=');
+                    lf = sItem.substring(0, idx6)
+                    idx7 = lf.indexOf(' ');
+                    name = lf.substring(0, idx7);
+                    rg = sItem.substring(idx6 + 1, sItem.length)
+                    idx8 = rg.indexOf(',')
+                    if (idx8 === -1) idx8 = rg.indexOf(')')
+                    if (idx8 === -1) idx8 = rg.length;
+                    
+                    value = rg.substring(0, idx8);
+
+                    pList.push({ name: name.trim(), value: value.trim() })
+                }
+
+                idx3 = idx4;
+            }
+
+            console.log(pList);
+
             dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
             let param = dbRet.data;            
             ret[sp.name].parameter = (param) ? 

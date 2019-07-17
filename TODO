@@ -4,5 +4,6 @@ NLib:
             ☐ Add Array helper class.
             ☐ 
         MSSql:
-            ☐ Add Convert function from database to js type (with size/precision/scale).
+            ✔ Add Convert function from database to js type (with size/precision/scale). @done(19-07-17 18:38)
             ☐ Add js file builder for generate database access class.
+            ☐ Check default value assignment if null or undefined assigned.
