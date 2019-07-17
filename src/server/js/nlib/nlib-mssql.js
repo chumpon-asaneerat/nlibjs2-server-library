@@ -72,15 +72,20 @@ queries.parseParameters = async (params) => {
         p = params[i];
         o = queries.parseParameter(p)
         
-        if (p.mode === 'OUT') {
-            ret.outputs.push(o);
-        }
-        else {
-            ret.inputs.push(o);
-        }
+        if (queries.isInput(p)) ret.inputs.push(o);
+        if (queries.isOutput(p)) ret.outputs.push(o);
     }
 
     return ret;
+}
+
+queries.isInput = (param) => {
+    return (param.mode === 'IN');
+    //return (param.mode.indexOf('IN') !== -1);
+}
+
+queries.isOutput = (param) => {
+    return (param.mode.indexOf('OUT') !== -1);
 }
 
 queries.parseParameter = (param) => {
@@ -320,11 +325,13 @@ const assignInput = (rq, p, pObj) => {
     let val = getValue(p, name, pObj);
     if (tsqltype) {
         let newVal = formatValue(tsqltype, val);
-        rq.output(name, tsqltype, newVal);
+        rq.input(name, tsqltype, newVal);
         // update value back to proper type required for new version of node-mssql.
         pObj[name] = newVal;
     }
-    else rq.input(name, val);
+    else {
+        rq.input(name, val);
+    }
 }
 const assignOutput = (rq, p, pObj) => {
     let name = p.name.toLowerCase();
@@ -336,7 +343,9 @@ const assignOutput = (rq, p, pObj) => {
         // update value back to proper type required for new version of node-mssql.
         pObj[name] = newVal;
     }
-    else rq.output(name, val);    
+    else {
+        rq.output(name, val);
+    }
 }
 const prepareInputs = (rq, pObj, inputs) => {
     if (rq) {
@@ -687,7 +696,7 @@ const SqlServer = class {
             await this.connection.close();
             this.connection = null;
             //console.log('database is disconnected.');
-        }        
+        }
     }
 
     //#endregion
@@ -726,6 +735,7 @@ const SqlServer = class {
         for (let i = 0; i < procCnt; i++) {
             let sp = procs[i];
             ret[sp.name] = {
+                //name: sp.name,
                 type: sp.type,
                 //created: sp.created,
                 updated: sp.updated

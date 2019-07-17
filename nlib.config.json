@@ -1,26 +1,37 @@
 {
-  "app": {
-    "name": "NLib Web Server Application",
-    "version": "2.0.0",
-    "updated": "2019-07-07 11:00"
-  },
-  "webserver": {
-    "port": 3000,
-    "cookies": {
-      "secret": "YOUR_SECURE_KEY@123"
+    "app": {
+        "name": "NLib Web Server Application",
+        "version": "2.0.0",
+        "updated": "2019-07-07 11:00"
+    },
+    "webserver": {
+        "port": 3000,
+        "cookies": {
+            "secret": "YOUR_SECURE_KEY@123"
+        }
+    },
+    "mssql": {
+        "default": {
+            "server": "localhost",
+            "database": "TestDb7x3",
+            "user": "sa",
+            "password": "winnt123",
+            "pool": {
+                "max": 10,
+                "min": 0,
+                "timeout": 1000
+            }
+        },
+        "testdb7x3": {
+            "server": "localhost",
+            "database": "Testdb7x3",
+            "user": "sa",
+            "password": "winnt123",
+            "pool": {
+                "max": 10,
+                "min": 0,
+                "timeout": 1000
+            }
+        }
     }
-  },
-  "mssql": {
-    "default": {
-      "server": "localhost",
-      "database": "TestDb7x3",
-      "user": "sa",
-      "password": "winnt123",
-      "pool": {
-        "max": 10,
-        "min": 0,
-        "timeout": 1000
-      }
-    }
-  }
 }

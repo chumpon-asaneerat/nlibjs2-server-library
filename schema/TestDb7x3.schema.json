@@ -91,13 +91,14 @@
                 {
                     "name": "length",
                     "type": "int"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "RandomString",
                     "type": "nvarchar(20)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "DeleteAll": {
@@ -116,7 +117,9 @@
                 {
                     "name": "errCode",
                     "type": "int"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -125,8 +128,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveErrorMsg": {
@@ -162,7 +164,9 @@
                 {
                     "name": "message",
                     "type": "nvarchar(max)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -171,8 +175,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveLanguage": {
@@ -203,7 +206,9 @@
                 {
                     "name": "enabled",
                     "type": "bit"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -212,8 +217,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "DisableLanguage": {
@@ -275,7 +279,9 @@
                 {
                     "name": "seedDigits",
                     "type": "tinyint"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -284,8 +290,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "NextMasterPK": {
@@ -296,7 +301,9 @@
                 {
                     "name": "tableName",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "seedcode",
                     "type": "nvarchar(max)"
@@ -309,8 +316,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetMasterPK": {
@@ -355,7 +361,9 @@
                 {
                     "name": "descriptionEN",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -364,8 +372,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SavePeriodUnitML": {
@@ -384,7 +391,9 @@
                 {
                     "name": "description",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -393,8 +402,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetPeriodUnits": {
@@ -430,7 +438,9 @@
                 {
                     "name": "unitTextEN",
                     "type": "nvarchar(20)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -439,8 +449,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveLimitUnitML": {
@@ -463,7 +472,9 @@
                 {
                     "name": "unitText",
                     "type": "nvarchar(20)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -472,8 +483,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetLimitUnits": {
@@ -529,7 +539,8 @@
         "type": "PROCEDURE",
         "updated": "2018-05-23T19:19:25.693Z",
         "parameter": {
-            "inputs": [
+            "inputs": [],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -538,8 +549,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveLicenseType": {
@@ -574,7 +584,9 @@
                 {
                     "name": "currText",
                     "type": "nvarchar(20)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "licenseTypeId",
                     "type": "int"
@@ -587,8 +599,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveLicenseTypeML": {
@@ -623,7 +634,9 @@
                 {
                     "name": "currText",
                     "type": "nvarchar(20)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -632,8 +645,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetLicenseTypes": {
@@ -665,7 +677,9 @@
                 {
                     "name": "noOfLimit",
                     "type": "int"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "seq",
                     "type": "int"
@@ -678,8 +692,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetLicenseFeatures": {
@@ -760,7 +773,9 @@
                 {
                     "name": "memberType",
                     "type": "int"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "userId",
                     "type": "nvarchar(30)"
@@ -773,8 +788,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveUserInfoML": {
@@ -801,7 +815,9 @@
                 {
                     "name": "lastName",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -810,8 +826,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetUserInfos": {
@@ -859,7 +874,9 @@
                 {
                     "name": "seedDigits",
                     "type": "tinyint"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -868,8 +885,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "NextCustomerPK": {
@@ -884,7 +900,9 @@
                 {
                     "name": "tableName",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "seedcode",
                     "type": "nvarchar(max)"
@@ -897,8 +915,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetCustomerPK": {
@@ -934,13 +951,14 @@
                 {
                     "name": "spName",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "logId",
                     "type": "int"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "Log": {
@@ -1029,7 +1047,9 @@
                 {
                     "name": "email",
                     "type": "nvarchar(80)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "customerId",
                     "type": "nvarchar(30)"
@@ -1042,8 +1062,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveCustomerML": {
@@ -1086,7 +1105,9 @@
                 {
                     "name": "postalcode",
                     "type": "nvarchar(8)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1095,8 +1116,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetCustomers": {
@@ -1164,7 +1184,9 @@
                 {
                     "name": "employeeCode",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "memberId",
                     "type": "nvarchar(30)"
@@ -1177,8 +1199,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveMemberInfoML": {
@@ -1209,7 +1230,9 @@
                 {
                     "name": "lastName",
                     "type": "nvarchar(50)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1218,8 +1241,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetMemberInfos": {
@@ -1259,7 +1281,9 @@
                 {
                     "name": "branchName",
                     "type": "nvarchar(80)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "branchId",
                     "type": "nvarchar(30)"
@@ -1272,8 +1296,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveBranchML": {
@@ -1296,7 +1319,9 @@
                 {
                     "name": "branchName",
                     "type": "nvarchar(80)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1305,8 +1330,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetBranchs": {
@@ -1354,7 +1378,9 @@
                 {
                     "name": "orgName",
                     "type": "nvarchar(80)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "orgId",
                     "type": "nvarchar(30)"
@@ -1367,8 +1393,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveOrgML": {
@@ -1391,7 +1416,9 @@
                 {
                     "name": "orgName",
                     "type": "nvarchar(80)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1400,8 +1427,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetOrgs": {
@@ -1453,7 +1479,9 @@
                 {
                     "name": "description",
                     "type": "nvarchar(max)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1462,8 +1490,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetQSets": {
@@ -1515,7 +1542,9 @@
                 {
                     "name": "sortOrder",
                     "type": "int"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "qSeq",
                     "type": "int"
@@ -1528,8 +1557,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(100)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveQSlideML": {
@@ -1556,7 +1584,9 @@
                 {
                     "name": "qText",
                     "type": "nvarchar(max)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1565,8 +1595,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetQSlides": {
@@ -1626,7 +1655,9 @@
                 {
                     "name": "sortOrder",
                     "type": "int"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "qSSeq",
                     "type": "int"
@@ -1639,8 +1670,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(100)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveQSlideItemML": {
@@ -1671,7 +1701,9 @@
                 {
                     "name": "qText",
                     "type": "nvarchar(max)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1680,8 +1712,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetQSlideItems": {
@@ -1757,7 +1788,9 @@
                 {
                     "name": "remark",
                     "type": "nvarchar(100)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "voteSeq",
                     "type": "int"
@@ -1770,8 +1803,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveDevice": {
@@ -1794,7 +1826,9 @@
                 {
                     "name": "location",
                     "type": "nvarchar(150)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "deviceId",
                     "type": "nvarchar(30)"
@@ -1807,8 +1841,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveDeviceML": {
@@ -1835,7 +1868,9 @@
                 {
                     "name": "location",
                     "type": "nvarchar(150)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -1844,8 +1879,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "__GenerateSubOrgInClause": {
@@ -1864,13 +1898,14 @@
                 {
                     "name": "includeSubOrg",
                     "type": "bit"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "retVal",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GenerateSubOrgInClause": {
@@ -1893,13 +1928,14 @@
                 {
                     "name": "ShowOutput",
                     "type": "bit"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "retVal",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "__BuildTotalVoteCountQuery": {
@@ -1938,13 +1974,14 @@
                 {
                     "name": "userId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "sql",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetDeviceTypes": {
@@ -2048,7 +2085,9 @@
                 {
                     "name": "passWord",
                     "type": "nvarchar(20)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "customerId",
                     "type": "nvarchar(30)"
@@ -2073,8 +2112,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(100)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "InitDeviceTypes": {
@@ -2101,7 +2139,9 @@
                 {
                     "name": "customerId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "accessId",
                     "type": "nvarchar(30)"
@@ -2114,8 +2154,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "CheckAccess": {
@@ -2126,7 +2165,9 @@
                 {
                     "name": "accessId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -2135,8 +2176,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SignOut": {
@@ -2147,7 +2187,9 @@
                 {
                     "name": "accessId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -2156,8 +2198,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "InitErrorMessages": {
@@ -2180,7 +2221,9 @@
                 {
                     "name": "accessId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -2189,8 +2232,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "CheckUsers": {
@@ -2209,7 +2251,9 @@
                 {
                     "name": "passWord",
                     "type": "nvarchar(20)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -2218,8 +2262,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetDevices": {
@@ -2329,13 +2372,14 @@
                 {
                     "name": "endDate",
                     "type": "datetime"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "qSetId",
                     "type": "nvarchar(30)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "SaveQSet": {
@@ -2370,7 +2414,9 @@
                 {
                     "name": "endDate",
                     "type": "datetime"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "qSetId",
                     "type": "nvarchar(30)"
@@ -2383,8 +2429,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(max)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "InitC1QSet1Votes": {
@@ -2466,7 +2511,9 @@
                 {
                     "name": "endDate",
                     "type": "datetime"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "pageNum",
                     "type": "int"
@@ -2491,8 +2538,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(100)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetCustomerQSets": {
@@ -2507,7 +2553,9 @@
                 {
                     "name": "customerId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -2516,8 +2564,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(100)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     },
     "GetVoteSummaries": {
@@ -2556,7 +2603,9 @@
                 {
                     "name": "userId",
                     "type": "nvarchar(30)"
-                },
+                }
+            ],
+            "outputs": [
                 {
                     "name": "errNum",
                     "type": "int"
@@ -2565,8 +2614,7 @@
                     "name": "errMsg",
                     "type": "nvarchar(100)"
                 }
-            ],
-            "outputs": []
+            ]
         }
     }
 }
