@@ -6,12 +6,3 @@ NLib:
         MSSql:
             ☐ Add Convert function from database to js type (with size/precision/scale).
             ☐ Add js file builder for generate database access class.
-    Client:
-        Refactor:
-            ☐ Core and Utils.
-            ☐ Cookie helper class.
-            ☐ Local Storage helper class.
-            ☐ Array helper class.
-        Task2:
-            ✔ finished task
-            ☐ bbb 
