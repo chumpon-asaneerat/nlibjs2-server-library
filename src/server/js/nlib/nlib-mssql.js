@@ -9,6 +9,23 @@ const fs = require('fs');
 // The newline character.
 const newline = '\r\n';
 
+// file and path.
+const isDir = (pathName) => {
+    try {
+        return fs.lstatSync(pathName).isDirectory();
+    } 
+    catch {
+        return false;
+    }
+}
+const checkDir = (pathName) => {
+    let dirname = path.normalize(pathName).split(path.sep);
+    dirname.forEach((sdir, index) => {
+        var pathInQuestion = dirname.slice(0, index+1).join(path.sep);
+        if ((!isDir(pathInQuestion)) && pathInQuestion) fs.mkdirSync(pathInQuestion);
+    });
+}
+
 // common queries.
 const queries = {}
 // get stored procedures and functions list.
@@ -43,6 +60,51 @@ queries.getProcedureParameters = (name) => {
 
     return ret;
 };
+
+queries.parseParameters = async (params) => {
+    let ret = {
+        inputs: [],
+        outputs: []
+    };
+
+    let p, o;
+    for (let i = 0; i < params.length; i++) {
+        p = params[i];
+        o = queries.parseParameter(p)
+        
+        if (p.mode === 'OUT') {
+            ret.outputs.push(o);
+        }
+        else {
+            ret.inputs.push(o);
+        }
+    }
+
+    return ret;
+}
+
+queries.parseParameter = (param) => {
+    let o = {};
+
+    if (param.name && param.name.length > 0)
+        o.name = param.name.substring(1, param.name.length)
+    else o.name = '__ret'
+    o.type = param.type;
+    queries.checkParameterType(param, o);
+
+    return o;
+}
+
+queries.checkParameterType = (param, o) => {
+    if (param.size) {
+        // max
+        if (param.size === -1) o.type = o.type + '(max)';
+        else o.type = o.type + '(' + param.size.toString() + ')';
+    }
+    if (param.scale) {
+        o.type = o.type + '(' + param.precision.toString() + ', '+ param.scale.toString() + ')';
+    }
+}
 
 // check is mssql npm package is installed if not auto install it.
 const check_modules = () => {
@@ -647,11 +709,13 @@ const SqlServer = class {
      * Gets SqlServer class version.
      */
     static get version() { return "2.0.0"; }
-
     /**
-     * Gets schema of database.
+     * Generate database schema file.
+     * 
+     * @param {String} name The database reference name in nlib.config.json (default is 'default')
+     * @param {String} outPath The output path (default is 'schema') 
      */
-    static async getSchema(name = 'default') {
+    static async generateSchema(name = 'default', outPath = 'schema') {
         let sqldb = new SqlServer();
         await sqldb.connect(name);
         let dbRet;
@@ -667,8 +731,10 @@ const SqlServer = class {
                 updated: sp.updated
             }
             dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
-            let params = dbRet.data;
-            ret[sp.name].parameters = (params) ? params : [];
+            let param = dbRet.data;            
+            ret[sp.name].parameter = (param) ? 
+                await queries.parseParameters(param) : 
+                { inputs:[], output: [] };
         }
 
         await sqldb.disconnect();
@@ -676,8 +742,10 @@ const SqlServer = class {
         // write file.
         let cfg = check_config(name);
         let dbName = (cfg) ? cfg.database : name; // get database name.
-        let file = path.join(nlib.paths.root, dbName + '.schema.json');
-        fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8')
+        let pathName = path.join(nlib.paths.root, outPath);
+        checkDir(pathName);
+        let file = path.join(pathName, dbName + '.schema.json');        
+        fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8', )
     }
 
     //#endregion

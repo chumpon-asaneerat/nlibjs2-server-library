@@ -60,7 +60,7 @@ else {
 const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 
 let getSchema = (async() =>{
-    SqlServer.getSchema();
+    SqlServer.generateSchema();
 })
 
 getSchema();
