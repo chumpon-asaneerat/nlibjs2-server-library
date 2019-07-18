@@ -5,6 +5,6 @@ NLib:
             ☐ 
         MSSql:
             ✔ Add Convert function from database to js type (with size/precision/scale). @done(19-07-17 18:38)
+            ✔ Parse default value from stored procedure source code. @done(19-07-18 17:21)
+            ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
             ☐ Add js file builder for generate database access class.
-            ☐ Parse default value from stored procedure source code.
-            ☐ Check default value assignment if null or undefined assigned.

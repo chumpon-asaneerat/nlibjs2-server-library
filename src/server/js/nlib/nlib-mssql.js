@@ -32,7 +32,7 @@ const queries = {}
 queries.getProcedures = () => {
     let ret = '';
 
-    ret = ret + "SELECT TOP 1 ROUTINE_NAME AS name" + newline;
+    ret = ret + "SELECT ROUTINE_NAME AS name" + newline;
     ret = ret + "     , ROUTINE_TYPE AS type" + newline;
     ret = ret + "     , CREATED AS created" + newline;
     ret = ret + "     , LAST_ALTERED AS updated" + newline;
@@ -40,7 +40,6 @@ queries.getProcedures = () => {
     ret = ret + "  FROM INFORMATION_SCHEMA.ROUTINES" + newline;
     ret = ret + " WHERE ROUTINE_NAME NOT LIKE 'sp_%'" + newline;
     ret = ret + "   AND ROUTINE_NAME NOT LIKE 'fn_%'" + newline;
-    ret = ret + "   AND ROUTINE_NAME = 'GetBranchs'" + newline;    
     ret = ret + " ORDER BY LAST_ALTERED" + newline;
 
     return ret;
@@ -64,7 +63,7 @@ queries.getProcedureParameters = (name) => {
 };
 
 // Stoded Procedure parameter parser related methods.
-queries.parseParameters = async (params) => {
+queries.parseParameters = async (params, defaultValue) => {
     let ret = {
         inputs: [],
         outputs: []
@@ -73,7 +72,7 @@ queries.parseParameters = async (params) => {
     let p, o;
     for (let i = 0; i < params.length; i++) {
         p = params[i];
-        o = queries.parseParameter(p)
+        o = queries.parseParameter(p, defaultValue)
         
         if (queries.isInput(p)) ret.inputs.push(o);
         if (queries.isOutput(p)) ret.outputs.push(o);
@@ -91,18 +90,25 @@ queries.isOutput = (param) => {
     return (param.mode.indexOf('OUT') !== -1);
 }
 
-queries.parseParameter = (param) => {
+queries.parseParameter = (param, defaultValue) => {
     let o = {};
 
     if (param.name && param.name.length > 0)
         o.name = param.name.substring(1, param.name.length)
     else o.name = '__ret'
     o.type = param.type;
-    // sqlserver not keep default value so need to manually edit json file.
-    //o.default = undefined;
+    // sqlserver not keep default value so need parse from source code.
+    // If the value is not correct required to manual edit json file.
+    o.default = queries.getDefaultValue(param, defaultValue);
     queries.checkParameterType(param, o);
 
     return o;
+}
+
+queries.getDefaultValue = (param, defaultValue) => {
+    let names = defaultValue.parameters.map(p => '@' + p.name);
+    let idx = names.indexOf(param.name);
+    return (idx === -1) ? undefined : defaultValue.parameters[idx].value;
 }
 
 queries.checkParameterType = (param, o) => {
@@ -166,14 +172,18 @@ defaultvalues.parseNameValue = (sp, o, pItem) => {
     let idx = o.codeUpr.indexOf(pItem);
     let sItem = sp.code.substring(idx, idx + pItem.length);
     idx = sItem.indexOf('=');
-    let lf = sItem.substring(0, idx)
-    let rg = sItem.substring(idx + 1, sItem.length)    
+    let lf = sItem.substring(0, idx);
+    let rg = sItem.substring(idx + 1, sItem.length);
     idx = lf.indexOf(' ');
-    let name = lf.substring(0, idx);    
+    let name = lf.substring(0, idx);
     idx = rg.indexOf(',')
-    if (idx === -1) idx = rg.indexOf(')')
-    if (idx === -1) idx = rg.length;    
+    if (idx === -1) idx = rg.indexOf(')');
+    if (idx === -1) idx = rg.length;
     let value = rg.substring(0, idx);
+        
+    idx = value.toUpperCase().indexOf('OUT');
+    if (idx !== -1) value = value.substring(0, idx);
+
     return { name: name.trim(), value: value.trim() };
 }
 
@@ -806,67 +816,12 @@ const SqlServer = class {
                 //created: sp.created,
                 updated: sp.updated
             }
-
-            /*
-            let code = sp.code.toUpperCase();
-            let ucode = sp.code.toUpperCase();
-            
-            let idx1, idx2, idx3, idx4, idx5, idx6, idx7, idx8;
-            let lf, rg, name, value;
-            idx1 = code.indexOf('CREATE ');
-            code = code.substring(idx1 + 'CREATE '.length, code.length);
-            if (sp.type === 'PROCEDURE') {
-                // procedure.
-                idx1 = code.indexOf(' PROCEDURE ');
-                code = code.substring(idx1 + ' PROCEDURE '.length, code.length);
-            }
-            else {
-                // function.
-                idx1 = code.indexOf(' FUNCTION ');
-                code = code.substring(idx1 + ' FUNCTION '.length, code.length);
-            }            
-            idx2 = code.indexOf('AS');
-            code = code.substring(0, idx2);
-
-            idx3 = code.indexOf('@');            
-            let pList = [];
-            let pItem, sItem;
-            while (idx3 !== -1) {
-                code = code.substring(idx3 + 1, code.length)
-                idx4 = code.indexOf('@') // find next param position
-                if (idx4 === -1)
-                    pItem = code
-                else pItem = code.substring(0, idx4)
-                
-                if (pItem.indexOf('=') !== -1) {
-                    idx5 = ucode.indexOf(pItem);
-                    sItem = sp.code.substring(idx5, idx5 + pItem.length);
-                    idx6 = sItem.indexOf('=');
-                    lf = sItem.substring(0, idx6)
-                    idx7 = lf.indexOf(' ');
-                    name = lf.substring(0, idx7);
-                    rg = sItem.substring(idx6 + 1, sItem.length)
-                    idx8 = rg.indexOf(',')
-                    if (idx8 === -1) idx8 = rg.indexOf(')')
-                    if (idx8 === -1) idx8 = rg.length;
-                    
-                    value = rg.substring(0, idx8);
-
-                    pList.push({ name: name.trim(), value: value.trim() })
-                }
-
-                idx3 = idx4;
-            }
-
-            console.log(pList);
-            */
-            let paramObj = defaultvalues.parse(sp);
-            console.log(paramObj.parameters);
+            let defaultValue = defaultvalues.parse(sp);
 
             dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
-            let param = dbRet.data;            
+            let param = dbRet.data;
             ret[sp.name].parameter = (param) ? 
-                await queries.parseParameters(param) : 
+                await queries.parseParameters(param, defaultValue) : 
                 { inputs:[], output: [] };
         }
 
