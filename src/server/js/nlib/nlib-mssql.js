@@ -63,6 +63,7 @@ queries.getProcedureParameters = (name) => {
     return ret;
 };
 
+// Stoded Procedure parameter parser related methods.
 queries.parseParameters = async (params) => {
     let ret = {
         inputs: [],
@@ -819,5 +820,12 @@ const SqlServer = class {
 }
 
 //#endregion
+
+
+// parse stored procedure source code for default value.
+defaultvalues.parse = (sp, output) => {
+
+}
+
 
 module.exports = exports = SqlServer;
