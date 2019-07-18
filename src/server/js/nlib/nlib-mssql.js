@@ -116,6 +116,67 @@ queries.checkParameterType = (param, o) => {
     }
 }
 
+// parse stored procedure source code for default value.
+const defaultvalues = {}
+
+defaultvalues.parse = (sp) => {
+    let o = {
+        codeUpr: sp.code.toUpperCase(),
+        current: sp.code.toUpperCase(),
+        parameters: []
+    }
+    defaultvalues.fiterDeclareBlock(sp, o);
+    defaultvalues.filterParameterList(sp, o);
+    return o;
+}
+defaultvalues.fiterDeclareBlock = (sp, o) => {
+    let idx = o.current.indexOf('CREATE ');
+    o.current = o.current.substring(idx + 'CREATE '.length, o.current.length);
+    if (sp.type === 'PROCEDURE') {
+        // procedure.
+        idx = o.current.indexOf(' PROCEDURE ');
+        o.current = o.current.substring(idx + ' PROCEDURE '.length, o.current.length);
+    }
+    else {
+        // function.
+        idx = o.current.indexOf(' FUNCTION ');
+        o.current = o.current.substring(idx + ' FUNCTION '.length, o.current.length);
+    }            
+    idx = o.current.indexOf('AS');
+    o.current = o.current.substring(0, idx);
+}
+defaultvalues.filterParameterList = (sp, o) => {
+    let idx = o.current.indexOf('@');
+    let idx2, pItem;
+    while (idx !== -1) {
+        o.current = o.current.substring(idx + 1, o.current.length)
+        idx2 = o.current.indexOf('@') // find next param position
+        if (idx2 === -1)
+            pItem = o.current
+        else pItem = o.current.substring(0, idx2)
+        
+        if (pItem.indexOf('=') !== -1) {
+            let result = defaultvalues.parseNameValue(sp, o, pItem);
+            o.parameters.push(result)
+        }
+        idx = idx2;
+    }
+}
+defaultvalues.parseNameValue = (sp, o, pItem) => {
+    let idx = o.codeUpr.indexOf(pItem);
+    let sItem = sp.code.substring(idx, idx + pItem.length);
+    idx = sItem.indexOf('=');
+    let lf = sItem.substring(0, idx)
+    let rg = sItem.substring(idx + 1, sItem.length)    
+    idx = lf.indexOf(' ');
+    let name = lf.substring(0, idx);    
+    idx = rg.indexOf(',')
+    if (idx === -1) idx = rg.indexOf(')')
+    if (idx === -1) idx = rg.length;    
+    let value = rg.substring(0, idx);
+    return { name: name.trim(), value: value.trim() };
+}
+
 // check is mssql npm package is installed if not auto install it.
 const check_modules = () => {
     // node-mssql
@@ -746,6 +807,7 @@ const SqlServer = class {
                 updated: sp.updated
             }
 
+            /*
             let code = sp.code.toUpperCase();
             let ucode = sp.code.toUpperCase();
             
@@ -797,6 +859,9 @@ const SqlServer = class {
             }
 
             console.log(pList);
+            */
+            let paramObj = defaultvalues.parse(sp);
+            console.log(paramObj.parameters);
 
             dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
             let param = dbRet.data;            
@@ -820,12 +885,5 @@ const SqlServer = class {
 }
 
 //#endregion
-
-
-// parse stored procedure source code for default value.
-defaultvalues.parse = (sp, output) => {
-
-}
-
 
 module.exports = exports = SqlServer;
