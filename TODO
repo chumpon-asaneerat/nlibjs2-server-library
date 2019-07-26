@@ -15,6 +15,9 @@ NLib:
             ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
             ☐ Add js file builder for generate database access class.
             ☐ Create Gulp Task class to generate schema and js file.
+        Rater Web:
+            ☐ Init new project in github.
+            ☐ Add all basic route for all management pages.
         Rechecks:
             ☐ web.tech.nodes
     
