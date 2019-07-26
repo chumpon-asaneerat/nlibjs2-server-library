@@ -18,6 +18,8 @@ NLib:
         Rater Web:
             ☐ Init new project in github.
             ☐ Add all basic route for all management pages.
+            ☐ Add table to keep session key.
+            ☐ Add middleware logic to handle browser/device unique id.
         Rechecks:
             ☐ web.tech.nodes
     
