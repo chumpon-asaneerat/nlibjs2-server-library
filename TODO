@@ -14,6 +14,7 @@ NLib:
             ✔ Parse default value from stored procedure source code. @done(19-07-18 17:21)
             ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
             ☐ Add js file builder for generate database access class.
+            ☐ Modify generate function to create SP source files.
             ☐ Create Gulp Task class to generate schema and js file.
             ☐ Add supports binary field update.
         Rater Web:
