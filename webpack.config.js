@@ -16,14 +16,14 @@ module.exports = {
         minimize: true
     },
     module: {
-        rules: [/*{
+        rules: [{
             test: /\.riot$/,
             exclude: /node_modules/,
             use: [{
                 loader: '@riotjs/webpack-loader',
                 options: { hot: true }
             }]
-        },*/ {
+        }, {
             test: /\.js$/,
             exclude: /node_modules/,
             use: {
