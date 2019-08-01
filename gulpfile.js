@@ -88,14 +88,14 @@ gulp.task('livereload', () => {
     return task.task();
 });
 
-gulp.task('watch', function() {
-    gulp.watch(src.sass, ['compile-sass']);
-    gulp.watch(src.js, ['bundle-js']);
+gulp.task('watch', () => {
+    gulp.watch(path.join(__dirname, 'src/client/sass/**/*.{sass,scss}'), ['compile-sass']);
+    gulp.watch(path.join(__dirname, 'src/client/js/**/*.js'), ['bundle-js']);
     //gulp.watch(src.html, ['html']);
     //gulp.watch(src.riotTags, ['riot-tags']);
 });
 
-gulp.task('monitor', function(done) {    
+gulp.task('monitor', (done) => {
     let task = new GulpNodeMonitor();
     task.opts = {
         script: 'server.js',
