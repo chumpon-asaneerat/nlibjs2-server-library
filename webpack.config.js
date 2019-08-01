@@ -2,6 +2,7 @@ const path = require('path')
 
 module.exports = {
     mode: 'development',
+    watch: true,
     entry: { 
         //main: './app/js/main.js',
         //index: './src/index.js',
@@ -17,7 +18,7 @@ module.exports = {
     },
     module: {
         rules: [{
-            test: /\.riot$/,
+            test: /\.(riot|tag)$/,
             exclude: /node_modules/,
             use: [{
                 loader: '@riotjs/webpack-loader',
