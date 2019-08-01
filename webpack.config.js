@@ -62,6 +62,16 @@ module.exports = {
                     options: { modules: false }
                 }
             ]
+        }, {
+            test: /\.(png|jpe?g|gif)$/i,
+            use: [
+              {
+                loader: 'url-loader',
+                options: {
+                  limit: 8192
+                }
+              }
+            ]
         }]
     },
     plugins: [
