@@ -1,1 +1,0 @@
-riot.tag2("app","<yield></yield>",'app,[data-is="app"]{ margin: 5px auto; border: 1px solid brown; }',"",function(t){}),riot.tag2("example","<p>Text: {opts.text}</p>","","",function(t){this.opts=this.parent.opts});
