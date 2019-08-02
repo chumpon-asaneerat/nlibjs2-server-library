@@ -8,6 +8,7 @@ const GulpJSBundle = require("./build/gulp/jsbundle").GulpJSBundle;
 const GulpLiveReloaded = require("./build/gulp/livereloaded").GulpLiveReloaded;
 const GulpFileMerge = require("./build/gulp/filemerge").GulpFileMerge;
 const GulpNodeMonitor = require("./build/gulp/nodemon").GulpNodeMonitor;
+const GulpRiot3 = require("./build/gulp/riot3").GulpRiot3;
 
 //const connect = require('gulp-connect');
 //const watch = require('gulp-watch');
@@ -46,6 +47,17 @@ gulp.task('compile-sass', () => {
         src: path.join(__dirname, 'src/client/sass/**/*.{sass,scss}'),
         dest: path.join(__dirname, 'dist/client/css/'),
         map: 'maps/'
+    };
+    return task.task();
+});
+
+gulp.task('riot3', () => {
+    let task = new GulpRiot3();
+    task.opts = {
+        merge: true,
+        src: path.join(__dirname, 'src/server/template/riot/**/*.tag'),
+        dest: path.join(__dirname, 'dist/component/riot'),
+        bundle: 'tags.js'
     };
     return task.task();
 });

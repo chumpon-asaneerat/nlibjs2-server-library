@@ -6,7 +6,6 @@ const riot = require('gulp-riot');
 const concat = require('gulp-concat');
 const uglify = require('gulp-uglify-es').default;
 
-
 class GulpRiot3 extends GulpTask {
     task() {
         if (this.opts.merge) {
