@@ -13,7 +13,6 @@ module.exports = {
         path: path.resolve(__dirname, 'dist'),
         filename: '[name].js'
     },
-    //devtool: 'inline',
     devtool: "source-map",
     optimization: {
         minimize: true
