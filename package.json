@@ -20,6 +20,7 @@
     "devDependencies": {
         "@babel/core": "^7.5.5",
         "@babel/preset-env": "^7.5.5",
+        "@riotjs/cli": "^4.0.2",
         "@riotjs/compiler": "^4.3.5",
         "@riotjs/hot-reload": "^4.0.0",
         "@riotjs/webpack-loader": "^4.0.1",
