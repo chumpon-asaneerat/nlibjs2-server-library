@@ -90,7 +90,8 @@ const dist_libs = [
     /* jQuery */
     { "route": "/dist/js", "path": "jquery-3.3.1" },
     /* jQuery UI */
-    { "route": "/dist", "path": "jquery-ui-1.12.1" },
+    { "route": "/dist/css", "path": "jquery-ui-1.12.1" },
+    { "route": "/dist/js", "path": "jquery-ui-1.12.1" },
     /* bootstrap 4.x */
     { "route": "/dist/js", "path": "popperjs-1.15.0" },
     { "route": "/dist/js", "path": "tooltipjs-1.3.2" },
