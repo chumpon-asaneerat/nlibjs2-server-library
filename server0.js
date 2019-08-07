@@ -124,6 +124,8 @@ const dist_libs = [
     { "route": "/dist", "path": "simplebar-4.1.0" },
     /* overlay-scrollbar */
     { "route": "/dist", "path": "overlay-scrollbars-1.9.1" },
+    /* reveal.js */
+    //{ "route": "/dist", "path": "reveal-3.8.0" },
     /* riotjs */
     { "route": "/dist/js", "path": "riotjs-3.13.2" },
     /* for access precompile riotjs component */
