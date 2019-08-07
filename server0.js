@@ -108,6 +108,8 @@ const dist_libs = [
     { "route": "/dist", "path": "chart-js-2.8.0" },
     /* chartjs-plugin-datalabels */
     { "route": "/dist", "path": "chart-js-plugin-datalabels-0.6.0" },
+    /* chartjs-plugin-piechart-outlabels */
+    { "route": "/dist", "path": "chart-js-plugin-piechart-outlabels-0.1.4" },
     /* howler */
     { "route": "/dist/js", "path": "howler-2.1.2" },
     /* jquery-org-chart */
