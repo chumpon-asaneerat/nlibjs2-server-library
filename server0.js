@@ -102,6 +102,8 @@ const dist_libs = [
     { "route": "/dist/css", "path": "emoji-symbols-1.0.0" },
     /* flag-icon-css 3.x */
     { "route": "/dist", "path": "flag-icon-css-3.1.0" },
+    /* animate-css */
+    { "route": "/dist", "path": "animate-css-3.7.2" },
     /* moment */
     { "route": "/dist/js", "path": "moment-2.22.2" },
     /* chartjs */
