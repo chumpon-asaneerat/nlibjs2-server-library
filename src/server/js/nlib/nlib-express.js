@@ -1,5 +1,6 @@
 /** @module server/nlib-express */
 
+const path = require('path');
 const nlib = require('./nlib');
 // common middlewares.
 const express = require("express");
@@ -8,6 +9,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const cookieparser = require("cookie-parser");
 const bodyparser = require("body-parser");
+const favicon = require("serve-favicon");
 
 const defaultApp = { 
     name:'NLib Web Server Application', 
@@ -16,8 +18,36 @@ const defaultApp = {
 };
 const defaultWSvr = { 
     port: 3000,
-    cookies: {
-        secret: 'YOUR_SECURE_KEY@123'
+    cookies: { secret: 'YOUR_SECURE_KEY@123' },
+    favicon : { path: "public", fileName: "favicon.ico" },
+    public: {
+        paths: [
+            { route: "/public", path: "public", maxAge: "30s", enable: true },
+            { route: "/dist/js", path: "public/dist/jquery-3.3.1", maxAge: "15s", enable: true },
+            { route: "/dist/css", path: "public/dist/jquery-ui-1.12.1", maxAge: "15s", enable: true },
+            { route: "/dist/js", path: "public/dist/jquery-ui-1.12.1", maxAge: "15s", enable: true },
+            { route: "/dist/js", path: "public/dist/popperjs-1.15.0", maxAge: "15s", enable: true },
+            { route: "/dist/js", path: "public/dist/tooltipjs-1.3.2", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/bootstrap-4.2.1", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/font-awesome-5.9.0", maxAge: "15s", enable: true },
+            { route: "/dist/css", path: "public/dist/emoji-symbols-1.0.0", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/flag-icon-css-3.1.0", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/animate-css-3.7.2", maxAge: "15s", enable: true },
+            { route: "/dist/js", path: "public/dist/moment-2.24.0", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/chart-js-2.8.0", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/chart-js-plugin-datalabels-0.6.0", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/chart-js-plugin-piechart-outlabels-0.1.4", maxAge: "15s", enable: true },
+            { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: "15s", maxAge: true },
+            { route: "/dist", path: "public/dist/jquery-org-chart-2.1.3", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/tabulator-4.3.0", maxAge: "15s", enable: true },
+            { route: "/dist/js", path: "public/dist/ace-1.4.5", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/simplebar-4.1.0", maxAge: "15s" },
+            { route: "/dist", path: "public/dist/overlay-scrollbars-1.9.1", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/socket.io-2.2.0", maxAge: "15s", enable: true },
+            { route: "/dist", path: "public/dist/reveal-3.8.0", maxAge: "15s", enable: false },
+            { route: "/dist/js", path: "public/dist/riotjs-3.13.2", maxAge: "15s", enable: true },
+            { route: "/components", path: "../../dist/component/riot", maxAge: "15s", enable: true }
+        ]
     }
 };
 
@@ -64,6 +94,26 @@ const init_body_parser = (app) => {
     app.use(bodyparser.urlencoded({ extended: true }));
 }
 
+const init_fav_icon = (app, cfg) => {
+    console.info('use "serve-favicon".');
+    let icocfg = cfg.get('webserver.favicon');
+    let iconpath = path.join(nlib.paths.root, icocfg.path, icocfg.fileName);
+    app.use(favicon(iconpath));
+}
+
+const init_public_paths = (app, cfg) => {
+    console.info('Setup static routes for public access.');
+    let paths = cfg.get('webserver.public.paths');
+    paths.forEach(info => {
+        if (info.enable) {
+            let localPath = path.join(nlib.paths.root, info.path);
+            console.log('publish "' + info.path + '"');
+            //console.log('publish "' + localPath + '"');
+            app.use(info.route, express.static(localPath, { maxage: info.maxAge }));
+        }
+    })
+}
+
 const init_middlewares = (app, cfg) => {
     //? load common middlewares.
     //! be careful the middleware order is matter.
@@ -71,6 +121,8 @@ const init_middlewares = (app, cfg) => {
     init_logger(app);
     init_cookie_parser(app, cfg);
     init_body_parser(app);
+    init_fav_icon(app, cfg);
+    init_public_paths(app, cfg);
 }
 
 /**
