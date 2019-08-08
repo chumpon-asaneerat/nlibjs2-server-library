@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Socket IO test</title>
+</head>
+<body>
+    <h3>Socket.io test</h3>
+    
+    <!-- socket.io 4 -->
+    <script src="/dist/js/socket.io.js"></script>
+    <script>
+        let socket = io.connect('http://localhost:3000');
+        socket.on('news', function (data) {
+            console.log(data);
+            socket.emit('my other event', { my: 'data' });
+        });
+    </script>
+</body>
+</html>
