@@ -1,6 +1,90 @@
 NLib:
     Server:
-        Core:
+        Core (nlib.js):
+            Core:
+                ✔ Object management methods. @done(19-08-08 11:55)
+                ✔ Classes exports methods. @done(19-08-08 11:55)
+            Objects class:
+                ✔ Implements assignTo method. @done(19-08-08 11:57)
+                ✔ Implements clone method. @done(19-08-08 11:57)
+                ✔ Implements setValues method. @done(19-08-08 11:57)
+            JSONFile class:
+                ✔ Implements save method. @done(19-08-08 11:59)
+                ✔ Implements load method. @done(19-08-08 11:59)
+                ✔ Implements exists method. @done(19-08-08 11:59)
+            Configuration class:
+                ✔ Implements get method. @done(19-08-08 12:00)
+                ✔ Implements set method. @done(19-08-08 12:00)
+                ✔ Implements exists method. @done(19-08-08 12:00)
+                ✔ Implements load method. @done(19-08-08 12:01)
+                ✔ Implements update method. @done(19-08-08 12:01)
+                ✔ Implements get data propety. @done(19-08-08 12:02)
+                ✔ Implements get fileName propety. @done(19-08-08 12:02)
+            Timespan class:
+                Implements 6 constructors:
+                    ✔ Empty. @done(19-08-08 12:04)
+                    ✔ milliseconds. @done(19-08-08 12:04)
+                    ✔ days, hours. @done(19-08-08 12:05)
+                    ✔ hours, minutes, seconds. @done(19-08-08 12:05)
+                    ✔ days, hours, minutes, seconds @done(19-08-08 12:05)
+                    ✔ days, hours, minutes, seconds, milliseconds @done(19-08-08 12:05)
+                ✔ Implements equals(timespan) methods. @done(19-08-08 12:06)
+                ✔ Implements duration methods. @done(19-08-08 12:07)
+                ✔ Implements toString methods. @done(19-08-08 12:07)
+                ✔ Implements add(timespan) methods. @done(19-08-08 12:07)
+                ✔ Implements subtract(timespan) methods. @done(19-08-08 12:07)
+                ✔ Implements get days property. @done(19-08-08 12:08)
+                ✔ Implements get hours property. @done(19-08-08 12:08)
+                ✔ Implements get minutes property. @done(19-08-08 12:08)
+                ✔ Implements get seconds property. @done(19-08-08 12:09)
+                ✔ Implements get milliseconds property. @done(19-08-08 12:09)
+                ✔ Implements get totalDays property. @done(19-08-08 12:09)
+                ✔ Implements get totalHours property. @done(19-08-08 12:09)
+                ✔ Implements get totalMinutes property. @done(19-08-08 12:09)
+                ✔ Implements get totalSeconds property. @done(19-08-08 12:09)
+                ✔ Implements get totalMilliseconds property. @done(19-08-08 12:09)
+                ✔ Implements fromDays static method. @done(19-08-08 12:10)
+                ✔ Implements fromHours static method. @done(19-08-08 12:10)
+                ✔ Implements fromMinutes static method. @done(19-08-08 12:10)
+                ✔ Implements fromSeconds static method. @done(19-08-08 12:10)
+            DateTime class:
+                Implements 6 constructors:
+                    ✔ Empty. @done(19-08-08 12:17)
+                    ✔ millisecond. @done(19-08-08 12:17)
+                    ✔ year, month, day. @done(19-08-08 12:17)
+                    ✔ year, month, day, hour, minute, second. @done(19-08-08 12:17)
+                    ✔ year, month, day, hour, minute, second, millisecond @done(19-08-08 12:18)
+                ✔ Implements add(timespan) method. @done(19-08-08 12:11)
+                ✔ Implements addYears(years) method. @done(19-08-08 12:11)
+                ✔ Implements addMonths(months, autoCalcDays) method. @done(19-08-08 12:11)
+                ✔ Implements addDays(days) method. @done(19-08-08 12:11)
+                ✔ Implements addHours(hours) method. @done(19-08-08 12:12)
+                ✔ Implements addMinutes(minutes) method. @done(19-08-08 12:12)
+                ✔ Implements addSeconds(seconds) method. @done(19-08-08 12:12)
+                ✔ Implements addMilliseconds(milliseconds) method. @done(19-08-08 12:12)
+                ✔ Implements format(mask, locale) method. @done(19-08-08 12:13)
+                ✔ Implements valueOf method. @done(19-08-08 12:13)
+                ✔ Implements toString method. @done(19-08-08 12:13)
+                ✔ Implements get year property. @done(19-08-08 12:14)
+                ✔ Implements get month property. @done(19-08-08 12:14)
+                ✔ Implements get day property. @done(19-08-08 12:14)
+                ✔ Implements get dayOfWeek property. @done(19-08-08 12:14)
+                ✔ Implements get hour property. @done(19-08-08 12:14)
+                ✔ Implements get minute property. @done(19-08-08 12:14)
+                ✔ Implements get second property. @done(19-08-08 12:15)
+                ✔ Implements get millisecond property. @done(19-08-08 12:15)
+                ✔ Implements get isEndOfMonth property. @done(19-08-08 12:15)
+                ✔ Implements get now property. @done(19-08-08 12:15)
+                ✔ Implements get elapsed property. @done(19-08-08 12:15)
+                ✔ Implements now static method. @done(19-08-08 12:15)
+                ✔ Implements isLeapYear(year) static method. @done(19-08-08 12:16)
+                ✔ Implements isValidMonth(month) static method. @done(19-08-08 12:16)
+                ✔ Implements isValidDayInMonth(year, month, day) static method. @done(19-08-08 12:16)
+                ✔ Implements daysInMonth(year, month) static method. @done(19-08-08 12:16)
+            NPM class:
+                ✔ Implements exists static method. @done(19-08-08 12:19)
+                ✔ Implements install(pkg, dev) static method. @done(19-08-08 12:19)
+                ✔ Implements uninstall(pkg) static method. @done(19-08-08 12:19)
             NArray class:
                 ☐ map method.
                 ☐ maps method.
@@ -9,22 +93,42 @@ NLib:
                 ☐ inArray method.
                 ☐ indexOf method.
             ☐ 
-        MSSql:
+        MSSql (nlib-mssql.js):
             ✔ Add Convert function from database to js type (with size/precision/scale). @done(19-07-17 18:38)
             ✔ Parse default value from stored procedure source code. @done(19-07-18 17:21)
             ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
+            ☐ Supports generate schema generate config.
+            ☐ Supports detected stored procedure script changed and update if required.
             ☐ Add js file builder for generate database access class.
             ☐ Modify generate function to create SP source files.
-            ☐ Create Gulp Task class to generate schema and js file.
+            ✘ Create Gulp Task class to generate schema and js file. @cancelled(19-08-08 11:50)
             ☐ Add supports binary field update.
-        Rater Web:
+        Express (nlib-express.js):
+            ✔ Supports basic middlewares #1 (helmet, morgan, cookie-parser, body-parser) @done(19-08-08 11:39)
+            ✔ Supports basic middlewares #2 (favicon, serve-static (for static path)) @done(19-08-08 11:40)
+            ✔ Supports common router methods (get/post/all) @done(19-08-08 11:40)
+            ✔ Supports websocket (socket.io). @done(19-08-08 11:41)
+            ✔ Change app listen to http server listen. @done(19-08-08 11:43)
+            ✔ Supports monitor middleware 'express-status-monitor'. @done(19-08-08 11:43)
+            ✔ Supports document middleware swagger. @done(19-08-08 11:44)
+            ✔ Supports configuration via nlib.config.js @done(19-08-08 11:44)
+            ☐ Supports jwt middleware for authenticated session access.
+            ☐ Supports formidable middleware for upload files.
+            ☐ 
+        NLib Web Application Project Template:
             ☐ Init new project in github.
+            ☐ Setup all required npm packages.
+            ☐ Setup nlib server js files.
+            ☐ Setup nlib client js and css files.
+            ☐ Setup gulp tasks.
+        Rater Web:
+            ☐ Init new project in github (import from NLib Web Application Project Template).
             ☐ Add all basic route for all management pages.
             ☐ Add table to keep session key.
             ☐ Add middleware logic to handle browser/device unique id.
             ☐ Checks server side cookie (server access) middleware.
         Rechecks:
             ☐ web.tech.nodes
-            ☐ Webpack
-            ☐ Babel
+            ✘ Webpack @cancelled(19-08-08 11:50)
+            ✘ Babel @cancelled(19-08-08 11:50)
     
