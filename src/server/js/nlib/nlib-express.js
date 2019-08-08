@@ -264,7 +264,6 @@ const WebServer = class {
 
 //#region Upload files route
 
-
 const initUploadProgressHandler = (form, req, res) => {
     form.on('progress', (bytesReceived, bytesExpected) => {
         //let percent_complete = (bytesReceived / bytesExpected) * 100;
@@ -279,7 +278,7 @@ const initUploadFieldHandler = (form, req, res) => {
 }
 const initUploadFileBeginHandler = (form, req, res) => {
     form.on('fileBegin', (name, file) => {
-        let dest = path.join(__dirname, 'uploads');
+        let dest = path.join(__dirname, 'uploads'); //! change path here!!!
         if (!fs.existsSync(dest)) fs.mkdirSync(dest);
         file.path = path.join(dest, file.name);
     })
