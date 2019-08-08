@@ -118,6 +118,7 @@ NLib:
             ✔ Supports monitor middleware 'express-status-monitor'. @done(19-08-08 11:43)
             ✔ Supports document middleware swagger. @done(19-08-08 11:44)
             ✔ Supports configuration via nlib.config.js @done(19-08-08 11:44)
+            ✔ Add sendJson method. @done(19-08-08 12:49)
             ☐ Supports jwt middleware for authenticated session access.
             ☐ Supports formidable middleware for upload files.
             ☐ 
