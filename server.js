@@ -12,7 +12,6 @@ const routes = {
     }
 }
 
-//wsvr.app.get('/', wsvr.home);
 //wsvr.get('/', (req, res, next) => { res.status(200).send(`It's work from custom home!!!`); })
 wsvr.get('/', routes.home)
 
