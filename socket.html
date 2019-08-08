@@ -8,15 +8,30 @@
 </head>
 <body>
     <h3>Socket.io test</h3>
+    <button onclick="connect();">Connect</button>
+    <button onclick="disconnect();">Disconnect</button>
+    <button onclick="send();">Send</button>
     
     <!-- socket.io 4 -->
     <script src="/dist/js/socket.io.js"></script>
     <script>
-        let socket = io.connect('http://localhost:3000');
-        socket.on('news', function (data) {
-            console.log(data);
-            socket.emit('my other event', { my: 'data' });
-        });
+        let counter = 0;;
+        let socket;
+        let connect = () => {
+            if (socket) return; // already connected.
+            socket = io.connect('http://localhost:3000', {'forceNew':true });
+            socket.on('news arrived from server', function (data) {
+                console.log(data);            
+            });
+        }
+        let disconnect = () => {
+            if (socket) socket.disconnect();
+            socket = null;
+        }
+        let send = () => {
+            if (!socket) return;
+            socket.emit('data from client', { my: 'data:' + counter++ });
+        }
     </script>
 </body>
 </html>
