@@ -82,6 +82,11 @@ app.use(bodyparser.urlencoded({ extended: true }));
 const iconpath = path.join(__dirname, "public", "favicon.ico");
 app.use(favicon(iconpath));
 
+const publicPath = path.join(__dirname, 'public');
+//const publicMaxAge = { maxage: '30d' };
+const publicMaxAge = { maxage: '30s' };
+app.use('/public', express.static(publicPath, publicMaxAge));
+
 const distPath = path.join(__dirname, 'public', 'dist');
 //const distMaxAge = { maxage: '1d' };
 const distMaxAge = { maxage: '15s' };
