@@ -119,7 +119,7 @@ NLib:
             ✔ Supports document middleware swagger. @done(19-08-08 11:44)
             ✔ Supports configuration via nlib.config.js @done(19-08-08 11:44)
             ✔ Add sendJson method. @done(19-08-08 12:49)
-            ☐ Supports formidable middleware for upload files.
+            ✔ Supports formidable middleware for upload files. @done(19-08-08 13:44)
             ☐ Supports jwt middleware for authenticated session access.
             ☐ 
         NLib Web Application Project Template:
