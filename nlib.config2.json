@@ -12,6 +12,12 @@
         "monitor": {
             "enable": false
         },
+        "swagger": {
+            "enable": true,
+            "apis": [ 
+                "./server.js" 
+            ]
+        },
         "cookies": {
             "secret": "YOUR_SECURE_KEY@123"
         },

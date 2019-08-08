@@ -14,6 +14,8 @@ const cookieparser = require("cookie-parser");
 const bodyparser = require("body-parser");
 const favicon = require("serve-favicon");
 
+const swaggerUi = require('swagger-ui-express');
+const swaggerJSDoc = require('swagger-jsdoc');
 
 const defaultApp = { 
     name:'NLib Web Server Application', 
@@ -24,6 +26,7 @@ const defaultWSvr = {
     port: 3000,
     websocket: { enable: false },
     monitor: { enable: false },
+    swagger: { enable: false, apis: [ "./server.js" ] },
     cookies: { secret: 'YOUR_SECURE_KEY@123' },
     favicon : { path: "public", fileName: "favicon.ico" },
     public: {
@@ -56,7 +59,6 @@ const defaultWSvr = {
         ]
     }
 };
-
 const loadconfig = () => {
     console.log('load configuration.');
     let cfg = nlib.Config;
@@ -69,8 +71,7 @@ const loadconfig = () => {
         cfg.update();
     }
     return cfg;
-}
-
+};
 const init_statusMonitor = (app, io, cfg) => {
     let usedMonitor = cfg.get('webserver.monitor.enable');
     if (!usedMonitor) return; // disable.
@@ -108,18 +109,14 @@ const init_statusMonitor = (app, io, cfg) => {
 
     app.use(statusMon(options));
 };
-    
-
 const init_helmet = (app) => {
     console.info('use "helmet".');
     app.use(helmet());
-}
-
+};
 const init_logger = (app) => {
     console.info('use "logger (morgan)".');    
     app.use(morgan("dev"));
-}
-
+};
 const init_cookie_parser = (app, cfg) => {
     console.info('use "cookie parser".');    
     // check config.
@@ -131,21 +128,18 @@ const init_cookie_parser = (app, cfg) => {
     }
     
     app.use(cookieparser(secret));
-}
-
+};
 const init_body_parser = (app) => {
     console.info('use "body parser".');
     app.use(bodyparser.json());
     app.use(bodyparser.urlencoded({ extended: true }));
-}
-
+};
 const init_fav_icon = (app, cfg) => {
     console.info('use "serve-favicon".');
     let icocfg = cfg.get('webserver.favicon');
     let iconpath = path.join(nlib.paths.root, icocfg.path, icocfg.fileName);
     app.use(favicon(iconpath));
-}
-
+};
 const init_public_paths = (app, cfg) => {
     console.info('Setup static routes for public access.');
     let paths = cfg.get('webserver.public.paths');    
@@ -157,8 +151,21 @@ const init_public_paths = (app, cfg) => {
             app.use(info.route, express.static(localPath, { maxage: info.maxAge }));
         }
     })
-}
-
+};
+const init_swagger_doc = (app, cfg) => {
+    let enableSwagger = cfg.get('webserver.swagger.enable');
+    if (!enableSwagger) return;
+    console.info('use "swagger-ui-express" and "swagger-jsdoc".');
+    let appName = nlib.Config.get('app.name');
+    let appVer = nlib.Config.get('app.version');
+    let apis = cfg.get('webserver.swagger.apis');
+    console.log('apis:', apis)
+    let swaggerSpec = swaggerJSDoc({
+        swaggerDefinition: { info: { title: appName + ' APIs', version: appVer } },
+        apis: apis
+    });
+    app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerSpec));
+};
 const init_middlewares = (app, io, cfg) => {
     //? load common middlewares.
     //! be careful the middleware order is matter.
@@ -169,7 +176,8 @@ const init_middlewares = (app, io, cfg) => {
     init_body_parser(app);
     init_fav_icon(app, cfg);
     init_public_paths(app, cfg);
-}
+    init_swagger_doc(app, cfg);
+};
 
 /**
  * The Web Server (express.js) class.
@@ -205,13 +213,22 @@ const WebServer = class {
     }
     /**
      * get
-     * @param {String} path The path.
-     * @param {express.RequestHandler} handler The handler.
+     * @param {string | RegExp | Array<string | RegExp>} path The path.
+     * @param {express.RequestHandler[]} handlers The handlers.
      */
-    get(path, handler) {
-        // this is sample to make function supports intellisense for Express Type.
-        this.app.get(path, handler);
-    }
+    get(path, ...handlers) { this.app.get(path, ...handlers); }
+    /**
+     * post
+     * @param {string | RegExp | Array<string | RegExp>} path The path.
+     * @param {express.RequestHandler[]} handlers The handlers.
+     */
+    post(path, ...handlers) { this.app.post(path, ...handlers); }
+    /**
+     * all
+     * @param {string | RegExp | Array<string | RegExp>} path The path.
+     * @param {express.RequestHandler[]} handlers The handlers.
+     */
+    all(path, ...handlers) { this.app.all(path, ...handlers); }    
     /**
      * Start the web server to listen request.
      */
@@ -232,3 +249,4 @@ module.exports = exports = WebServer;
  * @ignore
  */
 module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
+

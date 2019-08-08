@@ -7,10 +7,16 @@
     "webserver": {
         "port": 3000,
         "websocket": {
-            "enable": true
+            "enable": false
         },
         "monitor": {
-            "enable": true
+            "enable": false
+        },
+        "swagger": {
+            "enable": false,
+            "apis": [
+                "./server.js"
+            ]
         },
         "cookies": {
             "secret": "YOUR_SECURE_KEY@123"
