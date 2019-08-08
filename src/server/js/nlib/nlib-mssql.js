@@ -516,7 +516,7 @@ const unprepareStatement = async (ps, isPrepared) => {
  * The SqlServer class. Provide data access for microsoft sql server database.
  */
 const SqlServer = class {
-    //#region public methods
+    //#region constructor
 
     /**
      * Create new instance of Microsoft Sql Server data access.
