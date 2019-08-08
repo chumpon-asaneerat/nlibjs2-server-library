@@ -6,6 +6,12 @@
     },
     "webserver": {
         "port": 3000,
+        "websocket": {
+            "enable": false
+        },
+        "monitor": {
+            "enable": false
+        },
         "cookies": {
             "secret": "YOUR_SECURE_KEY@123"
         },

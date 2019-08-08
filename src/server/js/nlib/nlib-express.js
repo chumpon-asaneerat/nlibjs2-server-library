@@ -4,12 +4,16 @@ const path = require('path');
 const nlib = require('./nlib');
 // common middlewares.
 const express = require("express");
+const http = require('http');
+const socket = require('socket.io');
+const statusMon = require('express-status-monitor');
 
 const helmet = require("helmet");
 const morgan = require("morgan");
 const cookieparser = require("cookie-parser");
 const bodyparser = require("body-parser");
 const favicon = require("serve-favicon");
+
 
 const defaultApp = { 
     name:'NLib Web Server Application', 
@@ -18,6 +22,8 @@ const defaultApp = {
 };
 const defaultWSvr = { 
     port: 3000,
+    websocket: { enable: false },
+    monitor: { enable: false },
     cookies: { secret: 'YOUR_SECURE_KEY@123' },
     favicon : { path: "public", fileName: "favicon.ico" },
     public: {
@@ -65,6 +71,45 @@ const loadconfig = () => {
     return cfg;
 }
 
+const init_statusMonitor = (app, io, cfg) => {
+    let usedMonitor = cfg.get('webserver.monitor.enable');
+    if (!usedMonitor) return; // disable.
+    console.info('use "express-status-monitor".');
+    let appName = nlib.Config.get('app.name');
+    let options = {
+        title: appName + ' Status', // Default title
+        //theme: 'default.css',     // Default styles
+        path: '/status',
+        //socketPath: '/socket.io', // In case you use a custom path
+        //websocket: existingSocketIoInstance,        
+        spans: [{
+            interval: 1,            // Every second
+            retention: 60           // Keep 60 data points in memory
+        }, {
+            interval: 5,            // Every 5 seconds
+            retention: 60
+        }, {
+            interval: 15,           // Every 15 seconds
+            retention: 60
+        }],
+        chartVisibility: {
+            cpu: true,
+            mem: true,
+            load: true,
+            responseTime: true,
+            rps: true,
+            statusCodes: true
+        },
+        //ignoreStartsWith: '/admin',
+        healthChecks: []
+    }
+
+    if (io) options.websocket = io; // set exists socket io.
+
+    app.use(statusMon(options));
+};
+    
+
 const init_helmet = (app) => {
     console.info('use "helmet".');
     app.use(helmet());
@@ -103,7 +148,7 @@ const init_fav_icon = (app, cfg) => {
 
 const init_public_paths = (app, cfg) => {
     console.info('Setup static routes for public access.');
-    let paths = cfg.get('webserver.public.paths');
+    let paths = cfg.get('webserver.public.paths');    
     paths.forEach(info => {
         if (info.enable) {
             let localPath = path.join(nlib.paths.root, info.path);
@@ -114,9 +159,10 @@ const init_public_paths = (app, cfg) => {
     })
 }
 
-const init_middlewares = (app, cfg) => {
+const init_middlewares = (app, io, cfg) => {
     //? load common middlewares.
     //! be careful the middleware order is matter.
+    init_statusMonitor(app, io, cfg);
     init_helmet(app);
     init_logger(app);
     init_cookie_parser(app, cfg);
@@ -138,10 +184,15 @@ const WebServer = class {
         /** The Express Application instance.*/
         this.app = express();
         console.log('Express app instance created.');
+        this.server = http.Server(this.app);
+        console.log('HTTP server instance created.');
+        this.enableWebSocket = cfg.get('webserver.websocket.enable');
+        
+        this.io = (this.enableWebSocket) ? socket(this.server) : null;
+        if (this.io) console.log('Websocket instance created.');
+        
         // init middlewares.
-        init_middlewares(this.app, cfg);
-        /** The Express Server instance. */
-        this.server = null;
+        init_middlewares(this.app, this.io, cfg);
     }
     /**
      * home route.
@@ -168,11 +219,8 @@ const WebServer = class {
         let port = nlib.Config.get('webserver.port');
         let name = nlib.Config.get('app.name');
         
-        this.server = this.app.listen(port, () => {
-            console.log(`${name} listen on port: ${port}`)
-        });
-
-        return this.server;
+        this.server.listen(port);
+        console.log(`${name} listen on port: ${port}`)
     }
 }
 
