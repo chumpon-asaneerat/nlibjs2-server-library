@@ -1,5 +1,7 @@
 /** @module server/nlib-express */
 
+//#region Packages Required
+
 const path = require('path');
 const fs = require('fs');
 const nlib = require('./nlib');
@@ -18,6 +20,10 @@ const formidable = require('formidable');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
+
+//#endregion
+
+//#region WebServer default configurations
 
 const defaultApp = { 
     name:'NLib Web Server Application', 
@@ -61,6 +67,11 @@ const defaultWSvr = {
         ]
     }
 };
+
+//#endregion
+
+//#region WebServer helper methods
+
 const loadconfig = () => {
     console.log('load configuration.');
     let cfg = nlib.Config;
@@ -181,6 +192,10 @@ const init_middlewares = (app, io, cfg) => {
     init_swagger_doc(app, cfg);
 };
 
+//#endregion
+
+//#region WebServer class
+
 /**
  * The Web Server (express.js) class.
  */
@@ -245,14 +260,10 @@ const WebServer = class {
     }
 }
 
-module.exports = exports = WebServer;
+//#endregion
 
-/**
- * export Express RequestHandler type definition.
- * @type {express.RequestHandler}
- * @ignore
- */
-module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
+//#region Upload files route
+
 
 const initUploadProgressHandler = (form, req, res) => {
     form.on('progress', (bytesReceived, bytesExpected) => {
@@ -326,4 +337,19 @@ const uploadfiles = (req, res, next) => {
     initUploadEndHandler(form, req, res);
 }
 
+//#endregion
+
+//#region exports
+
+module.exports = exports = WebServer;
+
+/**
+ * export Express RequestHandler type definition.
+ * @type {express.RequestHandler}
+ * @ignore
+ */
+module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
+
 module.exports.uploadfiles = exports.uploadfiles = uploadfiles;
+
+//#endregion
