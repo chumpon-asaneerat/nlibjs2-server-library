@@ -2,7 +2,7 @@
     "app": {
         "name": "NLib Web Server Application",
         "version": "2.0.0",
-        "updated": "2019-07-07 11:00"
+        "updated": "2019-08-08 09:30"
     },
     "webserver": {
         "port": 3000,
@@ -108,7 +108,8 @@
                 {
                     "route": "/dist/js",
                     "path": "public/dist/howler-2.1.2",
-                    "maxAge": true
+                    "maxAge": "15s",
+                    "enable": true
                 },
                 {
                     "route": "/dist",
@@ -131,7 +132,8 @@
                 {
                     "route": "/dist",
                     "path": "public/dist/simplebar-4.1.0",
-                    "maxAge": "15s"
+                    "maxAge": "15s",
+                    "enable": true
                 },
                 {
                     "route": "/dist",
@@ -159,7 +161,7 @@
                 },
                 {
                     "route": "/components",
-                    "path": "../../dist/component/riot",
+                    "path": "dist/component/riot",
                     "maxAge": "15s",
                     "enable": true
                 }

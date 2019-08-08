@@ -14,7 +14,7 @@ const favicon = require("serve-favicon");
 const defaultApp = { 
     name:'NLib Web Server Application', 
     version:'2.0.0', 
-    updated: '2019-07-07 11:00' 
+    updated: '2019-08-08 09:30' 
 };
 const defaultWSvr = { 
     port: 3000,
@@ -37,7 +37,7 @@ const defaultWSvr = {
             { route: "/dist", path: "public/dist/chart-js-2.8.0", maxAge: "15s", enable: true },
             { route: "/dist", path: "public/dist/chart-js-plugin-datalabels-0.6.0", maxAge: "15s", enable: true },
             { route: "/dist", path: "public/dist/chart-js-plugin-piechart-outlabels-0.1.4", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: "15s", maxAge: true },
+            { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: "15s", enable: true },
             { route: "/dist", path: "public/dist/jquery-org-chart-2.1.3", maxAge: "15s", enable: true },
             { route: "/dist", path: "public/dist/tabulator-4.3.0", maxAge: "15s", enable: true },
             { route: "/dist/js", path: "public/dist/ace-1.4.5", maxAge: "15s", enable: true },
@@ -46,7 +46,7 @@ const defaultWSvr = {
             { route: "/dist", path: "public/dist/socket.io-2.2.0", maxAge: "15s", enable: true },
             { route: "/dist", path: "public/dist/reveal-3.8.0", maxAge: "15s", enable: false },
             { route: "/dist/js", path: "public/dist/riotjs-3.13.2", maxAge: "15s", enable: true },
-            { route: "/components", path: "../../dist/component/riot", maxAge: "15s", enable: true }
+            { route: "/components", path: "dist/component/riot", maxAge: "15s", enable: true }
         ]
     }
 };
