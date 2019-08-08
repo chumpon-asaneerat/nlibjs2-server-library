@@ -203,15 +203,6 @@ const WebServer = class {
         init_middlewares(this.app, this.io, cfg);
     }
     /**
-     * home route.
-     * @param {Request} req The express request instance.
-     * @param {Response} res The express response instance.
-     */
-    home(req, res) {
-        // this is sample to make function supports intellisense for Express Type.
-        res.status(200).send(`It's work from local home!!!`);
-    }
-    /**
      * get
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.

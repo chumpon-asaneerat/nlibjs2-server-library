@@ -5,7 +5,7 @@ let wsvr = new WebServer();
 
 const routes = {
     /** @type {WebServer.RequestHandler} */
-    home: (req, res) => {
+    home: (req, res, next) => {
         //res.status(200).send(`It's work from home 2!!!`);
         //res.sendFile(__dirname + '/socket.html')
         res.sendFile(__dirname + '/index.html')
