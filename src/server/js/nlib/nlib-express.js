@@ -13,6 +13,7 @@ const morgan = require("morgan");
 const cookieparser = require("cookie-parser");
 const bodyparser = require("body-parser");
 const favicon = require("serve-favicon");
+const formidable = require('formidable');
 
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
@@ -252,3 +253,76 @@ module.exports = exports = WebServer;
  */
 module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
 
+const initUploadProgressHandler = (form, req, res) => {
+    form.on('progress', (bytesReceived, bytesExpected) => {
+        //let percent_complete = (bytesReceived / bytesExpected) * 100;
+        //console.log(percent_complete.toFixed(2));
+        // required socket.io to emit event back to client.
+    })
+}
+const initUploadFieldHandler = (form, req, res) => {
+    form.on('field', (name, field) => { 
+        console.log('Field', name, field)
+    })
+}
+const initUploadFileBeginHandler = (form, req, res) => {
+    form.on('fileBegin', (name, file) => {
+        let dest = path.join(__dirname, 'uploads');
+        if (!fs.existsSync(dest)) fs.mkdirSync(dest);
+        file.path = path.join(dest, file.name);
+    })
+}
+const initUploadFileHandler = (form, req, res) => {
+    form.on('file', (name, file) => {
+        console.log('Uploaded ' + file.name);
+    })
+}
+const initUploadAbortedHandler = (form, req, res) => {
+    form.on('aborted', () => {
+        console.error('Request aborted by the user')
+    })
+}
+const initUploadErrorHandler = (form, req, res) => {
+    form.on('error', (err) => {
+        console.error('Error', err)
+        throw err
+    })
+}
+const initUploadEndHandler = (form, req, res) => {
+    form.on('end', () => {
+        res.end()
+    })
+}
+
+const uploadfiles = (req, res, next) => {
+    let form = new formidable.IncomingForm();
+
+    form.encoding = 'utf-8';
+    // Limits the amount of memory all fields together (except files) can allocate in bytes.
+    // If this value is exceeded, an 'error' event is emitted. The default size is 20MB.
+    form.maxFieldsSize = 20 * 1024 * 1024; // used default.
+
+    // Limits the size of uploaded file. If this value is exceeded, an 'error' event is emitted. 
+    // The default size is 200MB.
+    form.maxFileSize = 5 * 1024 * 1024 * 1024; // exntend to 5GB.
+
+    // Limits the number of fields that the querystring parser will decode.
+    // Defaults to 1000 (0 for unlimited).
+    form.maxFields = 1000; // used default.
+
+    // If this option is enabled, when you call form.parse, the files argument will contain 
+    // arrays of files for inputs which submit multiple files using the HTML5 multiple attribute.
+    form.multiples = true;
+
+    form.parse(req);
+
+    initUploadProgressHandler(form, req, res);
+    initUploadFieldHandler(form, req, res);
+    initUploadFileBeginHandler(form, req, res);
+    initUploadFileHandler(form, req, res);
+    initUploadAbortedHandler(form, req, res);
+    initUploadErrorHandler(form, req, res);
+    initUploadEndHandler(form, req, res);
+}
+
+module.exports.uploadfiles = exports.uploadfiles = uploadfiles;
