@@ -1,6 +1,7 @@
 /** @module server/nlib-express */
 
 const path = require('path');
+const fs = require('fs');
 const nlib = require('./nlib');
 // common middlewares.
 const express = require("express");
