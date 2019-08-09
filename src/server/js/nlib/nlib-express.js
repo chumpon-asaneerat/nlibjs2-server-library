@@ -138,8 +138,7 @@ const init_cookie_parser = (app, cfg) => {
         secret = 'YOUR_SECURE_KEY@123'
         cfg.set('webserver.cookies.secret', secret)
         cfg.update();
-    }
-    
+    }    
     app.use(cookieparser(secret));
 };
 const init_body_parser = (app) => {
@@ -288,7 +287,7 @@ const WebServer = class {
      * The NCookie class.
      * @ignore
      */
-    get cookie() { return NCookie; }
+    static get cookie() { return NCookie; }
 
     //#endregion
 }
@@ -308,10 +307,18 @@ class NCookie {
      * 
      * @param {Request} req The Request object instance.
      * @param {Response} res The Response object instance.
+     * @param {String} name The cookie name.
+     * @param {Object} opts The default cookie option i.e. maxAge, httpOnly.
      */
-    constructor(req, res) {
+    constructor(req, res, name, opts = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true }) {
+        /** @type {Request} The Request object instance. */
         this.req = req;
+        /** @type {Response} The Response object instance. */
         this.res = res;
+        /** @type {String} The cookie's name */
+        this.name = name;
+        /** @type {Object} The cookie default options */
+        this.opts = opts;
     }
 
     //#endregion
@@ -321,18 +328,18 @@ class NCookie {
     /**
      * Gets the value from specificed cookie's name.
      * 
-     * @param {String} name The cookie name.
      * @return {String} Returns value for specificed cookie name. If not found returns null.
      */
-    get(name) { return NCookie.parse(this.req, name); }
+    get() { return NCookie.parse(this.req, this.name); }
     /**
      * Store value to specificed cookie's name.
      * 
-     * @param {String} name The cookie name.
      * @param {String} data The data to stored to cookie.
      * @param {Object} opts The cookie option i.e. maxAge, httpOnly.
      */
-    set(name, data, opts) { NCookie.store(this.res, name, data, opts); }
+    set(data, opts = null) {
+        NCookie.store(this.res, this.name, data, (opts) ? opts : this.opts);
+    }
 
     //#endregion
 
