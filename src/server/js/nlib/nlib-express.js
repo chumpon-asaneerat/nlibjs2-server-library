@@ -9,6 +9,7 @@ const nlib = require('./nlib');
 const express = require("express");
 const http = require('http');
 const socket = require('socket.io');
+
 const statusMon = require('express-status-monitor');
 
 const helmet = require("helmet");
@@ -281,20 +282,73 @@ const WebServer = class {
 
     //#endregion
 
-    //#region static properties for export classes
+    //#region static properties for export classes and consts
 
     /** 
      * The NCookie class.
      * @ignore
      */
     static get cookie() { return NCookie; }
+    static get signedCookie() { return NSignedCookie; }
+    /** The expires time unit in millisecond */
+    static get expires() { return NExpires; }
 
     //#endregion
 }
 
 //#endregion
 
-//#region NCookie
+//#region NExpires Class
+
+class NExpires {
+    //#region constructor
+
+    constructor(value) { this.value = value; }
+
+    //#endregion
+
+    //#region public properties
+
+    /** Gets calculate millisecond of days */
+    get days() { return (this.value * 24 * 60 * 60 * 1000); }
+    /** Gets calculate millisecond of hours */
+    get hours() { return (this.value * 60 * 60 * 1000); }
+    /** Gets calculate millisecond of minutes */
+    get minutes() { return (this.value * 60 * 1000); }
+    /** Gets calculate millisecond of seconds */
+    get seconds() { return (this.value * 1000); }
+
+    //#endregion
+
+    //#region static method
+
+    /**
+     * Set to value to calculate to milliseconds.
+     * 
+     * @param {Number} value The value in number to calculate.
+     */
+    static in(value) { return new NExpires(value); }
+
+    //#endregion
+}
+
+//#endregion
+
+//#region NCookie and NSignedCookie
+
+const parseCookie = (req, name) => {
+    return (req && req.cookies && req.cookies[name]) ? req.cookies[name] : null;
+};
+const storeCookie = (res, name, data, maxAge, httpOnly = true) => {
+    if (!res) return;
+    let opts = {
+        maxAge: maxAge, 
+        //expires: new Date(new Date().getTime() + maxAge),
+        httpOnly: httpOnly,
+        signed: false
+    }
+    res.cookie(name, data, opts);
+};
 
 /**
  * The NCookie class.
@@ -307,18 +361,21 @@ class NCookie {
      * 
      * @param {Request} req The Request object instance.
      * @param {Response} res The Response object instance.
-     * @param {String} name The cookie name.
-     * @param {Object} opts The default cookie option i.e. maxAge, httpOnly.
+     * @param {String} name The cookie's name.
+     * @param {Number} maxAge The default cookie's maxAge default is 1 day.
+     * @param {Boolean} httpOnly The default cookie's httpOnly flag default is true.
      */
-    constructor(req, res, name, opts = { maxAge: 1 * 24 * 60 * 60 * 1000, httpOnly: true }) {
+    constructor(req, res, name, maxAge = null, httpOnly = true) {
         /** @type {Request} The Request object instance. */
         this.req = req;
         /** @type {Response} The Response object instance. */
         this.res = res;
         /** @type {String} The cookie's name */
         this.name = name;
-        /** @type {Object} The cookie default options */
-        this.opts = opts;
+        /** @type {Number} The cookie default maxAge option */
+        this.maxAge = (maxAge) ? maxAge : NExpires.in(1).days;
+        /** @type {Boolean} The cookie default httpOnly option */
+        this.httpOnly = httpOnly;
     }
 
     //#endregion
@@ -330,54 +387,98 @@ class NCookie {
      * 
      * @return {String} Returns value for specificed cookie name. If not found returns null.
      */
-    get() { return NCookie.parse(this.req, this.name); }
+    get() { return parseCookie(this.req, this.name); }
     /**
      * Store value to specificed cookie's name.
      * 
      * @param {String} data The data to stored to cookie.
-     * @param {Object} opts The cookie option i.e. maxAge, httpOnly.
+     * @param {Number} maxAge The cookie's maxAge.
      */
-    set(data, opts = null) {
-        NCookie.store(this.res, this.name, data, (opts) ? opts : this.opts);
+    set(data, maxAge) {
+        let age = (maxAge) ? maxAge : this.maxAge;
+        storeCookie(this.res, this.name, data, age, this.httpOnly);
+    }
+
+    //#endregion
+};
+
+const parseSignedCookie = (req, name) => {
+    return (req && req.signedCookies && req.signedCookies[name]) ? req.signedCookies[name] : null;
+};
+const storeSignedCookie = (res, name, data, maxAge, httpOnly = true) => {
+    if (!res) return;
+    let opts = {
+        maxAge: maxAge, 
+        //expires: new Date(new Date().getTime() + maxAge),
+        httpOnly: httpOnly,
+        signed: true
+    }
+    res.cookie(name, data, opts);
+};
+
+/**
+ * The NSignedCookie class.
+ */
+class NSignedCookie {
+    //#region constructor
+
+    /**
+     * Create new instance of NCookie.
+     * 
+     * @param {Request} req The Request object instance.
+     * @param {Response} res The Response object instance.
+     * @param {String} name The cookie's name.
+     * @param {Number} maxAge The default cookie's maxAge default is 1 day.
+     * @param {Boolean} httpOnly The default cookie's httpOnly flag default is true.
+     */
+    constructor(req, res, name, maxAge = null, httpOnly = true) {
+        /** @type {Request} The Request object instance. */
+        this.req = req;
+        /** @type {Response} The Response object instance. */
+        this.res = res;
+        /** @type {String} The cookie's name */
+        this.name = name;
+        /** @type {Number} The cookie default maxAge option */
+        this.maxAge = (maxAge) ? maxAge : NExpires.in(1).days;
+        /** @type {Boolean} The cookie default httpOnly option */
+        this.httpOnly = httpOnly;
+
+        let secret = nlib.Config.get('webserver.cookies.secret');
+        this.hasSecretKey = (secret && secret.length > 0);
     }
 
     //#endregion
 
-    //#region static methods and properties
+    //#region public methods
 
     /**
      * Gets the value from specificed cookie's name.
      * 
-     * @param {Request} req The Request object instance.
-     * @param {String} name The cookie name.
      * @return {String} Returns value for specificed cookie name. If not found returns null.
      */
-    static parse(req, name) {
-        return (req && req.cookies && req.cookies[name]) ? req.cookies[name] : null;
-    };
+    get() {
+        let ret;        
+        if (this.hasSecretKey)
+            ret = parseSignedCookie(this.req, this.name);
+        else ret = parseCookie(this.req, this.name);
+
+        return ret;
+    }
     /**
      * Store value to specificed cookie's name.
      * 
-     * @param {Response} res The Response object instance.
-     * @param {String} name The cookie name.
      * @param {String} data The data to stored to cookie.
-     * @param {Object} opts The cookie option i.e. maxAge, httpOnly.
+     * @param {Number} maxAge The cookie's maxAge.
      */
-    static store(res, name, data, opts) {
-        if (!res) return;
-        if (opts) {
-            res.cookie(name, data, opts);
-        }
-        else {
-            // 1 hour : 1 * 60 * 60 * 1000.
-            // 1 day : 1 * 24 * 60 * 60 * 1000.
-            let day = 1 * 24 * 60 * 60 * 1000;
-            res.cookie(name, data, { maxAge: 1 * day, httpOnly: true });
-        }
-    };
+    set(data, maxAge) {
+        let age = (maxAge) ? maxAge : this.maxAge;
+        if (this.hasSecretKey)
+            storeSignedCookie(this.res, this.name, data, age, this.httpOnly);
+        else storeCookie(this.res, this.name, data, age, this.httpOnly);
+    }
 
     //#endregion
-};
+}
 
 //#endregion
 

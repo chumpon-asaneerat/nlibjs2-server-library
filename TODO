@@ -94,38 +94,49 @@ NLib:
                 ☐ indexOf method.
             ☐ 
         MSSql (nlib-mssql.js):
-            ✔ Add connect async method. @done(19-08-08 12:22)
-            ✔ Add connect disconnect method. @done(19-08-08 12:23)
-            ✔ Add connect query method. @done(19-08-08 12:23)
-            ✔ Add connect execute method. @done(19-08-08 12:23)
-            ✔ Add get connected property. @done(19-08-08 12:23)
-            ✔ Add generateSchema(name, outPath) static method. @done(19-08-08 12:24)
-            ✔ Add Convert function from database to js type (with size/precision/scale). @done(19-07-17 18:38)
-            ✔ Parse default value from stored procedure source code. @done(19-07-18 17:21)
-            ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
-            ☐ Supports generate schema generate config.
-            ☐ Supports detected stored procedure script changed and update if required.
-            ☐ Add js file builder for generate database access class.
-            ☐ Modify generate function to create SP source files.
-            ✘ Create Gulp Task class to generate schema and js file. @cancelled(19-08-08 11:50)
-            ☐ Add supports binary field update.
+            SqlServer class:
+                ✔ Add connect async method. @done(19-08-08 12:22)
+                ✔ Add connect disconnect method. @done(19-08-08 12:23)
+                ✔ Add connect query method. @done(19-08-08 12:23)
+                ✔ Add connect execute method. @done(19-08-08 12:23)
+                ✔ Add get connected property. @done(19-08-08 12:23)
+                ✔ Add generateSchema(name, outPath) static method. @done(19-08-08 12:24)
+                ✔ Add Convert function from database to js type (with size/precision/scale). @done(19-07-17 18:38)
+                ✔ Parse default value from stored procedure source code. @done(19-07-18 17:21)
+                ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
+                ☐ Supports generate schema generate config.
+                ☐ Supports detected stored procedure script changed and update if required.
+                ☐ Add js file builder for generate database access class.
+                ☐ Modify generate function to create SP source files.
+                ✘ Create Gulp Task class to generate schema and js file. @cancelled(19-08-08 11:50)
+                ☐ Add supports binary field update.
         Express (nlib-express.js):
-            ✔ Supports basic middlewares #1 (helmet, morgan, cookie-parser, body-parser) @done(19-08-08 11:39)
-            ✔ Supports basic middlewares #2 (favicon, serve-static (for static path)) @done(19-08-08 11:40)
-            ✔ Supports common router methods (get/post/all) @done(19-08-08 11:40)
-            ✔ Supports websocket (socket.io). @done(19-08-08 11:41)
-            ✔ Change app listen to http server listen. @done(19-08-08 11:43)
-            ✔ Supports monitor middleware 'express-status-monitor'. @done(19-08-08 11:43)
-            ✔ Supports document middleware swagger. @done(19-08-08 11:44)
-            ✔ Supports configuration via nlib.config.js @done(19-08-08 11:44)
-            ✔ Add sendJson method. @done(19-08-08 12:49)
-            ✔ Supports formidable middleware for upload files. @done(19-08-08 13:44)
+            WebServer:
+                ✔ Supports basic middlewares #1 (helmet, morgan, cookie-parser, body-parser) @done(19-08-08 11:39)
+                ✔ Supports basic middlewares #2 (favicon, serve-static (for static path)) @done(19-08-08 11:40)
+                ✔ Supports common router methods (get/post/all) @done(19-08-08 11:40)
+                ✔ Supports websocket (socket.io). @done(19-08-08 11:41)
+                ✔ Change app listen to http server listen. @done(19-08-08 11:43)
+                ✔ Supports monitor middleware 'express-status-monitor'. @done(19-08-08 11:43)
+                ✔ Supports document middleware swagger. @done(19-08-08 11:44)
+                ✔ Supports configuration via nlib.config.js @done(19-08-08 11:44)
+                ✔ Add sendJson method. @done(19-08-08 12:49)
+                ✔ Supports formidable middleware for upload files. @done(19-08-08 13:44)
+                ☐ Supports jwt middleware for authenticated session access.
             NCookie class:
-                ✔ Supports parse (static method) cookie value from specificed cookie's name. @done(19-08-09 12:24)
-                ✔ Supports stored (static method) cookie value to specificed cookie's name. @done(19-08-09 12:25)
+                ✔ Add parseCookie (internal method). @done(19-08-09 12:24)
+                ✔ Add storeCookie (internal method). @done(19-08-09 12:25)
                 ✔ Add get/set methods (instance method). @done(19-08-09 12:25)
-            ☐ Supports jwt middleware for authenticated session access.
-            ☐ 
+            NSignedCookie class:
+                ✔ Add parseSignedCookie (internal method). @done(19-08-09 16:31)
+                ✔ Add storeSignedCookie (internal method). @done(19-08-09 16:31)
+                ✔ Add get/set methods (instance method). @done(19-08-09 16:32)
+            NExpires class:
+                ✔ Add in static methods. @done(19-08-09 16:30)
+                ✔ Add days property. @done(19-08-09 16:30)
+                ✔ Add hours property. @done(19-08-09 16:30)
+                ✔ Add minutes property. @done(19-08-09 16:30)
+                ✔ Add seconds property. @done(19-08-09 16:30)
         NLib Web Application Project Template:
             ☐ Init new project in github.
             ☐ Setup all required npm packages.
