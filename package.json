@@ -69,6 +69,7 @@
         "@types/swagger-jsdoc": "0.0.2",
         "@types/swagger-ui-dist": "^3.0.0",
         "@types/swagger-ui-express": "^3.0.0",
+        "@types/uuid": "^3.4.5",
         "body-parser": "^1.19.0",
         "cookie-parser": "^1.4.4",
         "express": "^4.16.4",
@@ -83,6 +84,7 @@
         "socket.io": "^2.2.0",
         "swagger-jsdoc": "^3.2.9",
         "swagger-ui-dist": "^3.22.1",
-        "swagger-ui-express": "^4.0.2"
+        "swagger-ui-express": "^4.0.2",
+        "uuid": "^3.3.2"
     }
 }
