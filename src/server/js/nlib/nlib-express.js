@@ -200,6 +200,8 @@ const init_middlewares = (app, io, cfg) => {
  * The Web Server (express.js) class.
  */
 const WebServer = class {
+    //#region constructor
+
     /**
      * Create new instance of WebServer class.
      */
@@ -219,6 +221,28 @@ const WebServer = class {
         // init middlewares.
         init_middlewares(this.app, this.io, cfg);
     }
+
+    //#endregion
+
+    //#region public methods
+
+    //#region listen method
+
+    /**
+     * Start the web server to listen request.
+     */
+    listen() {
+        let port = nlib.Config.get('webserver.port');
+        let name = nlib.Config.get('app.name');
+        
+        this.server.listen(port);
+        console.log(`${name} listen on port: ${port}`)
+    }
+
+    //#endregion
+
+    //#region route related methods
+
     /**
      * get
      * @param {string | RegExp | Array<string | RegExp>} path The path.
@@ -236,7 +260,12 @@ const WebServer = class {
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
-    all(path, ...handlers) { this.app.all(path, ...handlers); }    
+    all(path, ...handlers) { this.app.all(path, ...handlers); }
+
+    //#endregion
+
+    //#region request/response related method
+
     /**
      * Send Json.
      * @param {Request} req The express request instance.
@@ -248,17 +277,100 @@ const WebServer = class {
         res.write(JSON.stringify(data, null, 4,));
         res.end();    
     }
-    /**
-     * Start the web server to listen request.
+
+    //#endregion
+
+    //#endregion
+
+    //#region static properties for export classes
+
+    /** 
+     * The NCookie class.
+     * @ignore
      */
-    listen() {
-        let port = nlib.Config.get('webserver.port');
-        let name = nlib.Config.get('app.name');
-        
-        this.server.listen(port);
-        console.log(`${name} listen on port: ${port}`)
-    }
+    get cookie() { return NCookie; }
+
+    //#endregion
 }
+
+//#endregion
+
+//#region NCookie
+
+/**
+ * The NCookie class.
+ */
+class NCookie {
+    //#region constructor
+
+    /**
+     * Create new instance of NCookie.
+     * 
+     * @param {Request} req The Request object instance.
+     * @param {Response} res The Response object instance.
+     */
+    constructor(req, res) {
+        this.req = req;
+        this.res = res;
+    }
+
+    //#endregion
+
+    //#region public methods
+
+    /**
+     * Gets the value from specificed cookie's name.
+     * 
+     * @param {String} name The cookie name.
+     * @return {String} Returns value for specificed cookie name. If not found returns null.
+     */
+    get(name) { return NCookie.parse(this.req, name); }
+    /**
+     * Store value to specificed cookie's name.
+     * 
+     * @param {String} name The cookie name.
+     * @param {String} data The data to stored to cookie.
+     * @param {Object} opts The cookie option i.e. maxAge, httpOnly.
+     */
+    set(name, data, opts) { NCookie.store(this.res, name, data, opts); }
+
+    //#endregion
+
+    //#region static methods and properties
+
+    /**
+     * Gets the value from specificed cookie's name.
+     * 
+     * @param {Request} req The Request object instance.
+     * @param {String} name The cookie name.
+     * @return {String} Returns value for specificed cookie name. If not found returns null.
+     */
+    static parse(req, name) {
+        return (req && req.cookies && req.cookies[name]) ? req.cookies[name] : null;
+    };
+    /**
+     * Store value to specificed cookie's name.
+     * 
+     * @param {Response} res The Response object instance.
+     * @param {String} name The cookie name.
+     * @param {String} data The data to stored to cookie.
+     * @param {Object} opts The cookie option i.e. maxAge, httpOnly.
+     */
+    static store(res, name, data, opts) {
+        if (!res) return;
+        if (opts) {
+            res.cookie(name, data, opts);
+        }
+        else {
+            // 1 hour : 1 * 60 * 60 * 1000.
+            // 1 day : 1 * 24 * 60 * 60 * 1000.
+            let day = 1 * 24 * 60 * 60 * 1000;
+            res.cookie(name, data, { maxAge: 1 * day, httpOnly: true });
+        }
+    };
+
+    //#endregion
+};
 
 //#endregion
 
