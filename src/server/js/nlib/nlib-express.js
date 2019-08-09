@@ -19,6 +19,9 @@ const bodyparser = require("body-parser");
 const favicon = require("serve-favicon");
 const formidable = require('formidable');
 
+const uuidv4 = require('uuid/v4');
+const jwt = require('jsonwebtoken');
+
 const swaggerUi = require('swagger-ui-express');
 const swaggerJSDoc = require('swagger-jsdoc');
 
