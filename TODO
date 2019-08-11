@@ -138,11 +138,11 @@ NLib:
                 ✔ Add seconds property. @done(19-08-09 16:30)
                 ☐ Add year property.
         NLib Web Application Project Template:
-            ☐ Init new project in github.
-            ☐ Setup all required npm packages.
-            ☐ Setup nlib server js files.
-            ☐ Setup nlib client js and css files.
+            ✔ Init new project in github. @done(19-08-12 01:11)
+            ✔ Setup all required npm packages. @done(19-08-12 01:16)
             ☐ Setup gulp tasks.
+            ☐ Setup nlib client js and css files.
+            ☐ Setup nlib server js files.
         Rater Web:
             ☐ Init new project in github (import from NLib Web Application Project Template).
             ☐ Add all basic route for all management pages.
