@@ -145,8 +145,13 @@ NLib:
             ✔ Setup nlib client js and css files. @done(19-08-12 01:30)
             ✔ Add favicon in public folder. @done(19-08-12 01:31)
             ✔ Add all dist libraries in public/dist folder. @done(19-08-12 01:40)
-            ✔ Add audios files in public/assets/audios. @done(19-08-12 01:40)
-            ☐ Add videos files in public/assets/videos.
+            ✔ Add audio files in public/assets/audios. @done(19-08-12 01:40)
+            ✔ Add video files in public/assets/videos. @done(19-08-12 01:40)
+            ✔ Add image files in public/assets/images. @done(19-08-12 01:48)
+            ✔ Update vscode launch.json. @done(19-08-12 01:50)
+            ✔ Add jsdoc.json. @done(19-08-12 01:51)
+            ✔ Add swagger.json. @done(19-08-12 01:51)
+            ☐ Add nlib.config.json.
             ☐ Setup server.js basic operation.
         Rater Web:
             ☐ Init new project in github (import from NLib Web Application Project Template).
