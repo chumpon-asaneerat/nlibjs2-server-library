@@ -32,8 +32,11 @@ const swaggerJSDoc = require('swagger-jsdoc');
 const defaultApp = { 
     name:'NLib Web Server Application', 
     version:'2.0.0', 
-    updated: '2019-08-08 09:30' 
+    updated: '2019-08-12 02:00' 
 };
+
+let distMaxAge = "5y";
+
 const defaultWSvr = { 
     port: 3000,
     websocket: { enable: false },
@@ -44,30 +47,31 @@ const defaultWSvr = {
     public: {
         paths: [
             { route: "/public", path: "public", maxAge: "30s", enable: true },
-            { route: "/dist/js", path: "public/dist/jquery-3.3.1", maxAge: "15s", enable: true },
-            { route: "/dist/css", path: "public/dist/jquery-ui-1.12.1", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/jquery-ui-1.12.1", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/popperjs-1.15.0", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/tooltipjs-1.3.2", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/bootstrap-4.2.1", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/font-awesome-5.9.0", maxAge: "15s", enable: true },
-            { route: "/dist/css", path: "public/dist/emoji-symbols-1.0.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/flag-icon-css-3.1.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/animate-css-3.7.2", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/moment-2.24.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/chart-js-2.8.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/chart-js-plugin-datalabels-0.6.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/chart-js-plugin-piechart-outlabels-0.1.4", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/jquery-org-chart-2.1.3", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/tabulator-4.3.0", maxAge: "15s", enable: true },
-            { route: "/dist/js", path: "public/dist/ace-1.4.5", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/simplebar-4.1.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/overlay-scrollbars-1.9.1", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/socket.io-2.2.0", maxAge: "15s", enable: true },
-            { route: "/dist", path: "public/dist/reveal-3.8.0", maxAge: "15s", enable: false },
-            { route: "/dist/js", path: "public/dist/riotjs-3.13.2", maxAge: "15s", enable: true },
-            { route: "/components", path: "dist/component/riot", maxAge: "15s", enable: true }
+            { route: "/dist/js", path: "public/dist/jquery-3.3.1", maxAge: distMaxAge, enable: true },
+            { route: "/dist/css", path: "public/dist/jquery-ui-1.12.1", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/jquery-ui-1.12.1", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/popperjs-1.15.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/tooltipjs-1.3.2", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/bootstrap-4.2.1", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/font-awesome-5.9.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist/css", path: "public/dist/emoji-symbols-1.0.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/flag-icon-css-3.1.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/animate-css-3.7.2", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/moment-2.24.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/chart-js-2.8.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/chart-js-plugin-datalabels-0.6.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/chart-js-plugin-piechart-outlabels-0.1.4", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/jquery-org-chart-2.1.3", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/tabulator-4.3.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/ace-1.4.5", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/simplebar-4.1.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/overlay-scrollbars-1.9.1", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/socket.io-2.2.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/reveal-3.8.0", maxAge: distMaxAge, enable: false },
+            { route: "/dist/js", path: "public/dist/riotjs-3.13.2", maxAge: distMaxAge, enable: true },
+            { route: "/components", path: "dist/component/riot", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/lib", maxAge: "15s", enable: true }
         ]
     }
 };

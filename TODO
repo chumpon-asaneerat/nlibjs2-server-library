@@ -121,6 +121,7 @@ NLib:
                 ✔ Supports configuration via nlib.config.js @done(19-08-08 11:44)
                 ✔ Add sendJson method. @done(19-08-08 12:49)
                 ✔ Supports formidable middleware for upload files. @done(19-08-08 13:44)
+                ☐ Update maxAge setting by use variable.
                 ☐ Supports jwt middleware for authenticated session access.
             NCookie class:
                 ✔ Add parseCookie (internal method). @done(19-08-09 12:24)
@@ -152,6 +153,7 @@ NLib:
             ✔ Add jsdoc.json. @done(19-08-12 01:51)
             ✔ Add swagger.json. @done(19-08-12 01:51)
             ☐ Add nlib.config.json.
+            ☐ Add nlib-mssql-schema-generator.js file.
             ☐ Setup server.js basic operation.
         Rater Web:
             ☐ Init new project in github (import from NLib Web Application Project Template).
