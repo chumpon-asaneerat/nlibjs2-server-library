@@ -152,7 +152,7 @@ NLib:
             ✔ Update vscode launch.json. @done(19-08-12 01:50)
             ✔ Add jsdoc.json. @done(19-08-12 01:51)
             ✔ Add swagger.json. @done(19-08-12 01:51)
-            ☐ Add nlib-mssql-schema-generator.js file.
+            ✔ Add nlib-mssql-schema-generator.js file. @done(19-08-12 02:18)
             ☐ Setup server.js basic operation.
             ☐ Config nlib.config.json.
         Rater Web:
