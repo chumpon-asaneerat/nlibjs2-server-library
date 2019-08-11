@@ -743,10 +743,63 @@ XHR.executeCallback = (xhr, callback, value) => {
         callback(data);
     }
 }
+// MINE TYPES
+XHR.minetypes = [
+    { 
+        type:"application/json",        
+        parse: (xhr) => { 
+            return JSON.parse(xhr.responseText);
+        }
+    },
+    { 
+        type:"text/plain", 
+        parse: (xhr) => { return xhr.responseText; }
+    },
+    { 
+        type:"text/css", 
+        parse: (xhr) => { return xhr.responseText; }
+    },
+    { 
+        type:"text/html", 
+        parse: (xhr) => { return xhr.responseText; }
+    },
+    { 
+        type:"text/javascript", 
+        parse: (xhr) => { return xhr.responseText; }
+    },
+    { 
+        type:"text/ecmascript", 
+        parse: (xhr) => { return xhr.responseText; }
+    },
+    { 
+        type:"application/javascript", 
+        parse: (xhr) => { return xhr.responseText; }
+    },
+    { 
+        type:"application/ecmascript", 
+        parse: (xhr) => { return xhr.responseText; }
+    }
+];
+XHR.parseValueByContentType = (xhr, contentType) => {
+    let ret;    
+    let type = contentType.split(';')[0]
+    console.log(type)
+    let types = XHR.minetypes.map((mine) => mine.type)
+    let idx = types.indexOf(type);
+    if (idx !== -1) {
+        ret = XHR.minetypes[idx].parse(xhr);
+    }
+    else {
+        ret = xhr.response;
+    }
+    return ret;
+}
 XHR.setGetReadyHandler = (xhr, callback) => {
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            XHR.executeCallback(xhr, callback, xhr.responseText);
+            let contentType = xhr.getResponseHeader("Content-Type");
+            let val = XHR.parseValueByContentType(xhr, contentType);
+            XHR.executeCallback(xhr, callback, val);
         }
     }
 }
@@ -776,15 +829,15 @@ XHR.setGetLoadHandler = (xhr, callback) => {
         }
     }
 }
-
 XHR.setPostJsonReadyHandler = (xhr, callback) => {
     xhr.onreadystatechange = () => {
         if (xhr.readyState === 4 && xhr.status === 200) {
-            XHR.executeCallback(xhr, callback, xhr.responseText);
+            let contentType = xhr.getResponseHeader("Content-Type");
+            let val = XHR.parseValueByContentType(xhr, contentType);
+            XHR.executeCallback(xhr, callback, val);
         }
     }
 }
-
 XHR.setPostFilesLoadHandler = (xhr, callback) => {
     xhr.onload = (e) => {
         if (xhr.status == 200) {
