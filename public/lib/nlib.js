@@ -783,7 +783,7 @@ XHR.minetypes = [
 XHR.parseValueByContentType = (xhr, contentType) => {
     let ret;    
     let type = contentType.split(';')[0]
-    console.log(type)
+    //console.log(type)
     let types = XHR.minetypes.map((mine) => mine.type)
     let idx = types.indexOf(type);
     if (idx !== -1) {
