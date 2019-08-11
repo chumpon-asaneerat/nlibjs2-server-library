@@ -7,15 +7,6 @@ const db = new TestDb7x3();
 
 let wsvr = new WebServer();
 
-let getHexCode = async () => {
-    let connected = await db.connect();
-    if (connected) {
-        ret = await db.GetRandomHexCode({ length: 3 });
-        await db.disconnect();
-    }
-    console.log(ret);
-};
-
 const routes = {
     /** @type {WebServer.RequestHandler} */
     home: (req, res, next) => {
@@ -31,6 +22,9 @@ const routes = {
                 let data = await db.GetRandomHexCode({ length: 3 });
                 await db.disconnect();
                 wsvr.sendJson(req, res, data);
+            }
+            else {
+                wsvr.sendJson(req, res, { error: 'cannot connect to database server.' });
             }
         })()
     }
