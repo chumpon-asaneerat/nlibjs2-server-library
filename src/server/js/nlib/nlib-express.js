@@ -505,7 +505,7 @@ const initUploadFieldHandler = (form, req, res) => {
 }
 const initUploadFileBeginHandler = (form, req, res) => {
     form.on('fileBegin', (name, file) => {
-        let dest = path.join(__dirname, 'uploads'); //! change path here!!!
+        let dest = path.join(nlib.paths.root, 'uploads'); //! change path here!!!
         if (!fs.existsSync(dest)) fs.mkdirSync(dest);
         file.path = path.join(dest, file.name);
     })
