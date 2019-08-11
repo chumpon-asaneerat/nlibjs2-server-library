@@ -140,7 +140,7 @@ NLib:
         NLib Web Application Project Template:
             ✔ Init new project in github. @done(19-08-12 01:11)
             ✔ Setup all required npm packages. @done(19-08-12 01:16)
-            ☐ Setup gulp tasks.
+            ✔ Setup gulp tasks. @done(19-08-12 01:23)
             ☐ Setup nlib client js and css files.
             ☐ Setup nlib server js files.
         Rater Web:
