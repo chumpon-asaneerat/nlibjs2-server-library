@@ -144,7 +144,9 @@ NLib:
             ✔ Setup nlib server js files. @done(19-08-12 01:26)
             ✔ Setup nlib client js and css files. @done(19-08-12 01:30)
             ✔ Add favicon in public folder. @done(19-08-12 01:31)
-            ☐ Add all dist libraries in public/dist folder.
+            ✔ Add all dist libraries in public/dist folder. @done(19-08-12 01:40)
+            ✔ Add audios files in public/assets/audios. @done(19-08-12 01:40)
+            ☐ Add videos files in public/assets/videos.
             ☐ Setup server.js basic operation.
         Rater Web:
             ☐ Init new project in github (import from NLib Web Application Project Template).
