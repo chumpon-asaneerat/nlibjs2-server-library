@@ -5,7 +5,8 @@
     "main": "server.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "webpack-build": "webpack"
+        "webpack-build": "webpack",
+        "gen-schema": "node nlib-mssql-schema-generator.js"
     },
     "repository": {
         "type": "git",

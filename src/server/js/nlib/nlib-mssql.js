@@ -794,6 +794,49 @@ const SqlServer = class {
      * Gets SqlServer class version.
      */
     static get version() { return "2.0.0"; }
+
+    static getSchemaConfigFileName(name = 'default', outPath = 'schema') {
+        let cfg = check_config(name);
+        let dbName = (cfg) ? cfg.database : name; // get database name.
+        let pathName = path.join(nlib.paths.root, outPath);
+        checkDir(pathName);
+        let file = path.join(pathName, dbName + '.schema.config.json');
+        return file;
+    }
+    static getSchemaFileName(name = 'default', outPath = 'schema') {
+        let cfg = check_config(name);
+        let dbName = (cfg) ? cfg.database : name; // get database name.
+        let pathName = path.join(nlib.paths.root, outPath);
+        checkDir(pathName);
+        let file = path.join(pathName, dbName + '.schema.json');
+        return file;
+    }
+    static getSchemaConfig(name = 'default', outPath = 'schema') {
+        let file = SqlServer.getSchemaConfigFileName(name, outPath);
+        let ret;
+        if (fs.existsSync(file)) ret = require(file);
+        if (!ret) ret = {}
+        return ret;
+    }
+    static async generateSchemaConfig(name = 'default', outPath = 'schema') {
+        let file = SqlServer.getSchemaConfigFileName(name, outPath);
+        let sqldb = new SqlServer();
+        await sqldb.connect(name);
+        if (sqldb.connected) {
+            let dbRet;
+            let ret = SqlServer.getSchemaConfig(name, outPath);
+            dbRet = await sqldb.query(queries.getProcedures());
+            let procs = dbRet.data;
+            let procCnt = procs.length;
+            for (let i = 0; i < procCnt; i++) {
+                let sp = procs[i];
+                if (!ret[sp.name]) ret[sp.name] = false            
+            }
+            // write file.
+            fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8', )
+        }
+        await sqldb.disconnect();
+    }
     /**
      * Generate database schema file.
      * 
@@ -803,37 +846,34 @@ const SqlServer = class {
     static async generateSchema(name = 'default', outPath = 'schema') {
         let sqldb = new SqlServer();
         await sqldb.connect(name);
-        let dbRet;
-        let ret = {};
-        dbRet = await sqldb.query(queries.getProcedures());
-        let procs = dbRet.data;
-        let procCnt = procs.length;
-        for (let i = 0; i < procCnt; i++) {
-            let sp = procs[i];
-            ret[sp.name] = {
-                //name: sp.name,
-                type: sp.type,
-                //created: sp.created,
-                updated: sp.updated
+        if (sqldb.connected) {
+            let dbRet;
+            let schemaCfg = SqlServer.getSchemaConfig(name, outPath);
+            let ret = {};
+            dbRet = await sqldb.query(queries.getProcedures());
+            let procs = dbRet.data;
+            let procCnt = procs.length;
+            for (let i = 0; i < procCnt; i++) {
+                let sp = procs[i];
+                if (!schemaCfg[sp.name]) continue; // skip generate.                
+                ret[sp.name] = {
+                    type: sp.type,
+                    //created: sp.created,
+                    updated: sp.updated
+                }
+                let defaultValue = defaultvalues.parse(sp);
+
+                dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
+                let param = dbRet.data;
+                ret[sp.name].parameter = (param) ? 
+                    await queries.parseParameters(param, defaultValue) : 
+                    { inputs:[], output: [] };
             }
-            let defaultValue = defaultvalues.parse(sp);
-
-            dbRet = await sqldb.query(queries.getProcedureParameters(sp.name));
-            let param = dbRet.data;
-            ret[sp.name].parameter = (param) ? 
-                await queries.parseParameters(param, defaultValue) : 
-                { inputs:[], output: [] };
+            // write file.
+            let file = SqlServer.getSchemaFileName(name, outPath);
+            fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8', )
         }
-
         await sqldb.disconnect();
-
-        // write file.
-        let cfg = check_config(name);
-        let dbName = (cfg) ? cfg.database : name; // get database name.
-        let pathName = path.join(nlib.paths.root, outPath);
-        checkDir(pathName);
-        let file = path.join(pathName, dbName + '.schema.json');        
-        fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8', )
     }
 
     //#endregion
