@@ -1,7 +1,20 @@
 const path = require("path");
 //const nlib = require("./src/server/js/nlib/nlib");
 const WebServer = require('./src/server/js/nlib/nlib-express');
+
+const TestDb7x3 = require('./TestDb7x3.db');
+const db = new TestDb7x3();
+
 let wsvr = new WebServer();
+
+let getHexCode = async () => {
+    let connected = await db.connect();
+    if (connected) {
+        ret = await db.GetRandomHexCode({ length: 3 });
+        await db.disconnect();
+    }
+    console.log(ret);
+};
 
 const routes = {
     /** @type {WebServer.RequestHandler} */
@@ -9,11 +22,23 @@ const routes = {
         //res.status(200).send(`It's work from home 2!!!`);
         //res.sendFile(__dirname + '/socket.html')
         res.sendFile(__dirname + '/index.html')
+    },
+    /** @type {WebServer.RequestHandler} */
+    randomCode: (req, res, next) => {
+        (async() => {
+            let connected = await db.connect();
+            if (connected) {
+                let data = await db.GetRandomHexCode({ length: 3 });
+                await db.disconnect();
+                wsvr.sendJson(req, res, data);
+            }
+        })()
     }
 }
 
 //wsvr.get('/', (req, res, next) => { res.status(200).send(`It's work from custom home!!!`); })
 wsvr.get('/', routes.home)
+wsvr.get('/randomcode', routes.randomCode)
 
 //#region example route with swagger
 

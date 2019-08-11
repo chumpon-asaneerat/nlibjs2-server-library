@@ -3,6 +3,10 @@
 const nlib = require('./nlib');
 const path = require('path');
 const fs = require('fs');
+const dot = require('dot');
+dot.templateSettings.strip = false; // preserve space.
+
+const beautify = require('js-beautify').js
 
 //#region Internal variable and methods
 
@@ -221,7 +225,6 @@ const mssqlCfg = {
     }
 }
 const check_config = (name = 'default') => {
-    let dbCfg;
     let cfg = nlib.Config;
     if (!cfg.exists()) {
         cfg.set('mssql', mssqlCfg);
@@ -874,6 +877,54 @@ const SqlServer = class {
             fs.writeFileSync(file, JSON.stringify(ret, null, 4), 'utf8', )
         }
         await sqldb.disconnect();
+    }
+
+    static async generateSchemaJavascriptFile(name = 'default', outPath = 'schema') {
+        let cfg = nlib.Config;
+        let file = SqlServer.getSchemaFileName(name, outPath);
+        let schema = require(file);        
+        let db = {
+            name: name,
+            databaseName: cfg.get('mssql.' + name + ".database"),
+            procedures: []
+        }
+
+        for (let key in schema) {
+            db.procedures.push({
+                name: key,
+                parameter: schema[key].parameter
+            })
+        }
+        
+        let tmpl = `
+        // required to manual set require path for nlib-mssql.
+        const SqlServer = require('./src/server/js/nlib/nlib-mssql');
+        const schema = require('./schema/{{=it.databaseName}}.schema.json');
+
+        const {{=it.databaseName}} = class extends SqlServer {
+            constructor() {
+                super();
+                // should match with nlib.config.json
+                this.database = '{{=it.name}}'
+            }
+            async connect() { return await super.connect(this.database); }
+            async disconnect() { await super.disconnect(); }
+            {{~it.procedures :value:index}}
+            async {{=value.name}}(pObj) {
+                let name = '{{=value.name}}';
+                let proc = schema[name];
+                return await this.execute(name, pObj, proc.parameter.inputs, proc.parameter.outputs);
+            }
+            {{~}}
+        }
+
+        module.exports = exports = {{=it.databaseName}};
+        `;
+        let tmplFn = dot.template(tmpl.toString());
+        let compileTmpl = tmplFn(db);
+        let jsText = beautify(compileTmpl, { indent_size: 4, space_in_empty_paren: true });
+        let jsFile = path.join(nlib.paths.root, db.databaseName + '.db.js');
+        fs.writeFileSync(jsFile, jsText + '\n');
     }
 
     //#endregion

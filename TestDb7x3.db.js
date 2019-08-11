@@ -1,16 +1,18 @@
+// required to manual set require path for nlib-mssql.
 const SqlServer = require('./src/server/js/nlib/nlib-mssql');
 const schema = require('./schema/TestDb7x3.schema.json');
 
-const TestDb7x3Db = class extends SqlServer {
+const TestDb7x3 = class extends SqlServer {
     constructor() {
         super();
         // should match with nlib.config.json
-        //this.database = 'default'
-        this.database = 'testdb7x3'
+        this.database = 'default'
     }
-
     async connect() {
         return await super.connect(this.database);
+    }
+    async disconnect() {
+        await super.disconnect();
     }
 
     async GetRandomHexCode(pObj) {
@@ -24,6 +26,7 @@ const TestDb7x3Db = class extends SqlServer {
         let proc = schema[name];
         return await this.execute(name, pObj, proc.parameter.inputs, proc.parameter.outputs);
     }
+
 }
 
-module.exports = exports = TestDb7x3Db;
+module.exports = exports = TestDb7x3;
