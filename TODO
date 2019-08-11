@@ -104,11 +104,10 @@ NLib:
                 ✔ Add Convert function from database to js type (with size/precision/scale). @done(19-07-17 18:38)
                 ✔ Parse default value from stored procedure source code. @done(19-07-18 17:21)
                 ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
-                ☐ Supports generate schema generate config.
+                ✔ Supports generate schema generate config. @done(19-08-12 00:56)
+                ✔ Add js file builder for generate database access class. @done(19-08-12 00:56)
                 ☐ Supports detected stored procedure script changed and update if required.
-                ☐ Add js file builder for generate database access class.
                 ☐ Modify generate function to create SP source files.
-                ✘ Create Gulp Task class to generate schema and js file. @cancelled(19-08-08 11:50)
                 ☐ Add supports binary field update.
         Express (nlib-express.js):
             WebServer:
@@ -137,6 +136,7 @@ NLib:
                 ✔ Add hours property. @done(19-08-09 16:30)
                 ✔ Add minutes property. @done(19-08-09 16:30)
                 ✔ Add seconds property. @done(19-08-09 16:30)
+                ☐ Add year property.
         NLib Web Application Project Template:
             ☐ Init new project in github.
             ☐ Setup all required npm packages.
