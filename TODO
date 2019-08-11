@@ -106,8 +106,8 @@ NLib:
                 ✔ Check default value assignment if null or undefined assigned. @done(19-07-18 17:21)
                 ✔ Supports generate schema generate config. @done(19-08-12 00:56)
                 ✔ Add js file builder for generate database access class. @done(19-08-12 00:56)
-                ☐ Supports detected stored procedure script changed and update if required.
                 ☐ Modify generate function to create SP source files.
+                ☐ Supports detected stored procedure script changed and update if required.
                 ☐ Add supports binary field update.
         Express (nlib-express.js):
             WebServer:
