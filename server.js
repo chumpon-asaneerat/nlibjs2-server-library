@@ -12,7 +12,7 @@ const routes = {
     home: (req, res, next) => {
         //res.status(200).send(`It's work from home 2!!!`);
         //res.sendFile(__dirname + '/socket.html')
-        res.sendFile(__dirname + '/index.html')
+        WebServer.sendFile(req, res, 'index.html')
     },
     /** @type {WebServer.RequestHandler} */
     randomCode: (req, res, next) => {
@@ -21,10 +21,10 @@ const routes = {
             if (connected) {
                 let data = await db.GetRandomHexCode({ length: 3 });
                 await db.disconnect();
-                wsvr.sendJson(req, res, data);
+                WebServer.sendJson(req, res, data);
             }
             else {
-                wsvr.sendJson(req, res, { error: 'cannot connect to database server.' });
+                WebServer.sendJson(req, res, { error: 'cannot connect to database server.' });
             }
         })()
     }
