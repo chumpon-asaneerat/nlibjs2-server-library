@@ -565,6 +565,55 @@ const uploadfiles = (req, res, next) => {
 
 //#endregion
 
+//#region NWebRouter
+
+/**
+ * The WebRouter class.
+ */
+class WebRouter {
+    //#region constructor
+
+    /**
+     * Create new instance of WebRouter class.
+     */
+    constructor() {
+        /** @type {express.Router} Gets the express router */
+        this.router = express.Router();
+    }
+
+    //#endregion
+
+    //#region public methods
+
+    /**
+     * Use.
+     * @param {express.RequestHandler[]} handlers The request handler(s).
+     */
+    use(...handlers) { this.router.use(...handlers) }
+    /**
+     * get
+     * @param {string | RegExp | Array<string | RegExp>} path The path.
+     * @param {express.RequestHandler[]} handlers The handlers.
+     */
+    get(path, ...handlers) { this.router.get(path, ...handlers); }
+    /**
+     * post
+     * @param {string | RegExp | Array<string | RegExp>} path The path.
+     * @param {express.RequestHandler[]} handlers The handlers.
+     */
+    post(path, ...handlers) { this.router.post(path, ...handlers); }
+    /**
+     * all
+     * @param {string | RegExp | Array<string | RegExp>} path The path.
+     * @param {express.RequestHandler[]} handlers The handlers.
+     */
+    all(path, ...handlers) { this.router.all(path, ...handlers); }
+
+    //#endregion
+}
+
+//#endregion
+
 //#region exports
 
 module.exports = exports = WebServer;
@@ -577,6 +626,8 @@ module.exports = exports = WebServer;
 module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
 
 module.exports.uploadfiles = exports.uploadfiles = uploadfiles;
+
+module.exports.WebRouter = exports.WebRouter = WebRouter;
 
 //#endregion
 
