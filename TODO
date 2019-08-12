@@ -4,6 +4,7 @@ NLib:
             Core:
                 ✔ Object management methods. @done(19-08-08 11:55)
                 ✔ Classes exports methods. @done(19-08-08 11:55)
+                ✔ Add routes and views paths in constructor. @done(19-08-12 21:13)
             Objects class:
                 ✔ Implements assignTo method. @done(19-08-08 11:57)
                 ✔ Implements clone method. @done(19-08-08 11:57)
