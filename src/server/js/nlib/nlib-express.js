@@ -325,9 +325,12 @@ const WebServer = class {
      * @param {Object} data The data to send in json.
      */
     static sendJson(req, res, data) {
-        res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
-        res.write(JSON.stringify(data, null, 4,));
-        res.end();
+        // Express 3.x
+        //res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
+        //res.write(JSON.stringify(data, null, 4,));
+        //res.end();
+        // Express 4.x
+        res.json(data);
     }
     /**
      * Send File. Transfers the file at the given path.
