@@ -282,7 +282,9 @@ const WebServer = class {
 
     //#endregion
 
-    //#region request/response related method
+    //#endregion
+
+    //#region request/response related static methods
 
     /**
      * Send Json. Sends json object to the HTTP response.
@@ -293,7 +295,7 @@ const WebServer = class {
      * @param {Response} res The express response instance.
      * @param {Object} data The data to send in json.
      */
-    sendJson(req, res, data) {
+    static sendJson(req, res, data) {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.write(JSON.stringify(data, null, 4,));
         res.end();
@@ -308,12 +310,10 @@ const WebServer = class {
      * @param {Response} res The express response instance.
      * @param  {...String} paths The path to join.
      */
-    sendFile(req, res, ...paths) {
+    static sendFile(req, res, ...paths) {
         let file = path.join(nlib.paths.root, ...paths);
         res.sendFile(file);
     }
-
-    //#endregion
 
     //#endregion
 
