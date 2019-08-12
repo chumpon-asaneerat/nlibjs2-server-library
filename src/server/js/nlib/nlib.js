@@ -34,7 +34,11 @@ const NLib = class {
         /** The commmon paths for nlib. */
         this.paths = {
             /** The project root path. */
-            root: rootPath
+            root: rootPath,
+            /** The project root of routes path. */
+            routes: path.join(rootPath, 'routes'),
+            /** The project root of views path. */
+            views: path.join(rootPath, 'views')
         }
     }
 
