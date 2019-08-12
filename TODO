@@ -124,6 +124,12 @@ NLib:
                 ✔ Update maxAge setting by use variable. @done(19-08-12 02:15)
                 ✔ Fixed upload generate path. @done(19-08-12 02:23)
                 ☐ Supports jwt middleware for authenticated session access.
+                ✔ Add route method. @done(19-08-12 07:20)
+            WebRouter class:
+                ✔ Add use method. @done(19-08-12 07:17)
+                ✔ Add get method. @done(19-08-12 07:17)
+                ✔ Add post method. @done(19-08-12 07:17)
+                ✔ Add all method. @done(19-08-12 07:17)
             NCookie class:
                 ✔ Add parseCookie (internal method). @done(19-08-09 12:24)
                 ✔ Add storeCookie (internal method). @done(19-08-09 12:25)
