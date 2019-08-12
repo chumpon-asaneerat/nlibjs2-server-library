@@ -198,6 +198,15 @@ const init_middlewares = (app, io, cfg) => {
     init_public_paths(app, cfg);
     init_swagger_doc(app, cfg);
 };
+/**
+ * auto mount routes.
+ * 
+ * @param {WebServer} svr The web server instance.
+ * @ignore
+ */
+const init_routes = (svr) => {
+    //let routePath = nlib.paths.routes;
+}
 
 //#endregion
 
@@ -239,6 +248,9 @@ const WebServer = class {
      * Start the web server to listen request.
      */
     listen() {
+        // auto mount routes.
+        init_routes(this);
+
         let port = nlib.Config.get('webserver.port');
         let name = nlib.Config.get('app.name');
         
