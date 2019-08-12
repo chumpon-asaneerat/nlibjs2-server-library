@@ -166,7 +166,7 @@ NLib:
             ✔ Setup server.js basic operation. @done(19-08-12 02:32)
             ✔ Generate nlib.config.json. @done(19-08-12 02:32)
         Rater Web:
-            ☐ Init new project in github (import from NLib Web Application Project Template).
+            ✔ Init new project in github (import from NLib Web Application Project Template). @done(19-08-13 00:13)
             ☐ Add all basic route for all management pages.
             ☐ Add table to keep session key.
             ☐ Add middleware logic to handle browser/device unique id.
