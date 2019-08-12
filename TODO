@@ -125,6 +125,7 @@ NLib:
                 ✔ Fixed upload generate path. @done(19-08-12 02:23)
                 ☐ Supports jwt middleware for authenticated session access.
                 ✔ Add route method. @done(19-08-12 07:20)
+                ☐ Add sendFile method.
             WebRouter class:
                 ✔ Add use method. @done(19-08-12 07:17)
                 ✔ Add get method. @done(19-08-12 07:17)
