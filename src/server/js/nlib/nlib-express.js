@@ -251,25 +251,29 @@ const WebServer = class {
     //#region route related methods
 
     /**
-     * get
+     * Routes HTTP GET requests to the specified path with the specified callback functions.
+     * 
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
     get(path, ...handlers) { this.app.get(path, ...handlers); }
     /**
-     * post
+     * Routes HTTP POST requests to the specified path with the specified callback functions.
+     * 
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
     post(path, ...handlers) { this.app.post(path, ...handlers); }
     /**
-     * all
+     * Special-cased "all" method, applying the given route path, middleware, 
+     * and callback to every HTTP method.
+     * 
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
     all(path, ...handlers) { this.app.all(path, ...handlers); }
     /**
-     * Add Route.
+     * Uses route with mount path.
      * 
      * @param {String} path The WebRouter root path.
      * @param {WebRouter} webrouter The WebRouter instance.
@@ -281,15 +285,32 @@ const WebServer = class {
     //#region request/response related method
 
     /**
-     * Send Json.
+     * Send Json. Sends json object to the HTTP response.
+     * The HTTP response body is contains the string that convert the json object
+     * before send to client.
+     * 
      * @param {Request} req The express request instance.
      * @param {Response} res The express response instance.
-     * @param {Any} data The data to send in json.
+     * @param {Object} data The data to send in json.
      */
     sendJson(req, res, data) {
         res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8' });
         res.write(JSON.stringify(data, null, 4,));
         res.end();
+    }
+    /**
+     * Send File. Transfers the file at the given path.
+     * Sets the Content-Type response HTTP header field based on the filename’s extension.
+     * Unless the root option is set in the options object, path must be an absolute path 
+     * to the file.
+     * 
+     * @param {Request} req The express request instance.
+     * @param {Response} res The express response instance.
+     * @param  {...String} paths The path to join.
+     */
+    sendFile(req, res, ...paths) {
+        let file = path.join(nlib.paths.root, ...paths);
+        res.sendFile(file);
     }
 
     //#endregion
@@ -333,24 +354,29 @@ class WebRouter {
     //#region public methods
 
     /**
-     * Use.
+     * Uses the specified middleware function or functions.
+     * 
      * @param {express.RequestHandler[]} handlers The request handler(s).
      */
     use(...handlers) { this.router.use(...handlers) }
     /**
-     * get
+     * Routes HTTP GET requests to the specified path with the specified callback functions.
+     * 
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
     get(path, ...handlers) { this.router.get(path, ...handlers); }
     /**
-     * post
+     * Routes HTTP POST requests to the specified path with the specified callback functions.
+     * 
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
     post(path, ...handlers) { this.router.post(path, ...handlers); }
     /**
-     * all
+     * Special-cased "all" method, applying the given route path, middleware, 
+     * and callback to every HTTP method.
+     * 
      * @param {string | RegExp | Array<string | RegExp>} path The path.
      * @param {express.RequestHandler[]} handlers The handlers.
      */
