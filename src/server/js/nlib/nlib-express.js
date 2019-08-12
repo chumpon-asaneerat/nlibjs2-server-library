@@ -3,6 +3,7 @@
 //#region Packages Required
 
 const path = require('path');
+const find = require('find');
 const fs = require('fs');
 const nlib = require('./nlib');
 // common middlewares.
@@ -198,6 +199,20 @@ const init_middlewares = (app, io, cfg) => {
     init_public_paths(app, cfg);
     init_swagger_doc(app, cfg);
 };
+const init_routes_js = (svr, parentPath) => {
+    find.fileSync(parentPath).forEach(file => {
+        if (path.basename(file).toLowerCase() === 'routes.js') {
+            try {
+                console.log('  + setup route(s) in :', path.dirname(file));
+                require(file).init_routes(svr);
+            }
+            catch (ex) {
+                console.error('Cannot init route in file: ' + file);
+                console.error(ex);
+            }
+        }
+    });
+}
 /**
  * auto mount routes.
  * 
@@ -205,7 +220,8 @@ const init_middlewares = (app, io, cfg) => {
  * @ignore
  */
 const init_routes = (svr) => {
-    //let routePath = nlib.paths.routes;
+    let routePath = nlib.paths.routes;
+    init_routes_js(svr, routePath);
 }
 
 //#endregion
