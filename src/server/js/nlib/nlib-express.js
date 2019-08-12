@@ -220,6 +220,7 @@ const init_routes_js = (svr, parentPath) => {
  * @ignore
  */
 const init_routes = (svr) => {
+    console.log('init routes....');
     let routePath = nlib.paths.routes;
     init_routes_js(svr, routePath);
 }
