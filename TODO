@@ -127,7 +127,7 @@ NLib:
                 ☐ Supports jwt middleware for authenticated session access.
                 ✔ Add route method. @done(19-08-12 07:20)
                 ✔ Add sendFile method. @done(19-08-12 07:36)
-                ☐ Supports auto mount route in routes folder.
+                ✔ Supports auto mount route in routes folder. @done(19-08-12 21:40)
             WebRouter class:
                 ✔ Add use method. @done(19-08-12 07:17)
                 ✔ Add get method. @done(19-08-12 07:17)
