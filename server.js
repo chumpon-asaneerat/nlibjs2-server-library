@@ -9,12 +9,6 @@ let wsvr = new WebServer();
 
 const routes = {
     /** @type {WebServer.RequestHandler} */
-    home: (req, res, next) => {
-        //res.status(200).send(`It's work from home 2!!!`);
-        //res.sendFile(__dirname + '/socket.html')
-        WebServer.sendFile(req, res, 'index.html')
-    },
-    /** @type {WebServer.RequestHandler} */
     randomCode: (req, res, next) => {
         (async() => {
             let connected = await db.connect();
@@ -30,8 +24,6 @@ const routes = {
     }
 }
 
-//wsvr.get('/', (req, res, next) => { res.status(200).send(`It's work from custom home!!!`); })
-wsvr.get('/', routes.home)
 wsvr.get('/randomcode', routes.randomCode)
 
 //#region example route with swagger
