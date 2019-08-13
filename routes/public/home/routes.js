@@ -28,9 +28,8 @@ const routes = class {
      * home
      * @param {Request} req The Request.
      * @param {Response} res The Response.
-     * @param {WebServer.RequestHandler} next The RequestHandler.
      */
-    static home(req, res, next) {
+    static home(req, res) {
         WebServer.sendFile(req, res, __dirname, 'index.html');
     }
 }
