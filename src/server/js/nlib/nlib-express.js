@@ -343,7 +343,7 @@ const WebServer = class {
      * @param  {...String} paths The path to join.
      */
     static sendFile(req, res, ...paths) {
-        let file = path.join(nlib.paths.root, ...paths);
+        let file = path.join(...paths);
         res.sendFile(file);
     }
 

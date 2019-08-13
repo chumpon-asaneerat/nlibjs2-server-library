@@ -7,8 +7,9 @@ const rootPath = process.env['ROOT_PATHS'];
 //const nlibPath = path.join(rootPath, 'nlib');
 // for nlib-server dev project
 const nlibPath = path.join(rootPath, 'src', 'server', 'js', 'nlib');
+const nlibjs = path.join(nlibPath, 'nlib');
+const nlib = require(nlibjs);
 
-//const nlibjs = path.join(nlibPath, 'nlib');
 const nlibExprjs = path.join(nlibPath, 'nlib-express');
 
 const WebServer = require(nlibExprjs);
@@ -30,7 +31,7 @@ const routes = class {
      * @param {WebServer.RequestHandler} next The RequestHandler.
      */
     static home(req, res, next) {
-        WebServer.sendFile(req, res, 'index.html');
+        WebServer.sendFile(req, res, nlib.paths.root, 'index.html');
     }
 }
 
