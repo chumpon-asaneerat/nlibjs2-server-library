@@ -178,7 +178,7 @@
                     "enable": true
                 },
                 {
-                    "route": "/dist/js",
+                    "route": "/dist",
                     "path": "public/lib",
                     "maxAge": "15s",
                     "enable": true

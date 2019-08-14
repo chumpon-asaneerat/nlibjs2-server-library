@@ -1215,7 +1215,7 @@ class EventArgs { static get Empty() { return null; } };
 // New Tricks in XMLHttpRequest2: https://www.html5rocks.com/en/tutorials/file/xhr2/
 
 class XHR {
-    static get(url, callback) {
+    static get(url, data, callback) {
         let xhr = new XMLHttpRequest();
 
         xhr.open("GET", url, true);
@@ -1224,9 +1224,10 @@ class XHR {
         XHR.setTimeoutHandler(xhr, callback);
         XHR.setErrorHandler(xhr, callback);
 
-        xhr.send();
+        let sJson = JSON.stringify(data);
+        xhr.send(sJson);
     }
-    static getFile(url, callback) {
+    static getFile(url, data, callback) {
         let xhr = new XMLHttpRequest();
 
         xhr.open("GET", url, true);
@@ -1235,7 +1236,8 @@ class XHR {
         XHR.setTimeoutHandler(xhr, callback);
         XHR.setErrorHandler(xhr, callback);
 
-        xhr.send();
+        let sJson = JSON.stringify(data);
+        xhr.send(sJson);
     }
     static postJson(url, data, callback) {
         let xhr = new XMLHttpRequest();
