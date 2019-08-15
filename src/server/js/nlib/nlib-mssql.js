@@ -13,7 +13,8 @@ const beautify = require('js-beautify').js
 // The newline character.
 const newline = '\r\n';
 
-// file and path.
+//#region file and path
+
 const isDir = (pathName) => {
     try {
         return fs.lstatSync(pathName).isDirectory();
@@ -30,7 +31,10 @@ const checkDir = (pathName) => {
     });
 }
 
-// common queries.
+//#endregion
+
+//#region common queries
+
 const queries = {}
 // get stored procedures and functions list.
 queries.getProcedures = () => {
@@ -66,7 +70,10 @@ queries.getProcedureParameters = (name) => {
     return ret;
 };
 
-// Stoded Procedure parameter parser related methods.
+//#endregion
+
+//#region Stoded Procedure parameter parser related methods
+
 queries.parseParameters = async (params, defaultValue) => {
     let ret = {
         inputs: [],
@@ -93,7 +100,6 @@ queries.isInput = (param) => {
 queries.isOutput = (param) => {
     return (param.mode.indexOf('OUT') !== -1);
 }
-
 queries.parseParameter = (param, defaultValue) => {
     let o = {};
 
@@ -108,13 +114,11 @@ queries.parseParameter = (param, defaultValue) => {
 
     return o;
 }
-
 queries.getDefaultValue = (param, defaultValue) => {
     let names = defaultValue.parameters.map(p => '@' + p.name);
     let idx = names.indexOf(param.name);
     return (idx === -1) ? undefined : defaultValue.parameters[idx].value;
 }
-
 queries.checkParameterType = (param, o) => {
     if (param.size) {
         // max
@@ -126,7 +130,10 @@ queries.checkParameterType = (param, o) => {
     }
 }
 
-// parse stored procedure source code for default value.
+//#endregion
+
+//#region Parse stored procedure source code for default value
+
 const defaultvalues = {}
 
 defaultvalues.parse = (sp) => {
@@ -191,7 +198,10 @@ defaultvalues.parseNameValue = (sp, o, pItem) => {
     return { name: name.trim(), value: value.trim() };
 }
 
-// check is mssql npm package is installed if not auto install it.
+//#endregion
+
+//#region Check is mssql npm package is installed if not auto install it
+
 const check_modules = () => {
     // node-mssql
     if (!nlib.NPM.exists('mssql')) {
@@ -206,6 +216,10 @@ const check_modules = () => {
 }
 // check if node module installed.
 check_modules();
+
+//#endregion
+
+//#region SqlServer config
 
 // assume install package(s) successfully.
 const moment = require('moment');
@@ -240,6 +254,11 @@ const check_config = (name = 'default') => {
 
     return cfg.get('mssql.' + sName);
 }
+
+//#endregion
+
+//#region Stored Procedure prepare datatype and default value parser
+
 const get_type = (sStr, sidx) => {
     return (sidx !== -1) ? sStr.substring(0, sidx).trim() : sStr.trim();
 }
@@ -449,6 +468,11 @@ const prepare = (rq, pObj, inputs, outputs) => {
     prepareInputs(rq, pObj, inputs);
     prepareOutputs(rq, pObj, outputs);
 }
+
+//#endregion
+
+//#region Result related methods
+
 // error codes constant.
 const errorCodes = {
     UNKNOWN: 100,
@@ -459,16 +483,11 @@ const errorCodes = {
 }
 // create result object.
 const createResult = () => {
-    return {
-        multiple: false,
-        data: null,
-        datasets: null,
-        errors: {
-            hasError: false,
-            errNum: 0,
-            errMsg: ''
-        } 
-    };
+    let ret = nlib.NResult.empty();
+    // append properties.
+    ret.multiple = false;
+    ret.datasets = null;
+    return ret;
 }
 const hasRecordSets = (dbResult) => {
     return (dbResult && dbResult.recordsets && dbResult.recordsets.length > 0);
@@ -508,6 +527,11 @@ const readOutputs = (rq, outputs, dbResult) => {
     }
     return ret;
 }
+
+//#endregion
+
+//#region Prepare/Unprepare
+
 // prepare statement
 const prepareStatement = async (ps, text) => {
     let isPrepared = false;
@@ -519,6 +543,8 @@ const prepareStatement = async (ps, text) => {
 const unprepareStatement = async (ps, isPrepared) => {
     if (isPrepared) await ps.unprepare();
 }
+
+//#endregion
 
 //#endregion
 
