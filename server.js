@@ -18,7 +18,8 @@ const routes = {
                 WebServer.sendJson(req, res, data);
             }
             else {
-                WebServer.sendJson(req, res, { error: 'cannot connect to database server.' });
+                let result = db.error(db.errorNumbers.NO_DATA_ERROR, 'No data returns');
+                WebServer.sendJson(req, res, result);
             }
         })()
     }

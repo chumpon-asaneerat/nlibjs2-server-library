@@ -449,6 +449,14 @@ const prepare = (rq, pObj, inputs, outputs) => {
     prepareInputs(rq, pObj, inputs);
     prepareOutputs(rq, pObj, outputs);
 }
+// error codes constant.
+const errorCodes = {
+    UNKNOWN: 100,
+    CONNECT_ERROR: 101,
+    EXECUTE_ERROR: 102,
+    QUERY_ERROR: 103,
+    NO_DATA_ERROR: 104
+}
 // create result object.
 const createResult = () => {
     return {
@@ -457,7 +465,8 @@ const createResult = () => {
         datasets: null,
         errors: {
             hasError: false,
-            ErrMsg: ''
+            errNum: 0,
+            errMsg: ''
         } 
     };
 }
@@ -661,7 +670,8 @@ const SqlServer = class {
             }
             catch (err) {
                 ret.errors.hasError = true;
-                ret.errors.ErrMsg = err.message;
+                ret.errors,errNum = errorCodes.QUERY_ERROR;
+                ret.errors.errMsg = err.message;
             }
             finally {
                 await unprepareStatement(ps, isPrepared);
@@ -761,7 +771,8 @@ const SqlServer = class {
             }
             catch (err) {
                 ret.errors.hasError = true;
-                ret.errors.ErrMsg = err.message;
+                ret.errors,errNum = errorCodes.EXECUTE_ERROR;
+                ret.errors.errMsg = err.message;
             }
         }
 
@@ -776,6 +787,35 @@ const SqlServer = class {
             this.connection = null;
             //console.log('database is disconnected.');
         }
+    }
+
+    //#endregion
+
+    //#region error related methods and properties
+
+    /**
+     * Gets error numbers constant for error code. The default value are 
+     * UNKNOWN: 100, 
+     * CONNECT_ERROR: 101, 
+     * EXECUTE_ERROR: 102, 
+     * QUERY_ERROR: 103, 
+     * NO_DATA_ERROR: 104
+     */
+    get errorNumbers() { return errorCodes; }
+    /**
+     * Create new Result Object with specificed error number and error message.
+     * 
+     * @param {Number} errNum The error number or error code.
+     * @param {String} errMsg The error message.
+     * @return {Object} returns the object that contains error number and error message
+     * that has same structure of another error in execute method and query method.
+     */
+    error(errNum, errMsg) {
+        let ret = createResult();
+        ret.errors.hasError = true;
+        ret.errors.errNum = errNum;
+        ret.errors.errMsg = errMsg;
+        return ret
     }
 
     //#endregion
