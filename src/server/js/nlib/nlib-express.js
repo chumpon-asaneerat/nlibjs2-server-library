@@ -477,13 +477,13 @@ class NExpires {
 
     /** Gets calculate millisecond of years */
     get years() { 
-        let dt = nlib.DateTime.now();
+        let dt = new nlib.DateTime(0);
         dt = dt.addYears(this.value);        
         return dt.span.ticks;
     }
     /** Gets calculate millisecond of months */
     get months() {
-        let dt = nlib.DateTime.now();
+        let dt = new nlib.DateTime(0);
         dt = dt.addMonths(this.value);
         return dt.span.ticks;
     }
@@ -660,7 +660,7 @@ const obj2SignedCookie = (res, value, maxAge, httpOnly = true) => {
     }
     var keys = Object.keys(value);
     keys.forEach((key) => {
-        res.signedCookies(key, value[key], opts);
+        res.cookie(key, value[key], opts);
     });
 };
 
