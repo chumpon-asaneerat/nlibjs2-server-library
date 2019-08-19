@@ -475,6 +475,18 @@ class NExpires {
 
     //#region public properties
 
+    /** Gets calculate millisecond of years */
+    get years() { 
+        let dt = nlib.DateTime.now();
+        dt = dt.addYears(this.value);        
+        return dt.span.ticks;
+    }
+    /** Gets calculate millisecond of months */
+    get months() {
+        let dt = nlib.DateTime.now();
+        dt = dt.addMonths(this.value);
+        return dt.span.ticks;
+    }
     /** Gets calculate millisecond of days */
     get days() { return (this.value * 24 * 60 * 60 * 1000); }
     /** Gets calculate millisecond of hours */
