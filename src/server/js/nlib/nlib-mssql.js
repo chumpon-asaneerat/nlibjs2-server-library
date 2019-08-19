@@ -475,11 +475,11 @@ const prepare = (rq, pObj, inputs, outputs) => {
 
 // error codes constant.
 const errorCodes = {
-    UNKNOWN: 100,
-    CONNECT_ERROR: 101,
-    EXECUTE_ERROR: 102,
-    QUERY_ERROR: 103,
-    NO_DATA_ERROR: 104
+    UNKNOWN: -100,
+    CONNECT_ERROR: -101,
+    EXECUTE_ERROR: -102,
+    QUERY_ERROR: -103,
+    NO_DATA_ERROR: -104
 }
 // create result object.
 const createResult = () => {
@@ -821,11 +821,11 @@ const SqlServer = class {
 
     /**
      * Gets error numbers constant for error code. The default value are 
-     * UNKNOWN: 100, 
-     * CONNECT_ERROR: 101, 
-     * EXECUTE_ERROR: 102, 
-     * QUERY_ERROR: 103, 
-     * NO_DATA_ERROR: 104
+     * UNKNOWN: -100, 
+     * CONNECT_ERROR: -101, 
+     * EXECUTE_ERROR: -102, 
+     * QUERY_ERROR: -103, 
+     * NO_DATA_ERROR: -104
      */
     get errorNumbers() { return errorCodes; }
     /**

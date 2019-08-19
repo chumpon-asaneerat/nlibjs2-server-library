@@ -227,6 +227,45 @@ const init_routes = (svr) => {
 
 //#endregion
 
+//#region Request/Response helper methods
+
+const parseGETReq = (req) => {
+    let result = null;
+    if (req.query) {
+        result = {};
+        // Each parameter.
+        for (let key in req.query) {
+            // Add Property to objct with set value.
+            result[key] = (req.query[key]) ? req.query[key] : null;
+        }
+    }
+    return nlib.NResult.data(result);
+}
+const parsePOSTReq = (req) =>  {
+    let result = null;
+    // Check is Query object is null.
+    if (req.body) {
+        result = req.body;
+    }
+    return nlib.NResult.data(result);
+}
+const parseReq = (req) => {
+    let ret;
+    if (req.method === 'GET') {
+        ret = parseGETReq(req);
+    }
+    else if (req.method === 'POST') {
+        ret = parsePOSTReq(req);
+    }
+    else {
+        let errCode = -201; // Not supports.
+        ret = nlib.NResult.error(errCode, 'Not Supports Operation other than GET or POST.');
+    }
+    return ret;
+}
+
+//#endregion
+
 //#region WebServer class
 
 /**
@@ -346,6 +385,12 @@ const WebServer = class {
         let file = path.join(...paths);
         res.sendFile(file);
     }
+    /**
+     * Parse Request (GET/POST).
+     * 
+     * @param {Request} req The express request instance.
+     */
+    static parseReq(req) { return parseReq(req); }
 
     //#endregion
 
