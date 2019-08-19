@@ -632,10 +632,10 @@ const storeSignedCookie = (res, name, data, maxAge, httpOnly = true) => {
 };
 const signedCookie2obj = (req) => {
     var obj = {};
-    var keys = Object.keys(req.cookies);
+    var keys = Object.keys(req.signedCookies);
     keys.forEach((key) => {
-        if ((!(req.cookies[key] instanceof Function))) {
-            obj[key] = req.cookies[key];
+        if ((!(req.signedCookies[key] instanceof Function))) {
+            obj[key] = req.signedCookies[key];
         }
     });
     return obj;
@@ -648,7 +648,7 @@ const obj2SignedCookie = (res, value, maxAge, httpOnly = true) => {
     }
     var keys = Object.keys(value);
     keys.forEach((key) => {
-        res.cookie(key, value[key], opts);
+        res.signedCookies(key, value[key], opts);
     });
 };
 
