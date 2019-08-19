@@ -354,7 +354,7 @@ const getValue = (p, name, pObj) => {
 }
 const formatBit = (value) => {
     let ret = null;
-    if (value) {
+    if (value !== 'undefined') {
         let val = String(value).toLocaleUpperCase();
         let valList = [
             { code: '1', value: true },
@@ -367,9 +367,10 @@ const formatBit = (value) => {
             { code: 'N', value: false },
             { code: 'NULL', value: null }
         ]
-        let idx = valList.indexOf(val);
+        let codeList = valList.map(val => val.code);
+        let idx = codeList.indexOf(val);
         if (idx !== -1) {
-            ret = valList[idx];
+            ret = valList[idx].value;
         }
         else {
             console.log('no match boolean string. value is :', value);
