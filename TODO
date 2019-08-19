@@ -108,6 +108,7 @@ NLib:
                 ✔ Supports generate schema generate config. @done(19-08-12 00:56)
                 ✔ Add js file builder for generate database access class. @done(19-08-12 00:56)
                 ✔ Change error codes. @done(19-08-19 17:59)
+                ✔ Fixed bug in formatBit method. @done(19-08-19 19:24)
                 ☐ Modify generate function to create SP source files.
                 ☐ Supports detected stored procedure script changed and update if required.
                 ☐ Add supports binary field update.
