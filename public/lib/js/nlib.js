@@ -2231,25 +2231,21 @@ NDOM.Class = class {
     };
     remove(...classNames) {
         if (!this.hasElement) return;
-        let el = this._dom.elem;
-        el.classList.remove(...classNames);
+        this.elem.classList.remove(...classNames);
     };
     toggle(className, force) {
         if (!this.hasElement || !this.isValidName(className)) return;
-        let el = this._dom.elem;
-        return el.classList.toggle(className, force);
+        return this.elem.classList.toggle(className, force);
     };
     has(className) {
         if (!this.hasElement || !this.isValidName(className)) return;
-        let el = this._dom.elem;
-        return el.classList.contains(className);
+        return this.elem.classList.contains(className);
     };
     replace(oldClassName, newClassName) {
         if (!this.hasElement || 
             !this.isValidName(oldClassName) || 
             !this.isValidName(newClassName)) return;
-        let el = this._dom.elem;
-        el.classList.replace(oldClassName, newClassName);
+        this.elem.classList.replace(oldClassName, newClassName);
     };
     isValidName(name) { return (name && name.trim() !== ''); }
     get hasElement() { return this.dom && this.dom.elem; }
@@ -2265,15 +2261,13 @@ NDOM.Event = class {
     // event
     add(eventName, handler, options) {
         if (this.hasElement && this.isValidName(eventName) && handler) {
-            let el = this.elem;
-            el.addEventListener(eventName, handler, options);
+            this.elem.addEventListener(eventName, handler, options);
         }
     };
     remove(eventName, handler, options) {
         if (!this.hasElement) return;
         if (!this.isValidName(eventName)) return;
-        let el = this.elem;
-        el.removeEventListener(eventName, handler, options);
+        this.elem.removeEventListener(eventName, handler, options);
     };
     isValidName(name) { return (name && name.trim() !== ''); }
     get hasElement() { return this.dom && this.dom.elem; }
