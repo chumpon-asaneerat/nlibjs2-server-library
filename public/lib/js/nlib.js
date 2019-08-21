@@ -2063,4 +2063,471 @@ DateTime.LocaleSettings = {
 
 //#endregion
 
+//#region NDOM and related classes
+
+//#region NDOM
+
+NDOM = class {
+    constructor(elem) {
+        this.elem = elem;
+        this.class = new NDOM.Class(this);
+        this.event = new NDOM.Event(this);
+        this.styles = new NDOM.Style(this);
+        this.attrs = new NDOM.Attribute(this);
+        this.selector = new NDOM.Selector(this);
+    };
+    // attribute
+    attr(name, value) {
+        let ret;
+        if (this.elem && arguments) {
+            if (arguments.length === 0) {
+                ret = this.attrs;
+            }
+            else if (arguments.length === 1) {
+                ret = this.attrs.get(name);
+            }
+            else if (arguments.length === 2) {
+                this.attrs.set(name, value);
+            }
+        }
+        return ret;
+    };
+    // style
+    style(name, value) {
+        let ret;
+        if (this.elem && arguments) {
+            if (arguments.length === 0) {
+                ret = this.styles;
+            }
+            else if (arguments.length === 1) {
+                ret = this.styles.get(name);
+            }
+            else if (arguments.length === 2) {
+                this.styles.set(name, value);
+            }
+        }
+        return ret;
+    };
+    // query selector
+    query(selector) { 
+        let ret = null;
+        if (this.elem && arguments) {
+            ret = (arguments.length === 0) ? this.selector : this.selector.gets(selector);
+        }
+        return ret;
+    };
+    // element information.
+    get tagName() {
+        let ret = ''
+        if (this.elem) {
+            ret = this.elem.tagName;
+        }
+        return ret;
+    }
+    get text() {
+        let ret = ''
+        if (this.elem) {
+            ret = this.elem.textContent;
+        }
+        return ret;
+    }
+    set text(value) {
+        if (this.elem) {
+            if (this.elem.textContent != value) {
+                this.elem.textContent = value;
+            }
+        }
+    }
+    get html() {
+        let ret = '';
+        if (this.elem) {
+            ret = this.elem.innerHTML;
+        }
+        return ret;
+    }
+    set html(value) {
+        if (this.elem) {
+            if (this.elem.innerHTML != value) {
+                this.elem.innerHTML = value;
+            }
+        }
+    }
+    // parent/child access.
+    get parent() {
+        let ret = null;
+        if (this.elem && this.elem.parentElement) {
+            ret = new NDOM(this.elem.parentElement);
+        }
+        return ret;
+    }
+    get children() {
+        let results = [];
+        if (this.elem) {
+            let el = this.elem;
+            let celems = el.children;
+            if (celems && celems.length > 0) {
+                let iMax = celems.length;
+                for (let i = 0; i < iMax; i++) {
+                    let celem = celems[i];
+                    results.push(new NDOM(celem));
+                }
+            }
+        }
+        return results;
+    }
+    // child node management.
+    addChild(dom) {
+        if (!this.elem || !dom || !dom.elem) return;
+        this._elem.appendChild(dom.elem);
+    };
+    removeChild(dom) {
+        if (!this.elem || !dom || !dom.elem) return;
+        this.elem.removeChild(dom.elem);
+    };
+    clearChildren() {
+        if (!this.elem) return;
+        while (this.elem.firstChild) {
+            this.elem.removeChild(this.elem.firstChild);
+        }
+    };
+    // offset
+    get offsetLeft() {
+        if (!this.elem) return undefined
+        return this.elem.offsetLeft;
+    }
+    get offsetTop() { 
+        if (!this.elem) return undefined
+        return this.elem.offsetTop;
+    }
+    get offsetWidth() {
+        if (!this.elem) return undefined
+        return this.elem.offsetWidth;
+    }
+    get offsetHeight() {
+        if (!this.elem) return undefined
+        return this.elem.offsetHeight;
+    }
+    // behavior
+    focus() { 
+        if (!this.elem) return;
+        this.elem.focus();
+    };
+    // static
+    static create(tagName, options) {
+        return new NDOM(document.createElement(tagName, options));
+    };
+};
+
+//#endregion
+
+//#region NDOM.Class
+
+NDOM.Class = class {
+    constructor(dom) { this.dom = dom; };
+    add(...classNames) {
+        if (!this.hasElement) return;
+        let el = this._dom.elem;
+        el.classList.add(...classNames);
+    };
+    remove(...classNames) {
+        if (!this.hasElement) return;
+        let el = this._dom.elem;
+        el.classList.remove(...classNames);
+    };
+    toggle(className, force) {
+        if (!this.hasElement || !this.isValidName(className)) return;
+        let el = this._dom.elem;
+        return el.classList.toggle(className, force);
+    };
+    has(className) {
+        if (!this.hasElement || !this.isValidName(className)) return;
+        let el = this._dom.elem;
+        return el.classList.contains(className);
+    };
+    replace(oldClassName, newClassName) {
+        if (!this.hasElement || 
+            !this.isValidName(oldClassName) || 
+            !this.isValidName(newClassName)) return;
+        let el = this._dom.elem;
+        el.classList.replace(oldClassName, newClassName);
+    };
+    isValidName(name) { return (name && name.trim() !== ''); }
+    get hasElement() { return this.dom && this.dom.elem; }
+    get elem() { return (this.dom && this.dom.elem) ? this.dom.elem : null; }
+};
+
+//#endregion
+
+//#region NDOM.Event
+
+NDOM.Event = class {
+    constructor(dom) { this.dom = dom; };
+    // event
+    add(eventName, handler, options) {
+        if (this.hasElement && this.isValidName(eventName) && handler) {
+            let el = this.elem;
+            el.addEventListener(eventName, handler, options);
+        }
+    };
+    remove(eventName, handler, options) {
+        if (!this.hasElement) return;
+        if (!this.isValidName(eventName)) return;
+        let el = this.elem;
+        el.removeEventListener(eventName, handler, options);
+    };
+    isValidName(name) { return (name && name.trim() !== ''); }
+    get hasElement() { return this.dom && this.dom.elem; }
+    get elem() { return (this.dom && this.dom.elem) ? this.dom.elem : null; }
+};
+
+//#endregion
+
+//#region NDOM.Attribute
+
+NDOM.Attribute = class {
+    constructor(dom) { this.dom = dom; };
+    get(name) {
+        let ret;
+        if (this.hasElement && this.isValidName(name)) {
+            ret = this.elem.getAttribute(name);
+        }
+        return ret;
+    };
+    set(name, value) {
+        if (this.hasElement && this.isValidName(name)) {
+            this.elem.setAttribute(name, value);
+        }
+    };
+    remove(name) {
+        if (this.hasElement && this.isValidName(name)) {
+            this.elem.removeAttribute(name);
+        }
+    };
+    has(name) {
+        let ret = false;
+        if (this.hasElement && this.isValidName(name)) {
+            ret = this.elem.hasAttribute(name);
+        }
+        return ret;
+    };
+    toggle(name, value) {
+        if (this.hasElement && this.isValidName(name)) {
+            if (this.has(name)) this.remove(name);
+            else {
+                this.set(name, this.formatValue(value));
+            }
+        }
+    };
+    formatValue(value) { return (value) ? value : ''; }
+    isValidName(name) { return (name && name.trim() !== ''); }
+    get hasElement() { return this.dom && this.dom.elem; }
+    get elem() { return (this.dom && this.dom.elem) ? this.dom.elem : null; }
+};
+
+//#endregion
+
+//#region NDOM.Style
+
+NDOM.Style = class {
+    constructor(dom) {
+        this.dom = dom;
+        this.margins = new NDOM.Margin(dom);
+        this.paddings = new NDOM.Padding(dom);
+    };
+    get(name) {
+        let ret;
+        if (this.hasElement && this.isValidName(name)) {
+            ret = this.elem.style[name];
+        }
+        return ret;
+    };
+    set(name, value) {
+        if (this.hasElement && this.isValidName(name)) {
+            this.elem.style[name] = value;
+        }
+    };
+    remove(name) {
+        if (this.hasElement && this.isValidName(name)) {
+            this.elem.style[name] = undefined;
+        }
+    };
+    has(name) {
+        let ret = false;
+        if (this.hasElement && this.isValidName(name)) {
+            ret = (this.elem.style[name] !== undefined && this.elem.style[name] !== '');
+        }
+        return ret;
+    };
+    margin() {
+        let ret;
+        if (this.margins) {
+            ret = (!arguments || arguments.length === 0) ? 
+                this.margins.val() : this.margins.val(...arguments);
+        }
+        return ret;
+    };
+    // padding
+    padding() {
+        let ret;
+        if (this.paddings) {
+            ret = (!arguments || arguments.length === 0) ? 
+                this.paddings.val() : this.paddings.val(...arguments);
+        }
+        return ret;
+    };
+    isValidName(name) { return (name && name.trim() !== ''); }
+    get hasElement() { return this.dom && this.dom.elem; }
+    get elem() { return (this.dom && this.dom.elem) ? this.dom.elem : null; }
+};
+
+//#endregion
+
+//#region NDOM.Style (wrapper)
+
+//#region BlockStyle (common style)
+
+NDOM.BlockStyle = class {
+    constructor(dom) {
+        this.dom = dom;
+        this.prefix = '';
+    };
+    val() {
+        let ret;
+        if (this.hasElement)
+        {
+            if (arguments) {
+                if (arguments.length === 1) {
+                    let value = arguments[0];
+                    this.dom.style(this.prefix, value);
+                }
+                else if (arguments.length === 2) {
+                    let value = 
+                        arguments[0] + // top-bottom
+                        ' ' +
+                        arguments[1];  // right-left
+                    this.dom.style(this.prefix, value);
+                }
+                else if (arguments.length === 3) {
+                    let value = 
+                        arguments[0] + // top
+                        ' ' + 
+                        arguments[1] + // right-left
+                        ' ' +
+                        arguments[2];  // bottom
+                    this.dom.style(this.prefix, value);
+                }
+                else if (arguments.length === 4) {
+                    let value = 
+                        arguments[0] + // top
+                        ' ' + 
+                        arguments[1] + // right-left
+                        ' ' +
+                        arguments[2] + // bottom
+                        ' ' + 
+                        arguments[3];  // left
+                    this.dom.style(this.prefix, value);
+                }
+                else {
+                    ret = this.dom.style(this.prefix);
+                }
+            }
+            else {
+                ret = this.dom.style(this.prefix);
+            }
+        }
+        return ret;
+    }
+    get left() {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-left') : undefined;
+    }
+    set left(value) {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-left', value) : undefined;
+    }
+    get right() {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-right') : undefined;
+    }
+    set right(value) {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-right', value) : undefined;
+    }
+    get top() {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-top') : undefined;
+    }
+    set top(value) {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-top', value) : undefined;
+    }
+    get bottom() {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-bottom') : undefined;
+    }
+    set bottom(value) {
+        return (this.hasElement) ? this.dom.style(this._prefix + '-bottom', value) : undefined;
+    }
+    isValidName(name) { return (name && name.trim() !== ''); }
+    get hasElement() { return this.dom && this.dom.elem; }
+    get elem() { return (this.dom && this.dom.elem) ? this.dom.elem : null; }
+};
+
+//#endregion
+
+//#region Margin
+
+NDOM.Margin = class extends NDOM.BlockStyle {
+    constructor(dom) {
+        super(dom);
+        this.prefix = 'margin';
+    };
+};
+
+//#endregion
+
+//#region Padding
+
+NDOM.Padding = class extends NDOM.BlockStyle {
+    constructor(dom) {
+        super(dom);
+        this.prefix = 'padding';
+    };
+};
+
+//#endregion
+
+//#endregion
+
+//#region NDOM.Selector
+
+NDOM.Selector = class {
+    constructor(dom) { this.dom = dom; };
+    // returns the first child element that matches a specified CSS selector(s).
+    // of an element. If not found null returns.
+    get(selector) {
+        let ret = null;
+        if (this.hasElement && this.isValidName(selector)) {
+            let element = this.elem.querySelector(selector);
+            ret = (element) ? element : null;
+        }
+        return ret;
+    };
+    // returns a collection of an element's child elements that match a specified 
+    // CSS selector(s), as a static NodeList object. If not found empty array returns.
+    gets(selector) {
+        let results = [];
+        if (this.hasElement && this.isValidName(selector)) {
+            let elements = this.elem.querySelectorAll(selector);
+            if (elements) {
+                elements.forEach(element => {
+                    let edom = new NDOM(element);
+                    results.push(edom);
+                })
+            }
+        }
+        return results;
+    };
+    isValidName(name) { return (name && name.trim() !== ''); }
+    get hasElement() { return this.dom && this.dom.elem; }
+    get elem() { return (this.dom && this.dom.elem) ? this.dom.elem : null; }
+};
+
+//#endregion
+
+//#endregion
+
 console.log('nlib loaded.')
