@@ -1209,6 +1209,57 @@ class EventArgs { static get Empty() { return null; } };
 
 //#endregion
 
+//#region NResult
+
+/**
+ * The NResult class. Provide Result Object creation related functions.
+ */
+const NResult = class {
+    //#region static public methods
+
+    /**
+     * Create empty result object.
+     */
+    static empty() {
+        let ret = {
+            data: null,
+            errors: {
+                hasError: false,
+                errNum: 0,
+                errMsg: ''
+            }
+        }
+        return ret;
+    }
+    /**
+     * Create result object with data.
+     * 
+     * @param {Object} obj The objet to attach to result object.
+     */
+    static data(obj) {
+        let ret = NResult.empty();
+        ret.data = obj;
+        return ret;
+    }
+    /**
+     * Create result object with error number and error message.
+     * 
+     * @param {Number} errNum The error number.
+     * @param {String} errMsg The error message.
+     */
+    static error(errNum, errMsg) {
+        let ret = NResult.empty();
+        ret.errors.hasError = true;
+        ret.errors.errNum = errNum;
+        ret.errors.errMsg = errMsg;
+        return ret;
+    }
+
+    //#endregion
+}
+
+//#endregion
+
 //#region XMLHttpRequest
 
 // Reference:
