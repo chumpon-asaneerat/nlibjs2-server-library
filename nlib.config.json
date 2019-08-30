@@ -131,7 +131,7 @@
                 },
                 {
                     "route": "/dist",
-                    "path": "public/dist/tabulator-4.3.0",
+                    "path": "public/dist/tabulator-4.4.1",
                     "maxAge": "5y",
                     "enable": true
                 },
