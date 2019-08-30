@@ -64,7 +64,7 @@ const defaultWSvr = {
             { route: "/dist", path: "public/dist/chart-js-plugin-piechart-outlabels-0.1.4", maxAge: distMaxAge, enable: true },
             { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/jquery-org-chart-2.1.3", maxAge: distMaxAge, enable: true },
-            { route: "/dist", path: "public/dist/tabulator-4.3.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/tabulator-4.4.1", maxAge: distMaxAge, enable: true },
             { route: "/dist/js", path: "public/dist/ace-1.4.5", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/simplebar-4.1.0", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/overlay-scrollbars-1.9.1", maxAge: distMaxAge, enable: true },
