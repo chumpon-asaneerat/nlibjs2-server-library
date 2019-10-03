@@ -346,7 +346,7 @@ const getSqlType = (p) => {
     return (p.type) ? parse(p.type) : null;
 }
 const getDefaultValue = (p) => {
-    return (p && p.default) ? p.default : undefined;
+    return (p && p.default !== undefined) ? p.default : undefined;
 }
 const getValue = (p, name, pObj) => {
     val = (pObj && (name in pObj || pObj.name)) ? pObj[name] : getDefaultValue(p);
