@@ -512,9 +512,9 @@ const getOutputValue = (rq, p, output) => {
     // note:
     // for newer version the parameter value always null but keep code for reference.
     // So use Result.output[name] to get data instead of req.paramters[name].value.
-    let v1 = (p1) ? p1.value : null; 
-    let v2 = (p2) ? p2 : null;
-    let ret = (v2) ? v2 : v1;
+    let v1 = (p1 !== undefined) ? p1.value : null; 
+    let v2 = (p2 !== undefined) ? p2 : null;
+    let ret = (v2 !== undefined) ? v2 : v1;
     return ret;
 }
 const readOutputs = (rq, outputs, dbResult) => {
