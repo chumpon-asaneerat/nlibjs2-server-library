@@ -71,6 +71,8 @@ const defaultWSvr = {
             { route: "/dist", path: "public/dist/socket.io-2.2.0", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/reveal-3.8.0", maxAge: distMaxAge, enable: false },
             { route: "/dist/js", path: "public/dist/riotjs-3.13.2", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/fabricjs-3.4.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/gifuct-js-1.0.0", maxAge: distMaxAge, enable: true },
             { route: "/components", path: "dist/component/riot", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/lib", maxAge: "15s", enable: true }
         ]
