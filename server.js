@@ -3,13 +3,12 @@ const path = require("path");
 const WebServer = require('./src/server/js/nlib/nlib-express');
 
 const TestDb7x3 = require('./TestDb7x3.db');
-const db = new TestDb7x3();
-
 let wsvr = new WebServer();
 
 const routes = {
     /** @type {WebServer.RequestHandler} */
     randomCode: (req, res, next) => {
+        let db = new TestDb7x3();
         (async() => {
             let connected = await db.connect();
             if (connected) {
