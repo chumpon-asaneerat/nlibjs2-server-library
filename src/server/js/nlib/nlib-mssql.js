@@ -697,7 +697,7 @@ const SqlServer = class {
             }
             catch (err) {
                 ret.errors.hasError = true;
-                ret.errors,errNum = errorCodes.QUERY_ERROR;
+                ret.errors.errNum = errorCodes.QUERY_ERROR;
                 ret.errors.errMsg = err.message;
             }
             finally {
@@ -798,7 +798,7 @@ const SqlServer = class {
             }
             catch (err) {
                 ret.errors.hasError = true;
-                ret.errors,errNum = errorCodes.EXECUTE_ERROR;
+                ret.errors.errNum = errorCodes.EXECUTE_ERROR;
                 ret.errors.errMsg = err.message;
             }
         }
