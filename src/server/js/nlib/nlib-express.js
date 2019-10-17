@@ -79,6 +79,8 @@ const defaultWSvr = {
             { route: "/dist", path: "public/dist/gifler-0.3.0", maxAge: distMaxAge, enable: true },
             { route: "/dist/css", path: "public/dist/videojs-7.6.5", maxAge: distMaxAge, enable: true },
             { route: "/dist/js", path: "public/dist/videojs-7.6.5", maxAge: distMaxAge, enable: true },
+            { route: "/dist/css", path: "public/dist/jquery-easyui-1.8.7", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/jquery-easyui-1.8.7", maxAge: distMaxAge, enable: true },
             { route: "/components", path: "dist/component/riot", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/lib", maxAge: "15s", enable: true }
         ]
