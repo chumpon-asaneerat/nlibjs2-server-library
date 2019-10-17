@@ -76,6 +76,7 @@ const defaultWSvr = {
             { route: "/dist/css", path: "public/dist/highcharts-7.2.0/code/css", maxAge: distMaxAge, enable: true },
             { route: "/dist/js", path: "public/dist/highcharts-7.2.0/code", maxAge: distMaxAge, enable: true },
             { route: "/dist/js", path: "public/dist/interactjs-1.6.2", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/gifler-0.3.0", maxAge: distMaxAge, enable: true },
             { route: "/components", path: "dist/component/riot", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/lib", maxAge: "15s", enable: true }
         ]
