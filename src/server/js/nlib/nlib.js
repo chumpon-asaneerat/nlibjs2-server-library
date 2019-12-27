@@ -1244,6 +1244,53 @@ const NResult = class {
 
 //#endregion
 
+//#region NRandom and related functions
+
+//#region Helper functions for NRandom class
+
+const bitsToInt = (...bits) => {
+    let val = 0;
+    if (bits) bits.forEach(bit => val = (val << 1) | bit);
+    return val;
+}
+
+const random_ints = [
+    { id: 3, fn: (max, min) => {
+        // [min, max].
+        return min + Math.floor(Math.random() * (max - min + 1));
+    }},
+    { id: 2, fn: (max, min) => {
+        // (min, max].
+        return min + Math.ceil(Math.random() * (max - min));
+    }},
+    { id: 1, fn: (max, min) => {
+        // [min, max).
+        return min + Math.floor(Math.random() * (max - min));
+    }},
+    { id: 0, fn: (max, min) => {
+        // (min, max).
+        return min + Math.ceil(Math.random() * (max - min - 1));
+    }}
+]
+
+const random_ints_maps = random_ints.map(item => item.id)
+
+const getRandomIntMethod = (id) => {
+    let idx = random_ints_maps.indexOf(id)
+    return (idx === -1) ? random_ints[0] : random_ints[idx]
+}
+const prepareInt = (val) => { return val || 0 }
+const prepareIntMinMaxOpt = (opt) => {
+    let ret = { max: true, min: true }
+    if (opt) {
+        ret.min = (opt.min) ? true : false;
+        ret.max = (opt.max) ? true : false;
+    }
+    return ret
+}
+
+//#endregion
+
 //#region NRandom
 
 /**
@@ -1253,16 +1300,35 @@ const NRandom = class {
     /**
      * Gets random item from array.
      * 
-     * @param {Array} array The source array.
+     * @param {Array} items The source array.
      */
-    static rand(array) {
+    static array(items) {
         let ret;
-        if (array && array.length > 0) {
-            ret = array[Math.floor(Math.random() * array.length)]
+        if (items && items.length > 0) {
+            ret = items[Math.floor(Math.random() * items.length)]
         }
         return ret;
     }
+    /**
+     * Gets random number between min and max (include min/max value)
+     * 
+     * @param {Number} max The max integer value.
+     * @param {Number} min The min integer value.
+     * @param {Object} opt The include option default is { min: true. max: true }.
+     */
+    static int(max, min, opt) {
+        let imax = prepareInt(max)
+        let imin = prepareInt(min)
+        let rOpts = prepareIntMinMaxOpt(opt)
+        let id = 3; // [min, max]
+        if (opt) {
+            id = bitsToInt(rOpts.max, rOpts.min)
+        }
+        return getRandomIntMethod(id).fn(imax, imin)
+    }
 }
+
+//#endregion
 
 //#endregion
 
