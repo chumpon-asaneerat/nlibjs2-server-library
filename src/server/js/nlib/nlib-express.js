@@ -28,6 +28,21 @@ const swaggerJSDoc = require('swagger-jsdoc');
 
 //#endregion
 
+//#region Arguments parser helper
+
+const getargs = () => {
+    let obj = {}
+    process.argv.forEach(arg => {
+        let pairs = arg.split('=')
+        if (pairs.length === 2) {
+            obj[pairs[0].toLowerCase()] = pairs[1]
+        }
+    })
+    return obj;
+}
+
+//#endregion
+
 //#region WebServer default configurations
 
 const defaultApp = { 
@@ -317,7 +332,8 @@ const WebServer = class {
         // auto mount routes.
         init_routes(this);
 
-        let port = nlib.Config.get('webserver.port');
+        let args = getargs();
+        let port = args.port || nlib.Config.get('webserver.port');
         let name = nlib.Config.get('app.name');
         
         this.server.listen(port);
@@ -861,22 +877,3 @@ module.exports.RequestHandler = exports.RequestHandler = express.RequestHandler;
 module.exports.uploadfiles = exports.uploadfiles = uploadfiles;
 
 //#endregion
-
-/*
-class NJwtService {
-    validateDevice(req, res, next) {
-        let name = `x-device`;
-        let data = ncookie.parse(req, name);
-        if (!data) {
-            let token = uuidv4();
-            ncookie.store(res, name, token);
-        }
-        next();
-    };
-    signin(req, res, next) {
-    };
-    signout(req, res, next) {
-    };
-
-};
-*/
