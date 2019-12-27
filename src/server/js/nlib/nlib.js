@@ -122,6 +122,11 @@ const NLib = class {
      * @ignore
      */
     get NResult() { return NResult; }
+    /** 
+     * The NRandom class. Provide random generator related functions.
+     * @ignore
+     */
+    get NRandom() { return NRandom; }
 
     //#endregion
 
@@ -1235,6 +1240,28 @@ const NResult = class {
     }
 
     //#endregion
+}
+
+//#endregion
+
+//#region NRandom
+
+/**
+ * The NRandom class. Provide random generator related functions.
+ */
+const NRandom = class {
+    /**
+     * Gets random item from array.
+     * 
+     * @param {Array} array The source array.
+     */
+    static rand(array) {
+        let ret;
+        if (array && array.length > 0) {
+            ret = array[Math.floor(Math.random() * array.length)]
+        }
+        return ret;
+    }
 }
 
 //#endregion
