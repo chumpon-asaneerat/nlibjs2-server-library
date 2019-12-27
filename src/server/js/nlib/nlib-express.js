@@ -17,6 +17,7 @@ const helmet = require("helmet");
 const morgan = require("morgan");
 const cookieparser = require("cookie-parser");
 const bodyparser = require("body-parser");
+const compression = require("compression");
 const favicon = require("serve-favicon");
 const formidable = require('formidable');
 
@@ -180,6 +181,10 @@ const init_body_parser = (app) => {
     app.use(bodyparser.json());
     app.use(bodyparser.urlencoded({ extended: true }));
 };
+const init_compression = (app) => {
+    console.info('use "compression".');
+    app.use(compression())
+};
 const init_fav_icon = (app, cfg) => {
     console.info('use "serve-favicon".');
     let icocfg = cfg.get('webserver.favicon');
@@ -218,6 +223,7 @@ const init_middlewares = (app, io, cfg) => {
     init_statusMonitor(app, io, cfg);
     init_helmet(app);
     init_logger(app);
+    init_compression(app);
     init_cookie_parser(app, cfg);
     init_body_parser(app);
     init_fav_icon(app, cfg);
