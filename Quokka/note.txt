@@ -1,0 +1,47 @@
+command: press F1
+- quokka.js start on current file -> for start
+- quokka.js stop current file -> for stop
+
+[== REQUIRED!!! REMOVE for Support access HTML DOM globally. Set only one time ==]
+1. Open %USERPROFILE%\.quokka
+2. edit or update config below.
+    { "pro":false }
+3. Run command:
+   npm uninstall jsdom-quokka-plugin
+   npm uninstall quokka-jquery-loader
+   npm uninstall moment
+
+[== SETTING for Support access HTML DOM. Set on each project ==]
+1. Run command on current project:
+   npm i jsdom-quokka-plugin --save-dev
+   npm i quokka-jquery-loader --save-dev
+2. create new folder and add test.js file.
+3. create test.js file on root of new folder.
+4. Edit test.js file and add code below
+
+    ({ "plugins": [ "jsdom-quokka-plugin", "quokka-jquery-loader" ] })
+
+    let filename = 'index.html' // <<== Setup your file here
+
+    let path = require('path')
+    let fs = require('fs')
+    let __html = path.join(__dirname, filename)
+    let __root = document.getElementsByTagName('html')[0];
+    __root.innerHTML = fs.readFileSync(__html, { encoding: 'UTF8'});
+
+5. Run quokka in VS Code.
+
+[== (NOT RECOMMENDED) SETTING for Support access HTML DOM globally. Set only one time ==]
+1. Open %USERPROFILE%\.quokka
+2. edit or add config below.
+    {
+        "pro":false,
+        "plugins": [ "jsdom-quokka-plugin", "quokka-jquery-loader" ],
+        "jsdom": { "config" : { "file": "./index.html" } }
+    }
+3. Run command:
+   npm i jsdom-quokka-plugin --save-dev
+   npm i quokka-jquery-loader --save-dev
+   npm i moment
+4. Add index.html in target folder (root folder).
+5. Run quokka in VS Code.
