@@ -403,13 +403,34 @@ const formatDateTime = (value) => {
 
     return ret;
 }
+/**
+ * formatBuffer.
+ * 
+ * @param {String} value The string that represents base64 data.
+ */
+const formatBuffer = value => {
+    let ret = null;
+    try {
+        if (value) {
+            ret = Buffer.from(value)
+        }
+    }
+    catch (ex) {
+        console.log(ex);
+    }
+
+    return ret;
+}
 // value formatter array.
 const ValueFormatters = [
     { type: mssql.Bit, format: formatBit },
     { type: mssql.Date, format: formatDateTime },
     { type: mssql.DateTime, format: formatDateTime },
     { type: mssql.DateTime2, format: formatDateTime },
-    { type: mssql.DateTimeOffset, format: formatDateTime }
+    { type: mssql.DateTimeOffset, format: formatDateTime },
+    { type: mssql.VarBinary, format: formatBuffer },
+    { type: mssql.Binary, format: formatBuffer },
+    { type: mssql.Image, format: formatBuffer }
 ];
 const formatValue = (sqlType, value) => {
     let types = ValueFormatters.map(fmt => { return fmt.type; })
