@@ -1327,17 +1327,17 @@ const NRandom = class {
         return getRandomIntMethod(id).fn(imax, imin)
     }
     /**
-     * Gets array of random date between begin/end date.
+     * Gets array of random date between begin/end year.
      * 
-     * @param {Date} begin The Begin Date.
-     * @param {Date} end The End Date.
+     * @param {Number} begin The Begin Year.
+     * @param {Number} end The End Year.
      * @param {Number} sampleSize The sample size.
      */
-    static date(begin, end, sampleSize) {
+    static year(begin, end, sampleSize) {
         let ret = [];
         let imax = (sampleSize) ? sampleSize : 1;
-        let dt1 = new DateTime(begin)
-        let dt2 = new DateTime(end)
+        let dt1 = new DateTime(begin, 0, 1)
+        let dt2 = new DateTime(end, 11, 31, 23, 59, 59)
         let yr, mt, dayInMonth, dy, hr, mn, sc, ms;
         let dt;
         let opts = { min: true, max: true }
@@ -1355,6 +1355,33 @@ const NRandom = class {
             sc = NRandom.int(59, 0, opts)
             ms = NRandom.int(999, 0, opts)
             dt = new Date(yr, mt - 1, dy, hr, mn, sc, ms)
+            // remove timezone offset.
+            dt = new Date(dt.getTime() - (dt.getTimezoneOffset() * 60 * 1000))
+            ret.push(dt)
+        }
+        // sort date.
+        ret.sort((a, b) => a - b)
+        return ret;
+    }
+    /**
+     * Gets array of random date between begin/end date.
+     * 
+     * @param {Date} begin The Begin Date.
+     * @param {Date} end The End Date.
+     * @param {Number} sampleSize The sample size.
+     */
+    static date(begin, end, sampleSize) {
+        let ret = [];
+        let imax = (sampleSize) ? sampleSize : 1;
+        let dt1 = new Date(begin.getFullYear(), begin.getMonth(), begin.getDate(), 0, 0, 0)
+        let dt2 = new Date(end.getFullYear(), end.getMonth(), end.getDate(), 23, 59, 59, 999)
+        // remove timezone part.
+        let v1 = dt1.getTime() - (dt1.getTimezoneOffset() * 60 * 1000)
+        let v2 = dt2.getTime() - (dt2.getTimezoneOffset() * 60 * 1000)
+        let dt;
+        let opts = { min: true, max: true }
+        for (let i = 0; i < imax; i++) {
+            dt = new Date(NRandom.int(v2, v1, opts))
             ret.push(dt)
         }
         // sort date.
