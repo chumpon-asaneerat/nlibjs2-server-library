@@ -392,6 +392,8 @@ const formatDateTime = (value) => {
         let dt = moment(value, dateFormats);
         //ret = (dt.isValid()) ? new Date(dt.utc()) : null;
         ret = (dt.isValid()) ? dt.toDate() : null;
+        // fixed timezone offset (need to check if has problem)
+        ret = new Date(ret.getTime() - (ret.getTimezoneOffset() * 60 * 1000))
         //console.log('OTHER DATE (try to used moment.js):', ret);
     }
     catch (ex) {
