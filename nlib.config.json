@@ -173,7 +173,7 @@
                 },
                 {
                     "route": "/dist",
-                    "path": "public/dist/fabricjs-3.4.0",
+                    "path": "public/dist/fabricjs-3.6.2",
                     "maxAge": "5y",
                     "enable": true
                 },
