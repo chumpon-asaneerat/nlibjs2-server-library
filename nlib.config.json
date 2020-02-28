@@ -89,6 +89,12 @@
                 },
                 {
                     "route": "/dist",
+                    "path": "public/dist/materialize-icons-4.9.95",
+                    "maxAge": "5y",
+                    "enable": true
+                },
+                {
+                    "route": "/dist",
                     "path": "public/dist/animate-css-3.7.2",
                     "maxAge": "5y",
                     "enable": true
