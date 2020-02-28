@@ -73,6 +73,7 @@ const defaultWSvr = {
             { route: "/dist", path: "public/dist/font-awesome-5.9.0", maxAge: distMaxAge, enable: true },
             { route: "/dist/css", path: "public/dist/emoji-symbols-1.0.0", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/flag-icon-css-3.1.0", maxAge: distMaxAge, enable: true },
+            { route: "/dist", path: "public/dist/materialize-icons-4.9.95", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/animate-css-3.7.2", maxAge: distMaxAge, enable: true },
             { route: "/dist/js", path: "public/dist/moment-2.24.0", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/chart-js-2.8.0", maxAge: distMaxAge, enable: true },
