@@ -573,7 +573,8 @@ const cookie2obj = (req) => {
 const obj2cookie = (res, value, maxAge, httpOnly = true) => {
     let opts = {
         maxAge: maxAge,
-        httpOnly: httpOnly
+        httpOnly: httpOnly,
+        signed: false
     }
     var keys = Object.keys(value);
     keys.forEach((key) => {
