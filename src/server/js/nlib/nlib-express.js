@@ -550,12 +550,13 @@ class NExpires {
 const parseCookie = (req, name) => {
     return (req && req.cookies && req.cookies[name]) ? req.cookies[name] : null;
 };
-const storeCookie = (res, name, data, maxAge, httpOnly = true) => {
+const storeCookie = (res, name, data, maxAge, httpOnly = true, sameSite = true) => {
     if (!res) return;
     let opts = {
         maxAge: maxAge, 
         //expires: new Date(new Date().getTime() + maxAge),
         httpOnly: httpOnly,
+        sameSite: sameSite ? 'strict' : 'lax',
         signed: false
     }
     res.cookie(name, data, opts);
@@ -570,10 +571,11 @@ const cookie2obj = (req) => {
     });
     return obj;
 };
-const obj2cookie = (res, value, maxAge, httpOnly = true) => {
+const obj2cookie = (res, value, maxAge, httpOnly = true, sameSite = true) => {
     let opts = {
         maxAge: maxAge,
         httpOnly: httpOnly,
+        sameSite: sameSite ? 'strict' : 'lax',
         signed: false
     }
     var keys = Object.keys(value);
@@ -596,8 +598,9 @@ class NCookie {
      * @param {String} name The cookie's name.
      * @param {Number} maxAge The default cookie's maxAge default is 1 day.
      * @param {Boolean} httpOnly The default cookie's httpOnly flag default is true.
+     * @param {Boolean} sameSite The default cookie's same site flag default is true.
      */
-    constructor(req, res, name, maxAge = null, httpOnly = true) {
+    constructor(req, res, name, maxAge = null, httpOnly = true, sameSite = true) {
         /** @type {Request} The Request object instance. */
         this.req = req;
         /** @type {Response} The Response object instance. */
@@ -608,6 +611,8 @@ class NCookie {
         this.maxAge = (maxAge) ? maxAge : NExpires.in(1).days;
         /** @type {Boolean} The cookie default httpOnly option */
         this.httpOnly = httpOnly;
+        /** @type {Boolean} The cookie same site option */
+        this.sameSite = sameSite;
     }
 
     //#endregion
@@ -628,7 +633,7 @@ class NCookie {
      */
     set(data, maxAge) {
         let age = (maxAge) ? maxAge : this.maxAge;
-        storeCookie(this.res, this.name, data, age, this.httpOnly);
+        storeCookie(this.res, this.name, data, age, this.httpOnly, this.sameSite);
     }
 
     //#endregion
@@ -654,10 +659,11 @@ class NCookie {
      * @param {Object} obj The object that all its properties would stored into cookies.
      * @param {Number} maxAge The default cookie's maxAge default is 1 day.
      * @param {Boolean} httpOnly The default cookie's httpOnly flag default is true.
+     * @param {Boolean} sameSite The default cookie's same site flag default is true.
      */
-    static writeObject(req, res, obj, maxAge = null, httpOnly = true) {
+    static writeObject(req, res, obj, maxAge = null, httpOnly = true, sameSite = true) {
         let mAge = (maxAge) ? maxAge : NExpires.in(1).days;
-        obj2cookie(res, obj, mAge, httpOnly);
+        obj2cookie(res, obj, mAge, httpOnly, sameSite);
     }
 
     //#endregion
@@ -666,12 +672,13 @@ class NCookie {
 const parseSignedCookie = (req, name) => {
     return (req && req.signedCookies && req.signedCookies[name]) ? req.signedCookies[name] : null;
 };
-const storeSignedCookie = (res, name, data, maxAge, httpOnly = true) => {
+const storeSignedCookie = (res, name, data, maxAge, httpOnly = true, sameSite = true) => {
     if (!res) return;
     let opts = {
         maxAge: maxAge, 
         //expires: new Date(new Date().getTime() + maxAge),
         httpOnly: httpOnly,
+        sameSite: sameSite ? 'strict' : 'lax',
         signed: true
     }
     res.cookie(name, data, opts);
@@ -686,10 +693,11 @@ const signedCookie2obj = (req) => {
     });
     return obj;
 };
-const obj2SignedCookie = (res, value, maxAge, httpOnly = true) => {
+const obj2SignedCookie = (res, value, maxAge, httpOnly = true, sameSite = true) => {
     let opts = {
         maxAge: maxAge,
         httpOnly: httpOnly,
+        sameSite: sameSite ? 'strict' : 'lax',
         signed: true
     }
     var keys = Object.keys(value);
@@ -712,8 +720,9 @@ class NSignedCookie {
      * @param {String} name The cookie's name.
      * @param {Number} maxAge The default cookie's maxAge default is 1 day.
      * @param {Boolean} httpOnly The default cookie's httpOnly flag default is true.
+     * @param {Boolean} sameSite The default cookie's same site flag default is true.
      */
-    constructor(req, res, name, maxAge = null, httpOnly = true) {
+    constructor(req, res, name, maxAge = null, httpOnly = true, sameSite = true) {
         /** @type {Request} The Request object instance. */
         this.req = req;
         /** @type {Response} The Response object instance. */
@@ -724,6 +733,8 @@ class NSignedCookie {
         this.maxAge = (maxAge) ? maxAge : NExpires.in(1).days;
         /** @type {Boolean} The cookie default httpOnly option */
         this.httpOnly = httpOnly;
+        /** @type {Boolean} The cookie default sameSite option */
+        this.sameSite = sameSite;
 
         let secret = nlib.Config.get('webserver.cookies.secret');
         this.hasSecretKey = (secret && secret.length > 0);
@@ -755,8 +766,8 @@ class NSignedCookie {
     set(data, maxAge) {
         let age = (maxAge) ? maxAge : this.maxAge;
         if (this.hasSecretKey)
-            storeSignedCookie(this.res, this.name, data, age, this.httpOnly);
-        else storeCookie(this.res, this.name, data, age, this.httpOnly);
+            storeSignedCookie(this.res, this.name, data, age, this.httpOnly, this.sameSite);
+        else storeCookie(this.res, this.name, data, age, this.httpOnly, this.sameSite);
     }
 
     //#endregion
@@ -782,10 +793,11 @@ class NSignedCookie {
      * @param {Object} obj The object that all its properties would stored into cookies.
      * @param {Number} maxAge The default cookie's maxAge default is 1 day.
      * @param {Boolean} httpOnly The default cookie's httpOnly flag default is true.
+     * @param {Boolean} sameSite The default cookie's same site flag default is true.
      */
-    static writeObject(req, res, obj, maxAge = null, httpOnly = true) {
+    static writeObject(req, res, obj, maxAge = null, httpOnly = true, sameSite = true) {
         let mAge = (maxAge) ? maxAge : NExpires.in(1).days;
-        obj2SignedCookie(res, obj, mAge, httpOnly);
+        obj2SignedCookie(res, obj, mAge, httpOnly, sameSite);
     }
 
     //#endregion
