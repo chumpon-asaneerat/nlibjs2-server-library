@@ -2583,4 +2583,77 @@ NDOM.Selector = class {
 
 //#endregion
 
+//#region NDocument
+
+class NDocument {
+    load(url, filetype, callback) {
+        if (url && filetype) {
+            let idx = NDocument.filetype_loaders_map.indexOf(filetype.toLowerCase())
+            if (idx !== -1) {
+                NDocument.filetype_loaders[idx].load(url, callback)
+            }
+        }
+    }
+    /** init class prototype to nlib */
+    static init() {
+        if (!nlib.document) {
+            nlib.document = nlib.create(NDocument);
+        }
+        else nlib.document = nlib.document;
+    }
+}
+
+NDocument.filetype_loaders = [
+    { 
+        name: 'css', 
+        load: (url, callback) => {
+            let head = document.getElementsByTagName('head')[0]
+            let link = document.createElement('link')
+            //link.setAttribute('rel', 'stylesheet')
+            //link.setAttribute('type', 'text/css')
+            //link.setAttribute('href', url)
+            link.rel = 'stylesheet'
+            link.type = 'text/css'
+            link.href = url
+            link.onload = () => {
+                if (callback) callback()
+            }
+            // append to end of head tag to start load.
+            head.appendChild(link)
+        }
+    },
+    { 
+        name: 'js', 
+        load: (url, callback) => {
+            let body = document.getElementsByTagName('body')[0]
+            let done = false
+            let script = document.createElement('script')
+            //script.setAttribute('type', 'text/javascript')
+            //script.setAttribute('src', url)
+            script.type = 'text/javascript'
+            script.async = false
+            script.src = url
+            script.onload = script.onreadystatechange = () => {
+                if (!done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete')) {
+                    done = true
+                    // cleans up a little memory
+                    script.onload = script.onreadystatechange = null
+                    // to avoid douple loading
+                    body.removeChild(script)
+                    // execute callback
+                    if (callback) callback()
+                }
+            }
+            // append to end of body tag to start load.
+            body.appendChild(script)
+            done = false // reset flag
+        } 
+    }
+]
+NDocument.filetype_loaders_map = NDocument.filetype_loaders.map((loader) => loader.name )
+
+NDocument.init()
+
+//#endregion
+
 console.log('nlib loaded.')
