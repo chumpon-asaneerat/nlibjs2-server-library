@@ -2586,18 +2586,21 @@ NDOM.Selector = class {
 //#region NDocument
 
 class NDocument {
-    load(url, filetype, callback) {
-        if (url && filetype) {
-            let idx = NDocument.filetype_loaders_map.indexOf(filetype.toLowerCase())
-            let executed = false;
-            if (idx !== -1) {
-                let loader = NDocument.filetype_loaders[idx]
-                if (!loader.exists(url)) {
-                    loader.load(url, callback)
-                    executed = true;
+    load(callback, ...urls) {
+        if (urls) {
+            let max = urls.length
+            let iCnt = 0
+            let completed = () => {
+                iCnt++;
+                if (iCnt === max) {
+                    // execute callback when completed all file loaded.
+                    if (callback) callback()
                 }
             }
-            if (!executed && callback) callback()
+            NDocument.loadurls(completed, ...urls)
+        }
+        else {
+            if (callback) callback()
         }
     }
     /** init class prototype to nlib */
@@ -2678,6 +2681,33 @@ NDocument.filetype_loaders = [
     }
 ]
 NDocument.filetype_loaders_map = NDocument.filetype_loaders.map((loader) => loader.name )
+NDocument.execute = (url, filetype, callback) => {
+    let executed = false
+    let idx = NDocument.filetype_loaders_map.indexOf(filetype.toLowerCase())
+    if (idx !== -1) {
+        let loader = NDocument.filetype_loaders[idx]
+        if (!loader.exists(url)) {
+            loader.load(url, callback)
+            executed = true
+        }
+    }
+    return executed
+}
+NDocument.loadurl = (url, filetype, callback) => {
+    let executed = false
+    if (url && filetype) {
+        executed = NDocument.execute(url, filetype, callback)
+    }
+    if (!executed && callback) callback()
+}
+NDocument.loadurls = (completed, ...urls) => {
+    let items = urls.map(url => { 
+        let ext = url.split('.').pop()
+        let ret = { url: url, type: ext }
+        return ret
+    })
+    items.forEach(item => NDocument.loadurl(item.url, item.type, completed))
+}
 
 NDocument.init()
 
