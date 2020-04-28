@@ -2589,9 +2589,15 @@ class NDocument {
     load(url, filetype, callback) {
         if (url && filetype) {
             let idx = NDocument.filetype_loaders_map.indexOf(filetype.toLowerCase())
+            let executed = false;
             if (idx !== -1) {
-                NDocument.filetype_loaders[idx].load(url, callback)
+                let loader = NDocument.filetype_loaders[idx]
+                if (!loader.exists(url)) {
+                    loader.load(url, callback)
+                    executed = true;
+                }
             }
+            if (!executed && callback) callback()
         }
     }
     /** init class prototype to nlib */
@@ -2606,15 +2612,25 @@ class NDocument {
 NDocument.filetype_loaders = [
     { 
         name: 'css', 
+        exists: (url) => {
+            let found = false
+            let target = url.toLowerCase()
+            let collection = document.getElementsByTagName('link')
+            let links = (collection) ? [...collection] : []
+            let map = links.map(link => link.href.toLowerCase() )
+            let filter = map.filter(src => src.endsWith(target) )
+            found = filter.length > 0
+            return found
+        },
         load: (url, callback) => {
             let head = document.getElementsByTagName('head')[0]
             let link = document.createElement('link')
-            //link.setAttribute('rel', 'stylesheet')
-            //link.setAttribute('type', 'text/css')
             //link.setAttribute('href', url)
-            link.rel = 'stylesheet'
-            link.type = 'text/css'
+            //link.setAttribute('type', 'text/css')
+            //link.setAttribute('rel', 'stylesheet')
             link.href = url
+            link.type = 'text/css'
+            link.rel = 'stylesheet'
             link.onload = () => {
                 if (callback) callback()
             }
@@ -2624,22 +2640,33 @@ NDocument.filetype_loaders = [
     },
     { 
         name: 'js', 
+        exists: (url) => {
+            let found = false
+            let target = url.toLowerCase()
+            let collection = document.getElementsByTagName('script')
+            let scripts = (collection) ? [...collection] : []
+            let map = scripts.map(script => script.src.toLowerCase() )
+            let filter = map.filter(src => src.endsWith(target) )
+            found = filter.length > 0
+            return found
+        },
         load: (url, callback) => {
             let body = document.getElementsByTagName('body')[0]
             let done = false
             let script = document.createElement('script')
-            //script.setAttribute('type', 'text/javascript')
             //script.setAttribute('src', url)
+            //script.setAttribute('type', 'text/javascript')
+            script.src = url
             script.type = 'text/javascript'
             script.async = false
-            script.src = url
             script.onload = script.onreadystatechange = () => {
                 if (!done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete')) {
                     done = true
                     // cleans up a little memory
                     script.onload = script.onreadystatechange = null
-                    // to avoid douple loading
-                    body.removeChild(script)
+                    // to avoid douple loading.
+                    // comment out because cannot check file name to ignore reload
+                    //body.removeChild(script)
                     // execute callback
                     if (callback) callback()
                 }
