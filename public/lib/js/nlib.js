@@ -2586,6 +2586,8 @@ NDOM.Selector = class {
 //#region NDocument
 
 class NDocument {
+    //#region sync version
+    /*
     load(callback, ...urls) {
         if (urls) {
             let max = urls.length
@@ -2602,6 +2604,28 @@ class NDocument {
         else {
             if (callback) callback()
         }
+    }
+    */
+    //#endregion
+    async load(...urls) {
+        return new Promise((resolve, reject) => {
+            let iCnt = 0
+            if (urls) {
+                let max = urls.length
+                let completed = () => {
+                    ++iCnt
+                    if (iCnt === max) {
+                        //resolve(iCnt)
+                        resolve()
+                    }
+                }
+                NDocument.loadurls(completed, ...urls)
+            }
+            else {
+                //resolve(iCnt)
+                resolve()
+            }
+        })
     }
     /** init class prototype to nlib */
     static init() {
