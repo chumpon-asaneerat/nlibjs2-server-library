@@ -93,7 +93,10 @@ NLib:
                 ☐ filter method.
                 ☐ inArray method.
                 ☐ indexOf method.
-            ☐ 
+            NRandom class:
+                ✔ array random method. @done(20-011-14 19:32)
+                ✔ int randon method. @done(20-01-14 19:32)
+                ✔ date randon method. @done(20-011-14 19:32)
         MSSql (nlib-mssql.js):
             SqlServer class:
                 ✔ Add connect async method. @done(19-08-08 12:22)
@@ -109,9 +112,10 @@ NLib:
                 ✔ Add js file builder for generate database access class. @done(19-08-12 00:56)
                 ✔ Change error codes. @done(19-08-19 17:59)
                 ✔ Fixed bug in formatBit method. @done(19-08-19 19:24)
+                ✔ Add supports var binary field update. @done(20-01-14 19:29)
+                ✔ Fixed bug in formatDateTime (fixed timezone bug) @done(20-01-14 19:34)
                 ☐ Modify generate function to create SP source files.
                 ☐ Supports detected stored procedure script changed and update if required.
-                ☐ Add supports binary field update.
         Express (nlib-express.js):
             WebServer:
                 ✔ Supports basic middlewares #1 (helmet, morgan, cookie-parser, body-parser) @done(19-08-08 11:39)
@@ -131,6 +135,7 @@ NLib:
                 ✔ Add sendFile method. @done(19-08-12 07:36)
                 ✔ Supports auto mount route in routes folder. @done(19-08-12 21:40)
                 ✔ Add parseReq method. @done(19-08-19 17:59)
+                ✔ Update support cookie used samesite flag. @done(20-03-30 19:36)
             WebRouter class:
                 ✔ Add use method. @done(19-08-12 07:17)
                 ✔ Add get method. @done(19-08-12 07:17)
@@ -140,10 +145,12 @@ NLib:
                 ✔ Add parseCookie (internal method). @done(19-08-09 12:24)
                 ✔ Add storeCookie (internal method). @done(19-08-09 12:25)
                 ✔ Add get/set methods (instance method). @done(19-08-09 12:25)
+                ✔ Update support samesite flag. @done(20-03-30 19:36)
             NSignedCookie class:
                 ✔ Add parseSignedCookie (internal method). @done(19-08-09 16:31)
                 ✔ Add storeSignedCookie (internal method). @done(19-08-09 16:31)
                 ✔ Add get/set methods (instance method). @done(19-08-09 16:32)
+                ✔ Update support samesite flag. @done(20-03-30 19:36)
             NExpires class:
                 ✔ Add in static methods. @done(19-08-09 16:30)
                 ✔ Add days property. @done(19-08-09 16:30)
