@@ -2583,43 +2583,42 @@ NDOM.Selector = class {
 
 //#endregion
 
-//#region NDocument
+//#region NRuntime
 
-class NDocument {
-    //#region sync version
-    /*
-    load(callback, ...urls) {
-        if (urls) {
-            let max = urls.length
-            let iCnt = 0
-            let completed = () => {
-                iCnt++;
-                if (iCnt === max) {
-                    // execute callback when completed all file loaded.
-                    if (callback) callback()
-                }
-            }
-            NDocument.loadurls(completed, ...urls)
+class NRuntime {
+    /** init class prototype to nlib */
+    static init() {
+        if (!nlib.runtime) {
+            nlib.runtime = nlib.create(NRuntime);
         }
-        else {
-            if (callback) callback()
-        }
+        else nlib.runtime = nlib.runtime;
     }
-    */
-    //#endregion
+}
+NRuntime.File = class {
+    /** Get extension from url. */
+    getExtension(url) { return url.split('.').pop() }
+    /** init class prototype to nlib */
+    static init() {
+        if (!nlib.runtime) NRuntime.init()
+        if (!nlib.runtime.file) {
+            nlib.runtime.file = nlib.create(NRuntime.File);
+        }
+        else nlib.runtime.file = nlib.runtime.file;
+    }
+}
+NRuntime.File.css = class {
     async load(...urls) {
         return new Promise((resolve, reject) => {
-            let iCnt = 0
             if (urls) {
-                let max = urls.length
-                let completed = () => {
+                let iCnt = 0, max = urls.length
+                let completed = () => { 
                     ++iCnt
                     if (iCnt === max) {
                         //resolve(iCnt)
                         resolve()
                     }
                 }
-                NDocument.loadurls(completed, ...urls)
+                NRuntime.File.css.loadFiles(urls, completed)
             }
             else {
                 //resolve(iCnt)
@@ -2627,113 +2626,140 @@ class NDocument {
             }
         })
     }
+    static raise(callback) {
+        if (callback) callback()
+    }
+    static exists(url) {
+        let found = false
+        let target = url.toLowerCase()
+        let collection = document.getElementsByTagName('link')
+        let links = (collection) ? [...collection] : []
+        let map = links.map(link => link.href.toLowerCase() )
+        let filter = map.filter(src => src.endsWith(target) )
+        found = filter.length > 0
+        return found
+    }
+    static loadFile(url, completed) {
+        let head = document.getElementsByTagName('head')[0]
+        let link = document.createElement('link')
+        //link.setAttribute('href', url)
+        //link.setAttribute('type', 'text/css')
+        //link.setAttribute('rel', 'stylesheet')
+        link.href = url.toLowerCase()
+        link.type = 'text/css'
+        link.rel = 'stylesheet'
+        link.onload = () => { NRuntime.File.css.raise(completed) }
+        // append to end of head tag to start load.
+        head.appendChild(link)
+    }
+    static loadFiles(urls, completed) {
+        let exists = NRuntime.File.css.exists
+        let load = NRuntime.File.css.loadFile
+        urls.forEach(url => {
+            if (!exists(url)) {
+                load(url, completed)
+            }
+            else {
+                NRuntime.File.css.raise(completed)
+            }
+        })
+    }
     /** init class prototype to nlib */
     static init() {
-        if (!nlib.document) {
-            nlib.document = nlib.create(NDocument);
+        if (!nlib.runtime) NRuntime.init()
+        if (!nlib.runtime.css) {
+            nlib.runtime.css = nlib.create(NRuntime.File.css);
         }
-        else nlib.document = nlib.document;
+        else nlib.runtime.css = nlib.runtime.css;
     }
 }
-
-NDocument.filetype_loaders = [
-    { 
-        name: 'css', 
-        exists: (url) => {
-            let found = false
-            let target = url.toLowerCase()
-            let collection = document.getElementsByTagName('link')
-            let links = (collection) ? [...collection] : []
-            let map = links.map(link => link.href.toLowerCase() )
-            let filter = map.filter(src => src.endsWith(target) )
-            found = filter.length > 0
-            return found
-        },
-        load: (url, callback) => {
-            let head = document.getElementsByTagName('head')[0]
-            let link = document.createElement('link')
-            //link.setAttribute('href', url)
-            //link.setAttribute('type', 'text/css')
-            //link.setAttribute('rel', 'stylesheet')
-            link.href = url
-            link.type = 'text/css'
-            link.rel = 'stylesheet'
-            link.onload = () => {
-                if (callback) callback()
-            }
-            // append to end of head tag to start load.
-            head.appendChild(link)
-        }
-    },
-    { 
-        name: 'js', 
-        exists: (url) => {
-            let found = false
-            let target = url.toLowerCase()
-            let collection = document.getElementsByTagName('script')
-            let scripts = (collection) ? [...collection] : []
-            let map = scripts.map(script => script.src.toLowerCase() )
-            let filter = map.filter(src => src.endsWith(target) )
-            found = filter.length > 0
-            return found
-        },
-        load: (url, callback) => {
-            let body = document.getElementsByTagName('body')[0]
-            let done = false
-            let script = document.createElement('script')
-            //script.setAttribute('src', url)
-            //script.setAttribute('type', 'text/javascript')
-            script.src = url
-            script.type = 'text/javascript'
-            script.async = false
-            script.onload = script.onreadystatechange = () => {
-                if (!done && (!this.readyState || this.readyState === 'loaded' || this.readyState === 'complete')) {
-                    done = true
-                    // cleans up a little memory
-                    script.onload = script.onreadystatechange = null
-                    // to avoid douple loading.
-                    // comment out because cannot check file name to ignore reload
-                    //body.removeChild(script)
-                    // execute callback
-                    if (callback) callback()
+NRuntime.File.js = class {
+    async load(...urls) {
+        return new Promise((resolve, reject) => {
+            if (urls) {
+                let iCnt = 0, max = urls.length
+                let completed = () => { 
+                    ++iCnt
+                    if (iCnt === max) {
+                        //resolve(iCnt)
+                        resolve()
+                    }
                 }
+                NRuntime.File.js.loadFiles(urls, completed)
             }
-            // append to end of body tag to start load.
-            body.appendChild(script)
-            done = false // reset flag
-        } 
+            else {
+                //resolve(iCnt)
+                resolve()
+            }
+        })
     }
-]
-NDocument.filetype_loaders_map = NDocument.filetype_loaders.map((loader) => loader.name )
-NDocument.execute = (url, filetype, callback) => {
-    let executed = false
-    let idx = NDocument.filetype_loaders_map.indexOf(filetype.toLowerCase())
-    if (idx !== -1) {
-        let loader = NDocument.filetype_loaders[idx]
-        if (!loader.exists(url)) {
-            loader.load(url, callback)
-            executed = true
+    static raise(callback) {
+        if (callback) callback()
+    }
+    static exists(url) {
+        let found = false
+        let target = url.toLowerCase()
+        let collection = document.getElementsByTagName('script')
+        let scripts = (collection) ? [...collection] : []
+        let map = scripts.map(script => script.src.toLowerCase() )
+        let filter = map.filter(src => src.endsWith(target) )
+        found = filter.length > 0
+        return found
+    }
+    static checkReadyState(script) {
+        return (!script.readyState || script.readyState === 'loaded' || script.readyState === 'complete')
+    }
+    static loadFile(url, completed) {
+        let body = document.getElementsByTagName('body')[0]
+        let done = false
+        let script = document.createElement('script')
+        //script.setAttribute('src', url)
+        //script.setAttribute('type', 'text/javascript')
+        script.src = url.toLowerCase()
+        script.type = 'text/javascript'
+        script.async = false
+        script.onload = script.onreadystatechange = (e) => {
+            if (!done && NRuntime.File.js.checkReadyState(script)) {
+                done = true
+                // cleans up a little memory
+                script.onload = script.onreadystatechange = null
+                // to avoid douple loading.
+                // comment out because cannot check file name to ignore reload
+                //body.removeChild(script)
+                // execute callback
+                NRuntime.File.js.raise(completed)
+            }
         }
+        // append to end of body tag to start load.
+        body.appendChild(script)
+        done = false // reset flag
     }
-    return executed
-}
-NDocument.loadurl = (url, filetype, callback) => {
-    let executed = false
-    if (url && filetype) {
-        executed = NDocument.execute(url, filetype, callback)
+    static loadFiles(urls, completed) {
+        let exists = NRuntime.File.js.exists
+        let load = NRuntime.File.js.loadFile
+        urls.forEach(url => {
+            if (!exists(url)) {
+                load(url, completed)
+            }
+            else {
+                NRuntime.File.js.raise(completed)
+            }
+        })
     }
-    if (!executed && callback) callback()
-}
-NDocument.loadurls = (completed, ...urls) => {
-    let items = urls.map(url => { 
-        let ext = url.split('.').pop()
-        let ret = { url: url, type: ext }
-        return ret
-    })
-    items.forEach(item => NDocument.loadurl(item.url, item.type, completed))
+    /** init class prototype to nlib */
+    static init() {
+        if (!nlib.runtime) NRuntime.init()
+        if (!nlib.runtime.js) {
+            nlib.runtime.js = nlib.create(NRuntime.File.js);
+        }
+        else nlib.runtime.js = nlib.runtime.js;
+    }
 }
 
-NDocument.init()
+NRuntime.init()
+NRuntime.File.init()
+NRuntime.File.css.init()
+NRuntime.File.js.init()
 
 //#endregion
 
