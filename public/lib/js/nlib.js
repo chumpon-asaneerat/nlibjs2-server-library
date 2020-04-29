@@ -2597,6 +2597,43 @@ class NRuntime {
 NRuntime.File = class {
     /** Get extension from url. */
     getExtension(url) { return url.split('.').pop() }
+    async load(...urls) {
+        let state = { count: 0, max: 0 }
+        let mine = this.extractByFileTypes(urls)
+        return new Promise((resolve, reject) => {
+            if (urls) {
+                state.count = 0
+                state.max = urls.length;
+                let completed = (type_state) => { 
+                    state.count += type_state.count
+                    if (state.count === state.max) {
+                        resolve(state)
+                    }
+                }
+                if (mine.css && mine.css.length > 0) {
+                    nlib.runtime.css.load(...mine.css).then(completed)
+                }
+                if (mine.js && mine.js.length > 0) {
+                    nlib.runtime.js.load(...mine.js).then(completed)
+                }
+            }
+            else {
+                resolve(state)
+            }
+        })
+    }
+    extractByFileTypes(urls) {
+        let ret = {}
+        let self = this
+        if (urls) {
+            urls.forEach(url => {
+                let type = self.getExtension(url)
+                if (!ret[type]) ret[type] = []
+                ret[type].push(url)
+            })
+        }
+        return ret;
+    }
     /** init class prototype to nlib */
     static init() {
         if (!nlib.runtime) NRuntime.init()
@@ -2608,21 +2645,21 @@ NRuntime.File = class {
 }
 NRuntime.File.css = class {
     async load(...urls) {
+        let state = { type:'css', count: 0, max: 0 }
         return new Promise((resolve, reject) => {
             if (urls) {
-                let iCnt = 0, max = urls.length
+                state.count = 0
+                state.max = urls.length
                 let completed = () => { 
-                    ++iCnt
-                    if (iCnt === max) {
-                        //resolve(iCnt)
-                        resolve()
+                    state.count++
+                    if (state.count === state.max) {
+                        resolve(state)
                     }
                 }
                 NRuntime.File.css.loadFiles(urls, completed)
             }
             else {
-                //resolve(iCnt)
-                resolve()
+                resolve(state)
             }
         })
     }
@@ -2676,20 +2713,20 @@ NRuntime.File.css = class {
 NRuntime.File.js = class {
     async load(...urls) {
         return new Promise((resolve, reject) => {
+            let state = { type:'js', count: 0, max: 0 }
             if (urls) {
-                let iCnt = 0, max = urls.length
+                state.count = 0
+                state.max = urls.length
                 let completed = () => { 
-                    ++iCnt
-                    if (iCnt === max) {
-                        //resolve(iCnt)
-                        resolve()
+                    state.count++
+                    if (state.count === state.max) {
+                        resolve(state)
                     }
                 }
                 NRuntime.File.js.loadFiles(urls, completed)
             }
             else {
-                //resolve(iCnt)
-                resolve()
+                resolve(state)
             }
         })
     }
