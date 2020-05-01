@@ -1,3 +1,34 @@
+:root {
+    --default-box-shadow: 4px 4px 8px -3px rgba(0, 0, 0, 0.4);
+
+    /*== Sidebar Layout =======================================================*/
+    --sidebar-width: 200px;
+    --sidebar-collapse-width: 30px;
+    --sidebar-zindex: 9999;
+
+    /*== Navi Bar   =======================================================*/
+    /* Navi Bar: normal */
+    --navibar-foreground-color: white;
+    --navibar-background-color: cornflowerblue;
+
+    /*== Tab Control =======================================================*/
+    /* Tab Header: normal */
+    --tabheader-foreground-color: navy;
+    --tabheader-background-color: silver;
+    --tabheader-border-color: cornflowerblue;
+    /* Tab Header: hover */
+    --tabheader-hover-background-color: forestgreen;
+    --tabheader-hover-border-color: green;
+    /* Tab Header: active */
+    --tabheader-active-background-color: cornflowerblue;
+    --tabheader-active-border-color: cornflowerblue;
+    /* Tab Pages: box shadow. */
+    --tabpages-box-shadow: var(--default-box-shadow);
+
+    /*== Card Layout =======================================================*/
+    --card-box-shadow: var(--default-box-shadow);
+}
+
 html, body { 
     width: 100%;
     height: 100%;
