@@ -136,6 +136,7 @@ NLib:
                 ✔ Supports auto mount route in routes folder. @done(19-08-12 21:40)
                 ✔ Add parseReq method. @done(19-08-19 17:59)
                 ✔ Update support cookie used samesite flag. @done(20-03-30 19:36)
+                ☐ Supports upload/download generate path from option.
             WebRouter class:
                 ✔ Add use method. @done(19-08-12 07:17)
                 ✔ Add get method. @done(19-08-12 07:17)
