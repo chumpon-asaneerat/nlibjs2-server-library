@@ -53,32 +53,6 @@ class NUtils {
         return (!value || value === 'undefined');
     }
     /**
-     * Checks is specificed string has white space.
-     *
-     * @param {string} value The object to checks is null or undefined.
-     * @returns {boolean} Returns true if value is contains one or more whitespace otherwise returns false.
-     */
-    hasWhiteSpace(value) {
-        let ret = false;
-        if (value) ret = value.indexOf(' ') >= 0;
-        return ret;
-    }
-    /**
-     * Checks is valid email address text.
-     * 
-     * @param {string} value The object to checks is null or undefined.
-     * @returns {boolean} Returns true if value is valid email format otherwist returns false.
-     */
-    isValidEmail(value) {
-        let ret = false;
-        if (value) {
-            let expr = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
-            var r = new RegExp(expr);
-            ret = (value.match(r) == null) ? false : true;
-        }
-        return ret;
-    }
-    /**
      * get expired date from current date by specificed expired day(s).
      * if nothing assigned 1 day returns.
      * 
@@ -431,6 +405,32 @@ NLib.Extension.String = class {
         }
         return ret;
     }
+    /**
+     * Checks is specificed string has white space.
+     *
+     * @param {string} value The object to checks is null or undefined.
+     * @returns {boolean} Returns true if value is contains one or more whitespace otherwise returns false.
+     */
+    static hasWhiteSpace(value) {
+        let ret = false;
+        if (value) ret = value.indexOf(' ') >= 0;
+        return ret;
+    }
+    /**
+     * Checks is valid email address text.
+     * 
+     * @param {string} value The object to checks is null or undefined.
+     * @returns {boolean} Returns true if value is valid email format otherwist returns false.
+     */
+    static isValidEmail(value) {
+        let ret = false;
+        if (value) {
+            let expr = "[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?";
+            var r = new RegExp(expr);
+            ret = (value.match(r) == null) ? false : true;
+        }
+        return ret;
+    }
 }
 NLib.Extension.String.api = class {
     static verify(pad, width, length) {
@@ -477,6 +477,22 @@ String.prototype.padL = function (width, pad) {
 String.prototype.padR = function (width, pad) {
     return NLib.Extension.String.padR(this, width, pad);
 };
+/**
+ * Checks is specificed string has white space.
+ *
+ * @returns {boolean} Returns true if value is contains one or more whitespace otherwise returns false.
+ */
+String.prototype.hasWhiteSpace = function() {
+    return NLib.Extension.String.hasWhiteSpace(this);
+}
+/**
+ * Checks is valid email address text.
+ * 
+ * @returns {boolean} Returns true if value is valid email format otherwist returns false.
+ */
+String.prototype.isValidEmail = function() {
+    return NLib.Extension.String.isValidEmail(this);
+}
 
 //#endregion
 
