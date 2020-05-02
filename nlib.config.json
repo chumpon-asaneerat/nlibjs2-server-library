@@ -238,6 +238,12 @@
                     "enable": true
                 },
                 {
+                    "route": "/dist/js",
+                    "path": "public/dist/signature-pad-3.0.0.beta.3",
+                    "maxAge": "5y",
+                    "enable": true
+                },
+                {
                     "route": "/components",
                     "path": "dist/component/riot",
                     "maxAge": "5y",
