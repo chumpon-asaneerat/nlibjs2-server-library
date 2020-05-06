@@ -206,6 +206,33 @@ const Objects = class {
             dest[key] = (!src[dKey]) ? (!overwrite) ? dest[key] : null : src[dKey];
         });
     }
+    static getValue(obj, property) {
+        let props = property.split('.')
+        let prop
+        let ref = obj
+        while (props.length > 0 && ref) {
+            prop = props.shift()
+            ref = (ref[prop]) ? ref[prop] : null
+        }
+        return ref;
+    }
+    static setValue(obj, property, value) {
+        let props = property.split('.')
+        let prop
+        let ref = obj
+        let iCnt = 0
+        let iMax = props.length
+        while (props.length > 0 && ref) {
+            prop = props.shift()        
+            iCnt++
+            if (iCnt < iMax) {
+                ref = (ref[prop]) ? ref[prop] : null
+            }
+            else {
+                ref[prop] = value
+            }
+        }
+    }
     /**
      * Gets class version.
      */
