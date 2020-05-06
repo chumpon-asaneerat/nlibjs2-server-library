@@ -73,6 +73,33 @@ class NUtils {
         return Math.random().toString(36).substring(2, 15) +
             Math.random().toString(36).substring(2, 15);
     }
+    getValue(obj, property) {
+        let props = property.split('.')
+        let prop
+        let ref = obj
+        while (props.length > 0 && ref) {
+            prop = props.shift()
+            ref = (ref[prop]) ? ref[prop] : null
+        }
+        return ref;
+    }
+    setValue(obj, property, value) {
+        let props = property.split('.')
+        let prop
+        let ref = obj
+        let iCnt = 0
+        let iMax = props.length
+        while (props.length > 0 && ref) {
+            prop = props.shift()        
+            iCnt++
+            if (iCnt < iMax) {
+                ref = (ref[prop]) ? ref[prop] : null
+            }
+            else {
+                ref[prop] = value
+            }
+        }
+    }
     /** init class prototype to nlib */
     static init() {
         if (!nlib.utils) {
