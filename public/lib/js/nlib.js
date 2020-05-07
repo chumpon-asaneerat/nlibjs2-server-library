@@ -100,6 +100,15 @@ class NUtils {
             }
         }
     }
+    assign(dst, src, propertyName) {
+        let set = nlib.utils.setValue
+        let get = nlib.utils.getValue
+        set(dst, propertyName, get(src, propertyName))
+    }
+    assigns(dst, src, ...propertyNames) {
+        let fn = nlib.utils.assign
+        propertyNames.forEach(propertyName => fn(dst, src, propertyName))
+    }
     /** init class prototype to nlib */
     static init() {
         if (!nlib.utils) {
