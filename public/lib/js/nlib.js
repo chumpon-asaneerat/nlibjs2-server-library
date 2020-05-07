@@ -103,7 +103,8 @@ class NUtils {
     assign(dst, src, propertyName) {
         let set = nlib.utils.setValue
         let get = nlib.utils.getValue
-        set(dst, propertyName, get(src, propertyName))
+        let val = get(src, propertyName)
+        if (val) set(dst, propertyName, val)
     }
     assigns(dst, src, ...propertyNames) {
         let fn = nlib.utils.assign
