@@ -82,7 +82,7 @@ const defaultWSvr = {
             { route: "/dist/js", path: "public/dist/howler-2.1.2", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/jquery-org-chart-2.1.3", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/tabulator-4.6.0", maxAge: distMaxAge, enable: true },
-            { route: "/dist/js", path: "public/dist/ace-1.4.5", maxAge: distMaxAge, enable: true },
+            { route: "/dist/js", path: "public/dist/ace-1.4.10", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/simplebar-4.1.0", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/overlay-scrollbars-1.9.1", maxAge: distMaxAge, enable: true },
             { route: "/dist", path: "public/dist/socket.io-2.2.0", maxAge: distMaxAge, enable: true },
