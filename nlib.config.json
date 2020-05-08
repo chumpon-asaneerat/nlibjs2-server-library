@@ -143,7 +143,7 @@
                 },
                 {
                     "route": "/dist/js",
-                    "path": "public/dist/ace-1.4.5",
+                    "path": "public/dist/ace-1.4.10",
                     "maxAge": "5y",
                     "enable": true
                 },
