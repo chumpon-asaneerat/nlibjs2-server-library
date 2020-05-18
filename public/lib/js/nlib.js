@@ -110,6 +110,12 @@ class NUtils {
         let fn = nlib.utils.assign
         propertyNames.forEach(propertyName => fn(dst, src, propertyName))
     }
+    clone(src) { return JSON.parse(JSON.stringify(src)) }
+    equals(src, dst) {
+        let o1 = JSON.stringify(src);
+        let o2 = JSON.stringify(dst);
+        return (o1 === o2);
+    }
     /** init class prototype to nlib */
     static init() {
         if (!nlib.utils) {
