@@ -381,7 +381,6 @@ const formatBit = (value) => {
 }
 // The moment custom date formats.
 const dateFormats = [
-    // SQL Server Format Styles.
     'YYYY-MM-DD HH.mm.ss.SSS',
     'YYYY/MM/DD HH.mm.ss.SSS',
     'YYYY-MM-DD HH:mm:ss.SSS',
@@ -390,29 +389,18 @@ const dateFormats = [
 const formatDateTime = (value) => {
     let ret = null;
     try {
-        if (null !== value) {
-            // make sure convert parameter to string.
-            let sVal = JSON.stringify(value);
-            // create moment object (default assume its local time).
-            let mObj = moment(sVal, dateFormats);
-            let isValid = mObj.isValid();
-            let dt = (isValid) ? mObj.toDate() : null;
-            if (null !== dt) {
-                let time = dt.getTime();
-                let tz = dt.getTimezoneOffset() * 60 * 1000;
-                ret = new Date(time - tz);
-            }
-            else {
-                console.log('Invalid moment date fomat : ', value);
-                ret = new Date(value);
-            }
-        }
+        let dt = moment(value, dateFormats);
+        //ret = (dt.isValid()) ? new Date(dt.utc()) : null;
+        ret = (dt.isValid()) ? dt.toDate() : null;
+        // fixed timezone offset (need to check if has problem)
+        ret = new Date(ret.getTime() - (ret.getTimezoneOffset() * 60 * 1000))
+        //console.log('OTHER DATE (try to used moment.js):', ret);
     }
     catch (ex) {
-        console.log('Error convert date : ', value);
         console.log(ex);
-        ret = null;
+        console.log('OTHER DATE (try to used moment.js): failed.');
     }
+
     return ret;
 }
 /**
@@ -1000,7 +988,7 @@ const SqlServer = class {
         
         let tmpl = `
         // required to manual set require path for nlib-mssql.
-        const SqlServer = require('./nlib/nlib-mssql');
+        const SqlServer = require('./src/server/js/nlib/nlib-mssql');
         const schema = require('./schema/{{=it.databaseName}}.schema.json');
 
         const {{=it.databaseName}} = class extends SqlServer {
