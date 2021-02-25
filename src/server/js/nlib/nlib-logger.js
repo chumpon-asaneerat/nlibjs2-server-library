@@ -14,7 +14,7 @@ const DailyRotateFile = require('winston-daily-rotate-file')
 // The default log file options.
 const DEFAULT_LOG_FILE_OPTIONS = {
     auditFile: 'logger-audit.json',
-    filename: 'application-%DATE%.log',
+    filename: 'logs/application-%DATE%.log',
     datePattern: 'YYYY-MM-DD-HH',
     //datePattern: 'YYYY-MM-DD-HH-mm',
     zippedArchive: false,
@@ -33,7 +33,7 @@ let cfgFile = path.join(rootPath, 'logger.config.json')
 let logOptions = null;
 let logger = null
 
-const exist = () => { fs.existsSync(cfgFile) }
+const exist = () => { return fs.existsSync(cfgFile) }
 const save = () => {  
     if (!logOptions) logOptions = DEFAULT_LOG_FILE_OPTIONS
     return fs.writeFileSync(cfgFile, JSON.stringify(logOptions, null, 4), 'utf8');
