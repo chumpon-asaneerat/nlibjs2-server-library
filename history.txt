@@ -1,6 +1,10 @@
 -------------------------------------------------------------------------------------------------
 [commited]
 Update 2021-02-25 #5
+- Implements nlib-logger #4.
+
+[commited]
+Update 2021-02-25 #5
 - Implements nlib-logger #3.
 
 [commited]

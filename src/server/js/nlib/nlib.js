@@ -10,6 +10,9 @@ const rootPath = process.env['ROOT_PATHS'];
 // default config file name.
 let cfgFile = path.join(rootPath, 'nlib.config.json');
 
+// init logger
+const logger = require('./nlib-logger').logger;
+
 //#region NLib
 
 /**
@@ -40,6 +43,8 @@ const NLib = class {
             /** The project root of views path. */
             views: path.join(rootPath, 'views')
         }
+        // write logger.
+        logger.info('NLib ' + NLib.version + ' init.');
     }
 
     //#endregion

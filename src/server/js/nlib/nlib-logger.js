@@ -1,8 +1,15 @@
-const winston = require('winston');
-const { createLogger, format, transports } = require('winston');
-const { combine, timestamp, label, printf, colorize, prettyPrint } = format;
-//const colorizer = winston.format.colorize();
-const DailyRotateFile = require('winston-daily-rotate-file');
+const path = require('path')
+const fs = require('fs')
+
+// setup root path. only call once when module load (require).
+process.env['ROOT_PATHS'] = path.dirname(require.main.filename)
+const rootPath = process.env['ROOT_PATHS']
+
+const winston = require('winston')
+const { createLogger, format, transports } = require('winston')
+const { combine, timestamp, label, printf, colorize, prettyPrint } = format
+//const colorizer = winston.format.colorize()
+const DailyRotateFile = require('winston-daily-rotate-file')
 
 // The default log file options.
 const DEFAULT_LOG_FILE_OPTIONS = {
@@ -18,35 +25,54 @@ const DEFAULT_LOG_FILE_OPTIONS = {
 const logFormat = printf((info, opts) => {
     //return colorizer.colorize(level, `${timestamp} ${level}: ${message}`);
     //return `${timestamp} ${level}: ${message}`;
-    return `${info.timestamp} ${info.level}: ${info.message}`;
+    return `${info.timestamp} ${info.level}: ${info.message}`
 });
 
-/*
-const log_file_opts =  {
-    filename: 'application-%DATE%.log',
-    datePattern: 'YYYY-MM-DD',
-    zippedArchive: true,
-    maxSize: '20m',
-    maxFiles: '14d'
+// default config file name.
+let cfgFile = path.join(rootPath, 'logger.config.json')
+let logOptions = null;
+let logger = null
+
+const exist = () => { fs.existsSync(cfgFile) }
+const save = () => {  
+    if (!logOptions) logOptions = DEFAULT_LOG_FILE_OPTIONS
+    return fs.writeFileSync(cfgFile, JSON.stringify(logOptions, null, 4), 'utf8');
+}
+const load = () => {
+    let sJson = fs.readFileSync(cfgFile, 'utf8');
+    try { logOptions = JSON.parse(sJson) }
+    catch { logOptions = DEFAULT_LOG_FILE_OPTIONS }
 }
 
-const logger = createLogger({
-    // general format.
-    format: combine(
-        timestamp(),
-        logFormat),
-    transports: [
-        new transports.Console({
-            // custom format for console.
-            format: combine(
-                colorize({all: true}),
-                timestamp(),
-                prettyPrint(),
-                logFormat)
-        }),
-        //new transports.File({ filename: 'combined.log' }),
-        new DailyRotateFile(log_file_opts)
-    ]        
-})
+const InitLogger = () => {
+    if (null != logger) return // already create.
 
-*/
+    if (!exist()) {
+        // set default
+        logOptions = DEFAULT_LOG_FILE_OPTIONS;
+        save() // save log config
+    }
+    load() // load log config.
+
+    logger = createLogger({
+        // general format.
+        format: combine(
+            timestamp(),
+            logFormat),
+        transports: [
+            new transports.Console({
+                // custom format for console.
+                format: combine(
+                    colorize({all: true}),
+                    timestamp(),
+                    prettyPrint(),
+                    logFormat)
+            }),
+            new DailyRotateFile(logOptions)
+        ]        
+    })
+}
+
+InitLogger();
+
+module.exports.logger = exports.logger = logger;
