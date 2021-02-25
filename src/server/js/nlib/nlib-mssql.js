@@ -465,9 +465,13 @@ const assignInput = (rq, p, pObj) => {
         rq.input(name, tsqltype, newVal);
         // update value back to proper type required for new version of node-mssql.
         pObj[name] = newVal;
+
+        logger.info(`\t\t name: ${name}, type: ${p.type}, value: ${newVal}`)
     }
     else {
         rq.input(name, val);
+
+        logger.info(`\t\t name: ${name}, type: ${p.type}, value: ${val}`)
     }
 }
 const assignOutput = (rq, p, pObj) => {
@@ -479,14 +483,19 @@ const assignOutput = (rq, p, pObj) => {
         rq.output(name, tsqltype, newVal);
         // update value back to proper type required for new version of node-mssql.
         pObj[name] = newVal;
+
+        logger.info(`\t\t name: ${name}, sqltype: ${tsqltype}, value: ${newVal}`)
     }
     else {
         rq.output(name, val);
+
+        logger.info(`\t\t name: ${name}, type: ${p.type}, value: ${val}`)
     }
 }
 const prepareInputs = (rq, pObj, inputs) => {
     if (rq) {
         if (checkInputs(inputs)) {
+            logger.info('\t [Inputs]')
             inputs.forEach(p => {
                 assignInput(rq, p, pObj);
             });
@@ -496,6 +505,7 @@ const prepareInputs = (rq, pObj, inputs) => {
 const prepareOutputs = (rq, pObj, outputs) => {
     if (rq) {
         if (checkOutputs(outputs)) {
+            logger.info('\t [Outputs]')
             outputs.forEach(p => {
                 assignOutput(rq, p, pObj);
             });
@@ -559,8 +569,13 @@ const readOutputs = (rq, outputs, dbResult) => {
     let ret = {}
     if (rq) {
         if (checkOutputs(outputs)) {
+            logger.info('\t [Outputs (RETURNS)]')
             outputs.forEach(p => {
-                ret[p.name] = getOutputValue(rq, p, dbResult.output);
+                let name = p.name;
+                let val = getOutputValue(rq, p, dbResult.output);
+                ret[name] = val;
+
+                logger.info(`\t\t name: ${name}, type: ${p.type}, value: ${val}`)
             });
         }
     }
@@ -725,6 +740,7 @@ const SqlServer = class {
     async query(text, pObj, inputs, outputs) {
         let ret = createResult();
         if (this.connected) {
+            logger.info('execute query: ' + text)
             let ps = new mssql.PreparedStatement(this.connection);
             
             let o = clone(pObj);
@@ -732,7 +748,6 @@ const SqlServer = class {
             let isPrepared = false;
 
             try {
-                logger.info('execute database query: ' + text)
                 isPrepared = await prepareStatement(ps, text);
                 let dbResult = await ps.execute(o);
                 updateResult(ret, dbResult);
@@ -830,6 +845,7 @@ const SqlServer = class {
     async execute(name, pObj, inputs, outputs) {
         let ret = createResult();
         if (this.connected) {
+            logger.info('execute command: ' + name)
             let req = new mssql.Request(this.connection);
 
             let o = clone(pObj);
@@ -844,6 +860,7 @@ const SqlServer = class {
                 ret.errors.hasError = true;
                 ret.errors.errNum = errorCodes.EXECUTE_ERROR;
                 ret.errors.errMsg = err.message;
+                logger.error(err.message);
             }
         }
 
