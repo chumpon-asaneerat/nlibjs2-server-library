@@ -624,10 +624,14 @@ const SqlServer = class {
         }
         catch (err) {
             //console.log(err)
+            logger.error(err.message);
             this.connection = null;
         }
         
         ret = this.connected;
+        if (ret) {
+            logger.info('database is connected.');
+        }
         return ret;
     }
     /**
@@ -728,6 +732,7 @@ const SqlServer = class {
             let isPrepared = false;
 
             try {
+                logger.info('execute database query: ' + text)
                 isPrepared = await prepareStatement(ps, text);
                 let dbResult = await ps.execute(o);
                 updateResult(ret, dbResult);
@@ -737,6 +742,7 @@ const SqlServer = class {
                 ret.errors.hasError = true;
                 ret.errors.errNum = errorCodes.QUERY_ERROR;
                 ret.errors.errMsg = err.message;
+                logger.error(err.message);
             }
             finally {
                 await unprepareStatement(ps, isPrepared);
@@ -851,6 +857,7 @@ const SqlServer = class {
             await this.connection.close();
             this.connection = null;
             //console.log('database is disconnected.');
+            logger.info('database is disconnected.');
         }
     }
 
