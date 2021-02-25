@@ -4,6 +4,12 @@ const { combine, timestamp, label, printf, colorize, prettyPrint } = format;
 //const colorizer = winston.format.colorize();
 const DailyRotateFile = require('winston-daily-rotate-file');
 
+const logFormat = printf((info, opts) => {
+    //return colorizer.colorize(level, `${timestamp} ${level}: ${message}`);
+    //return `${timestamp} ${level}: ${message}`;
+    return `${info.timestamp} ${info.level}: ${info.message}`;
+});
+
 /*
 const log_file_opts =  {
     filename: 'application-%DATE%.log',
