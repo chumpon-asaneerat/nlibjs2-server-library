@@ -1,5 +1,9 @@
 -------------------------------------------------------------------------------------------------
 [commited]
+Update 2021-02-25 #6
+- Implements supports logger in nlib-mssql #1.
+
+[commited]
 Update 2021-02-25 #5
 - Implements nlib-logger #4.
 

@@ -8,6 +8,9 @@ dot.templateSettings.strip = false; // preserve space.
 
 const beautify = require('js-beautify').js
 
+// init logger
+const logger = require('./nlib-logger').logger;
+
 //#region Internal variable and methods
 
 // The newline character.
