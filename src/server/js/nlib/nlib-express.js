@@ -6,6 +6,9 @@ const path = require('path');
 const find = require('find');
 const fs = require('fs');
 const nlib = require('./nlib');
+// init logger
+const logger = require('./nlib-logger').logger;
+
 // common middlewares.
 const express = require("express");
 const http = require('http');
@@ -165,7 +168,8 @@ const init_helmet = (app) => {
 };
 const init_logger = (app) => {
     console.info('use "logger (morgan)".');    
-    app.use(morgan("dev"));
+    //app.use(morgan("dev"));
+    app.use(morgan("short", { stream: logger.stream }));
 };
 const init_cookie_parser = (app, cfg) => {
     console.info('use "cookie parser".');    

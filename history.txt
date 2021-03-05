@@ -1,5 +1,9 @@
 ----------------------------------------------------------------------------------------------
 [commited]
+Update 2021-03-05 #2
+- Update nlib-express -> morgan use short format and set logger.stream.
+
+[commited]
 Update 2021-03-05 #1
 - Update nlib-logger -> add logger.stream.
 
