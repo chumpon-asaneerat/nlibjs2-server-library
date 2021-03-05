@@ -71,6 +71,13 @@ const InitLogger = () => {
             new DailyRotateFile(logOptions)
         ]        
     })
+
+    logger.stream = {
+        write: function(message, encoding) {
+            // morgan always has newline so remove it before send to log.
+            logger.info(message.substring(0,message.lastIndexOf('\n')));
+        }
+    }    
 }
 
 InitLogger();
